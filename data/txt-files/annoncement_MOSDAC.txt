@@ -1,0 +1,46 @@
+New Data Ordering using Single-Sign-On (SSO) launched on MOSDAC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+z 
+ 
+ 
+ 
+Greetings, 
+ 
+We are pleased to announce the launch of Single Sign On (SSO) functionality on MOSDAC site. SSO will 
+enable users to securely authenticate with multiple applications and datasets by using just one set of login 
+credentials. We are also happy to announce the release of new User Order Processing System (UOPS) on 
+our MOSDAC site. New UOPS is user friendly and has features like Band extraction, Time based selection, 
+Region of interest based ordering and much more.  
+ 
+We would like you to explore the New UOPS and send your feedback / suggestions at 
+admin@mosdac.gov.in. 
+ 
+In order to have a smooth transition for the users, we plan to continue the old User ordering System for 
+a period of one month.  
+ 
+Links to access the ordering system are as follows: 
+ 
+New Ordering System : https://mosdac.gov.in/sso-login 
+Old Ordering System : https://mosdac.gov.in/data/jsp/new_login/main_login.jsp 
+ 
+Looking forward for your cooperation. 
+ 
+Be Safe Be Healthy !! 
+ 
+Team@MOSDAC 
+ 
+ 

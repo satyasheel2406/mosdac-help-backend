@@ -1,0 +1,336 @@
+MOSDAC provides a variety of satellite-derived data products that support meteorological and oceanographic research and operations.
+
+1. Rainfall Products:
+MOSDAC provides various rainfall products derived from satellite data, including those from INSAT-3D and Megha-Tropiques missions. These products include rainfall estimates based on algorithms like the Hydro-Estimator Method and the INSAT Multispectral Rainfall Algorithm Technique (IMSRA). Additionally, MOSDAC offers near-real-time rainfall information and heavy rainfall alerts, including cloudburst potential alerts for the Western Himalayan region.
+Rainfall Estimation Products:
+
+Hydro-Estimator Method:
+This method, used with KALPANA-1 VHRR data, generates rainfall estimates over the Indian region. 
+
+INSAT Multispectral Rainfall Algorithm Technique (IMSRA):
+IMSRA is a key operational algorithm for INSAT-3D, using infrared brightness temperatures and TRMM-PR surface rain rate data to estimate precipitation. 
+
+1-2. GSMap ISRO Rain
+
+The GSMaP_ISRO is a precipitation product that was developed through the Indian Space Research Organisation (ISRO) - Japan Aerospace Exploration Agency (JAXA) Implementation of Agreement (IA) specifically for the Indian subcontinent. It is currently available from March 2000 Onwards and offers a horizontal resolution of 0.1°X 0.1° on a latitude/longitude grid with a temporal resolution of 1 hour. The dataset is based on the Global Satellite Mapping of Precipitation (GSMaP) algorithm (Kubota et al. 2020; Kumar et al. 2021, 2022) with Indian Meteorological Department (IMD) gauge correction, and is a specialized product that focuses on the Indian landmass. The GSMaP algorithm, designed by the JAXA, is instrumental in creating a comprehensive view of precipitation using microwave radiometers and cloud moving data from Geostationary Infrared (IR) technology. The algorithm is separated into three primary categories for effective measurement: the microwave imager, microwave sounder, and microwave-infrared (MVK) combined (Mega et al. 2019). A detailed verification of GSMaP_ISRO for the Indian summer monsoon periods of 2000-2020 against ground, satellite and various merge rainfall products is presented in Kumar et al. (2022). 
+ 
+
+Data Access
+Science products are available to download with a Single Sign On on MOSDAC. Click Here to access the data
+Data Version
+Version 1.0 (beta)
+Data Sources
+GSMaP_MVK product, NOAA Climate Prediction Center (CPC) rainfall analysis, CPC Infrared brightness temperature, IMD gridded rain (0.25 degree), etc.
+Processing Steps
+-For gauge adjustment, the software used was JAXA MCD_V05.02, based upon Mega et al. (2019). -Merging NOAA CPC and Indian gauges was accomplished using Matlab software. -The algorithms pertaining to GSMaP_ISRO are provided in Kumar et al. (2022) in detail.
+References
+Kubota, T., Aonashi, K., Ushio, T., Shige, S., Takayabu, Y. N., Kachi, M., and Oki, R. (2020). Global Satellite Mapping of Precipitation (GSMaP) products in the GPM era. Satellite Precipitation Measurement: Volume 1, 355-373. Kumar, P., Gairola, R., Kubota, T., and Kishtawal, C. (2021). Hybrid assimilation of satellite rainfall product with high density gauge network to improve daily estimation: A case of Karnataka, India. Journal of the Meteorological Society of Japan. Ser. II, 99(3), 741-763. Kumar, P., Varma, A. K., Kubota, T., Yamaji, M., Tashima, T., Mega, T., and Ushio, T. (2022). Long-Term High-Resolution Gauge Adjusted Satellite Rainfall Product Over India. Earth and Space Science, 9(12), e2022EA002595. Mega, T., Ushio, T., Matsuda, T., Kubota, T., Kachi, M., and Oki, R. (2019) Gauge-Adjusted Global Satellite Mapping of Precipitation, IEEE Trans. Geosci. Remote Sens, 57, 4, 1928-1935.
+Kumar, P., Srivastava, S.S., Jivani, N., Varma, A.K., Yokoyama, C. & Kubota, T. (2024) Long-term assessment of ERA5 reanalysis rainfall for lightning events over India observed by Tropical Rainfall Measurement Mission Lightning Imaging Sensor. Quarterly Journal of the Royal Meteorological Society, 150(761), 2472â€“2488. Available from: https://doi.org/10.1002/qj.4719(link is external)
+Derivation Techniques and Algorithm
+The manuscript titled "Long-Term High-Resolution Gauge Adjusted Satellite Rainfall Product Over India" provides a description.
+Limitations
+The number of gauge stations within a NOAA CPC pixel of 0.5 degree impacts the accuracy of the gauge-adjusted rainfall.
+Known problems with data
+No known issues at this time.
+File Naming Convention
+HDF5 file:
+
+Sample name : GPMMRG_MAP_YYMMDDHH00_H_L3S_MCH_03F.h5
+
+YY - Year
+MM - Month
+DD - Day
+HH - Hour
+
+MetaData
+
+| Sr. No | Core Metadata Elements                  | Definition                                                                                                                                                                                                                 |
+|--------|------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1      | Metadata language                        | English                                                                                                                                                                                                                    |
+| 2      | Metadata Contact                         | MOSDAC                                                                                                                                                                                                                     |
+| 3      | Metadata date                            | November, 2023                                                                                                                                                                                                            |
+| 4      | Data Lineage or Quality                  | IMD gauge adjusted GSMaP-ISRO Rain                                                                                                                                                                                         |
+| 5      | Title                                    | GSMaP - ISRO Rain                                                                                                                                                                                                         |
+| 6      | Abstract                                 | The GSMaP-ISRO rain data has been derived through the IMD gauge-based gridded rain & NOAA CPC gauge analysis adjustment of the GSMaP_MVK rain product. It offers high-quality rainfall information with excellent spatiotemporal resolution, covering a range spanning from March 2020 onwards. It has been developed through the ISRO-JAXA Implementation of Agreement (IoA). This product provides a lat-long grid with 0.1x0.1° horizontal resolution, along with hourly temporal resolution. |
+| 7      | Developer                                | Prashant Kumar, Atul K. Verma, Tulsi Prabhakar, Masako Yamaji, Tomohito Lukinura, Tomoaki Mega, Tomoo Ushio                                                                                                                |
+| 8      | Dataset Contact                          | Dr. Prashant Kumar, ASIASO/EPSA/SAC, Space Applications Centre, ISRO Ahmedabad-380015 prashant282@sac.isro.gov.in                                                                                                          |
+| 9      | Update Frequency                         | 2.5 years of global GSMaP-ISRO rain. Further data will be added intermittently.                                                                                                                                            |
+| 10     | Access Right or Restriction              | Open Access                                                                                                                                                                                                               |
+| 11     | Spatial Resolution                       | 0.1 degree                                                                                                                                                                                                                |
+| 12     | Language                                 | English                                                                                                                                                                                                                   |
+| 13     | Topic Category                           | Gauge-adjusted satellite rainfall                                                                                                                                                                                         |
+| 14     | Keywords                                 | GSMaP, JAXA, NOAA CPC rainfall analysis, CPC infrared brightness temperature, IMD gridded rain (0.25 degree)                                                                                                                |
+| 15     | Date or period                           | March 2020 Onwards                                                                                                                                                                                                        |
+| 16     | Responsible Party                        | Dr. Prashant Kumar, ASIASO/EPSA, Space Applications Centre, ISRO Ahmedabad-380015, India                                                                                                                                  |
+| 17     | Organization                             | Space Applications Centre (ISRO), Ahmedabad, India                                                                                                                                                                       |
+| 18     | Line of code                             | Development of high spatio-temporal resolution gauge-adjusted satellite rainfall                                                                                                                                           |
+| 19     | Individual name                          | Dr. Prashant Kumar, ASIASO/EPSA, Space Applications Centre, ISRO Ahmedabad-380015, India. Email: prashant282@sac.isro.gov.in                                                                                              |
+| 20     | Position                                 | Scientist/Engineer - SF                                                                                                                                                                                                   |
+| 21     | Geographic Extent                        | Global                                                                                                                                                                                                                    |
+| 22     | Geographic name, geographic Identifier   | Global                                                                                                                                                                                                                    |
+| 23     | Bounding box                             | lat_min: -60, lat_max: 90, lon_min: 0, lon_max: 360                                                                                                                                                                        |
+| 24     | Temporal extent                          | March 2020 Onwards                                                                                                                                                                                                        |
+| 25     | Access Right or Restriction              | Open Access                                                                                                                                                                                                               |
+| 26     | Distribution Information                 | Available for download in date folders in HDF5 format                                                                                                                                                                     |
+| 27     | Resource Lineage Level                   | Level 3 (Gauge-adjusted satellite rainfall product)                                                                                                                                                                       |
+| 28     | Reference System                         | Datum: WGS84                                                                                                                                                                                                              |
+
+
+1-3. Bayesian-based MT-SAPHIR rainfall:
+This product uses observations from the SAPHIR instrument on the Megha-Tropiques satellite and a Bayesian-based retrieval technique. 
+https://www.mosdac.gov.in/3d-volumetric-terls-dwrproduct
+
+Real-time Products and Alerts:
+
+1-4. Heavy Rainfall Alerts:
+
+MOSDAC provides real-time heavy rainfall alerts, generated by Space Applications Centre (SAC), ISRO, using the INSAT series of satellites. 
+
+1-5. Cloudburst Potential Alerts:
+These alerts are specifically for the Western Himalayan region and are generated using the NETRA (Nowcasting of ExTreme orographic RAinfall events) model. 
+
+Near-Real-Time (NRT) products:
+These are dumping-wise products derived from data transmitted to the ground station. 
+
+2. Wind:
+MOSDAC provides access to various wind-related data products and tools. These include wind speed and direction data derived from satellite observations, as well as software for processing and analyzing this data. 
+
+Wind Products:
+
+Cloud Motion Vectors (CMV):
+Derived from INSAT-3D's visible, TIR-1, and TIR-2 channels, these vectors represent wind speed and direction at cloud level. 
+Water Vapour Wind (WVW):
+Derived from INSAT-3D's water vapor, TIR-1, and TIR-2 channels, these represent wind speed and direction in the upper troposphere. 
+Ocean Surface Winds:
+Derived from scatterometers like Oceansat-2's OSCAT and SCATSAT-1, these provide wind speed and direction over the ocean surface. 
+Vector Winds:
+Higher spatial-density wind vectors are generated by combining operational Level-2A and Level-2B data from scatterometers. 
+12 Hourly AWV:
+Advanced Wind Vector products are generated by combining data from OSCAT and ASCAT. 
+Tools and Software:
+Megha Tropiques HDF Viewer: Software for viewing data in HDF format from the Megha Tropiques satellite. 
+Megha Tropiques batch mode HDF5 to Binary/ASCII converter: A tool for converting data from HDF5 to other formats. 
+Real Time Analysis of Products and Information Dissemination (RAPID): An application developed by Space Applications Centre (SAC), ISRO for weather data analysis and dissemination. 
+Data Access:
+MOSDAC provides access to satellite data products, including wind data, in various formats like HDF, netCDF, and geoTIFF. 
+Users can access data through the MOSDAC website and may need to register for Single Sign On to download certain data. 
+
+
+3.Cloud:
+MOSDAC provides various cloud-related products derived from satellite data. These products include cloud properties from geostationary satellites like Metosat-8, such as cloud phase, optical depth, and cloud top height. Additionally, MOSDAC offers products like outgoing longwave radiation, quantitative precipitation estimation, and cloud motion vectors derived from INSAT-3D data. 
+METEOSAT8 Cloud Properties:
+https://www.mosdac.gov.in/meteosat8-cloud-properties
+NASA LaRC is operationally generating global cloud properties products using different geostationary satellites. This Metosat-8 cloud properties products include Cloud Phase, Optical Depth, Effective Water Radius, Effective Ice Diameter, Liquid Water Path, Ice Water Path, Effective Cloud Temperature, Cloud Top Height, Effective Cloud Height, Cloud Base Height, Cloud Top Pressure, Effective Cloud Pressure, Cloud Base Pressure, Broadband Albedo, Broadband  Longwave Flux, and Cloud Thickness.
+
+Cloud Products from Metosat-8:
+
+Cloud Phase: Identifies whether the cloud is composed of liquid water or ice.
+Optical Depth: Measures the opacity of the cloud.
+Effective Water Radius/Ice Diameter: Provides information on the size of water droplets or ice crystals within the cloud.
+Liquid Water/Ice Water Path: Quantifies the amount of liquid water or ice in the cloud.
+Cloud Top/Base/Effective Height/Pressure: Indicates the vertical extent and pressure levels of the cloud.
+Broadband Albedo/Longwave Flux: Measures the cloud's reflectivity and outgoing longwave radiation.
+Cloud Thickness: Determines the vertical extent of the cloud. 
+
+Data Version
+Format : NetCDF (nc4)
+CDO Version : 1.9.3 , Conventions : CF 1.6
+
+Data Sources
+Cloud Properties Products, downloaded from LaRC, NASA
+
+Processing Steps
+        https://satcorps.larc.nasa.gov/CERES_algorithms/
+
+4. Ocean subsurface:
+Satellite data has been used to reconstruct ocean interior density and velocity anomalies in the Bay of Bengal through the “interior + surface Quasigeostrophic” (isQG) method.
+https://www.mosdac.gov.in/ocean-subsurface
+
+Home » Taxonomy term
+Opendata
+Subscribe to Opendata
+High Resolution Sea Surface Salinity
+
+The Bay of Bengal's high-resolution sea surface salinity has been reconstructed using a Lagrangian technique leveraging satellite data.
+Tags:
+OpendataOcean
+Read moreabout High Resolution Sea Surface Salinity
+GSMap ISRO Rain
+
+The GSMaP_ISRO is a precipitation product that was developed through the Indian Space Research Organisation (ISRO) - Japan Aerospace Exploration Agency (JAXA) Impleme
+Tags:
+OpendataAtmosphere
+Read moreabout GSMap ISRO Rain
+3D Volumetric TERLS DWRproduct
+DWR
+Tags:
+OpendataLand
+Read moreabout 3D Volumetric TERLS DWRproduct
+Bayesian based MT-SAPHIR rainfall
+Rainfall
+Megha- Tropiques (MT) is a joint Indo-French collaborative satellite mission, which is launched on 12 October 2011.
+Tags:
+OpendataAtmosphere
+Read moreabout Bayesian based MT-SAPHIR rainfall
+METEOSAT8 Cloud Properties
+
+NASA LaRC is operationally generating global cloud properties products using different geostationary satellites.
+Tags:
+OpendataAtmosphere
+Read moreabout METEOSAT8 Cloud Properties
+Ocean Subsurface
+Ocean Subsurface
+Satellite data has been used to reconstruct ocean interior density and velocity anomalies in the Bay of Bengal through the “interior + surface Quasigeostrophic” (isQG) method.
+
+Tags:
+OpendataOcean
+Read moreabout Ocean Subsurface
+GPS derived Integrated water vapour
+GPS
+Tags:
+OpendataAtmosphere
+Read moreabout GPS derived Integrated water vapour
+5. Oceanic Eddies Detection:
+https://www.mosdac.gov.in/oceanic-eddies-detection
+
+5.Sea-ice:
+MOSDAC provides various sea ice products and tools derived from satellite data. These include sea ice concentration, sea ice edge, sea ice motion, and sea ice extent. MOSDAC utilizes data from satellites like INSAT-3D and Oceansat-2, as well as other sources, to generate these products. 
+Sea Ice Products and Tools from MOSDAC:
+Sea Ice Concentration:
+MOSDAC provides sea ice concentration maps, which indicate the percentage of the ocean surface covered by sea ice. 
+Sea Ice Edge:
+MOSDAC offers data on the location of the sea ice edge, which is the boundary between open water and areas covered by sea ice. 
+Sea Ice Motion:
+MOSDAC uses satellite data to track the movement of sea ice over time, providing information on ice drift and deformation. 
+Sea Ice Extent:
+MOSDAC calculates sea ice extent, which is the total area covered by sea ice above a certain concentration threshold (e.g., 15%). 
+Oceanic Eddy Products:
+MOSDAC also generates data on oceanic eddies, which are swirling currents that can influence sea ice distribution and movement. 
+INSAT-3D Data:
+MOSDAC utilizes INSAT-3D satellite data, which includes information from its imager and sounder instruments, to derive various oceanographic and meteorological parameters, including sea ice information. 
+Oceansat-2 Data:
+MOSDAC also uses Oceansat-2 data, including scatterometer data, to generate products like analyzed wind vectors and wind stress. 
+Tools:
+MOSDAC provides access to various tools for visualizing and analyzing these sea ice products. These include tools for data download, visualization, and analysis. 
+Examples of MOSDAC's sea ice products and tools:
+Sea Ice Occurrence Probability:
+MOSDAC processes satellite data to determine the probability of sea ice occurrence in a given region over a specific period. 
+Oceanic Eddy Detection:
+MOSDAC identifies and tracks oceanic eddies using sea surface height data from satellites like AVISO. 
+Climatological Data:
+MOSDAC also generates climatological datasets, such as monthly sea surface temperature and salinity, which are used to understand long-term trends in sea ice and ocean conditions. 
+
+6. GPS derived Integrated water vapour:
+https://www.mosdac.gov.in/gps-derived-integrated-water-vapour
+
+7. Outgoing Lo3ngwave Radiation (OLR):
+OLR is derived from the thermal infrared channels and used to assess convective activity, monitor droughts, and detect heatwaves.
+
+8. Temperature and Humidity Profiles:
+Vertical atmospheric temperature and humidity profiles are derived from the INSAT-3D Sounder. Important for numerical weather prediction and forecasting models.
+
+9. Sea Surface Temperature (SST):
+This product provides SST estimates using microwave and infrared sensors. Crucial for cyclone prediction and monsoon analysis.
+
+10. Wind Vector Products:
+Derived from Oceansat-2 Scatterometer and other missions. These products provide ocean surface wind speed and direction for marine forecasting.
+
+11. Vegetation Indices:
+Products such as NDVI and EVI help monitor vegetation health, crop yield estimation, and drought stress.
+
+12. Snow and Ice Products:
+Includes snow cover extent and sea ice probability derived from visible and microwave sensors. Important for hydrology and climate studies.
+
+13. Soil Moisture:
+https://www.mosdac.gov.in/soil-moisture-0
+
+14. Indian Mainland Coastal Product:
+https://www.mosdac.gov.in/indian-mainland-coastal-product
+
+15.Sea Ice Occurrence Probability:https://www.mosdac.gov.in/sea-ice-occurrence-probability
+
+16. Global Ocean Surface Current:https://www.mosdac.gov.in/global-ocean-surface-current
+
+17. Wave based Renewable Energy:https://www.mosdac.gov.in/wave-based-renewable-energy
+
+18.River Discharge:
+https://www.mosdac.gov.in/river-discharge
+
+19. Inland Water Height:https://www.mosdac.gov.in/inland-water-height
+
+All products are available in formats such as NetCDF, HDF, or GeoTIFF with metadata compliant to ISRO standards.
+
+20. High Resolution Sea Surface Salinity
+
+The Bay of Bengal's high-resolution sea surface salinity has been reconstructed using a Lagrangian technique leveraging satellite data. The primary input datasets utilized are sea surface salinity data from the SMAP mission and sea surface currents derived from altimetry. These datasets are obtained at a spatial resolution of 25 km. The SMAP mission has been operational since 2015, whereas altimetry-derived sea surface currents have been available since 1993. Validation of this reconstructed product was conducted against in-situ datasets obtained from thermo-salinographs. Results indicate that the reconstructed product more accurately captures front formation compared to the original SMAP salinity fields.
+ 
+Data Access
+Science products are available to download with a Single Sign On on MOSDAC. Click Here(https://www.mosdac.gov.in/opendata/HRSSS/) to access the data
+Data Version
+Version 1.0 (beta).
+Data Sources
+SMAP Sea Surface Salinity (https://podaac.jpl.nasa.gov/dataset/SMAP_JPL_L3_SSS_CAP_8DAY-RUNNINGMEAN_V5(link is external)) Altimetry-derived sea surface currents (https://data.marine.copernicus.eu/product/SEALEVEL_GLO_PHY_L4_MY_008_047/(link is external)).
+Processing Steps
+i. Remap Sea Surface Currents with a spatial resolution of 5 km.
+ii. Backward advection of particles from the final time {t} rsub {f} to the initial time {t} rsub {f} -14 , where 14 is the number of days the particles are advected using Runge-Kutta 4th order method.
+iii. The SMAP Sea Surface Salinity observed at {t} rsub {f} -14 is interpolated onto the particle positions that day.
+iv. With this, each particle has an SSS value on {t} rsub {f} day that corresponds to the observation at {t} rsub {f} -14 .
+
+References
+[1] Barbara, B., Drushka, K., & Gaube, P. (2021), â€œLagrangian reconstruction to extract small-scale salinity variability from SMAP obervationsâ€, JGR Oceans, 126(3), e2020JC016477.
+[2] Dencausse, G., Morrow, R., RogÃ©, M., and Fleury, S. (2014). Lateral stirring of large-scale tracer fields by altimetry. Ocean Dynamics, 64(1), 61â€“78.
+[3] DesprÃ¨s, A., Reverdin, G., and d'Ovidio, F. (2011). Mechanisms and spatial variability of mesoscale frontogenesis in the northwestern subpolar gyre. Ocean Modelling, 39(1), 97â€“113.
+[4] Durack, P. J., Lee, T., Vinogradova, N. T., and Stammer, D. (2016). Keeping the lights on for global ocean salinity observation. Nature Climate Change, 6(3), 228â€“231.
+[5] Lehahn, Y., d'Ovidio, F., and Koren, I. (2018). A satellite-based Lagrangian view on phytoplankton dynamics. Annual Review of Marine Science, 10(1), 99â€“119.
+[6] RogÃ©, M., Morrow, R. A., and Dencausse, G. (2015). Altimetric Lagrangian advection to reconstruct Pacific Ocean fine-scale surface tracer fields. Ocean Dynamics, 65(9), 1249â€“1268.
+
+Derivation Techniques and Algorithm
+The algorithm is called Lagrangian Reconstruction Technique. User should refer [1].
+
+Limitations
+This algorithm is applicable only in the region with moderate to high eddy kinetic energy and where lateral advection dominates.
+High resolution sea surface salinity product generated by Lagrangian technique can have error due to tracer bias (depends on accuracy of initial conditions) and advection bias (Passive stirring can introduce bias due to mixing physics (air-sea fluxes, mixing etc.)).
+Known problems with data
+Data sets have biases as well as inaccuracy.
+File Naming Convention
+Netcdf file: HRSSS_bck_YYYYMMDD_14D.nc
+
+MetaData
+
+1.  Metadata language: English  
+2.  Metadata Contact: MOSDAC  
+3.  Metadata date: April, 2015  
+4.  Data Lineage or Quality: High resolution sea surface salinity in Bay of Bengal using Lagrangian technique.  
+5.  Title: Dynamic downscaling of Satellite Sea Surface Salinity for the Bay of Bengal  
+6.  Abstract:  
+    Lagrangian technique is used for generating high-resolution sea surface salinity fields in the Bay of Bengal. This is achieved through the utilization of Sea Surface Salinity (SSS) data derived from the Soil Moisture Active Passive (SMAP) satellite, in conjunction with sea surface currents obtained from altimetry. By employing forward and backward schemes for the numerical advection of SMAP SSS fields using altimeter-derived geostrophic currents, a Lagrangian reconstruction is produced, capturing smaller-scale features. The reliability of our in-house developed algorithm is assessed by comparing it with an available restructured product in the Gulf Stream. Additionally, a preliminary validation is conducted against in situ data obtained from a thermo-salinograph. Further, the developed algorithm was modified to select the advection time dynamically.
+
+7.  Dataset Contact: Jai Kumar, PODAAC/OSG/EPSA, Space Applications Centre (ISRO), Ahmedabad, 380015, kumarjai@sac.isro.gov.in  
+8.  Update Frequency: Six months.  
+9.  Access Rights or Restriction: Open Access  
+10. Spatial Resolution: Spatial resolution is 10 km  
+11. Language: English  
+12. Topic Category: High resolution sea surface salinity product (SAC-TDP) using satellite data.  
+13. Keywords: Sea surface salinity, sea surface currents, Lagrangian advection technique, high resolution  
+14. Date or period: April 2015 – June 2023  
+15. Responsible Party: Jai Kumar, PODAAC/OSG/EPSA, Space Applications Centre (ISRO), Ahmedabad-380015, India  
+16. Organization: Space Applications Centre (ISRO), Ahmedabad, India  
+
+16a. Org. role: Geophysical parameters from satellite data in the Bay of Bengal region  
+16b. Individual name: Jai Kumar, PODAAC/OSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6104.  
+     Email: kumarjai@sac.isro.gov.in  
+16c. Position: Scientist/Engineer, PODAAC/OSG/EPSA, SAC (ISRO), Ahmedabad-380015  
+16d. Vertical Extent (minimumValue, maximumValue, unitOfMeasure, vertical datum):  
+     Lat_min: 0N, Lat_max: 25N, Lon_min: 78E, Lon_max: 100E  
+
+17. Geographic Extent: Indian Lowlands  
+18. Geographic name, geographic Identifier: Bay of Bengal  
+19. Bounding box: Lat_min: 0N, Lat_max: 25N, Lon_min: 78E, Lon_max: 100E  
+20. Temporal Extent: April 2015–June 2023  
+21. Access Rights or Restrictions: Open Access  
+22. Distribution Information: Download of data files in NetCDF format  
+23. Resource Lineage Level: Level 3 (Downscaled satellite data)  
+24. Reference System: Datum: WGS84  
+
+3D Volumetric TERLS DWRproduct
+https://www.mosdac.gov.in/3d-volumetric-terls-dwrproduct

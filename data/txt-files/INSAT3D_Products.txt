@@ -1,0 +1,2397 @@
+ 
+SAC/IMDPS/SIPA/DPSG/MSDPD/TN-01/FEB 2014 
+ 
+Version 1.1, February 2014 
+ 
+ 
+ 
+ 
+ 
+Data Products Software Group 
+Signal and Image Processing Area 
+Space Applications Center (SAC) 
+Indian Space Research Organisation (ISRO) 
+INDIA-380015. 
+ 
+INSAT-3D Data Products Format Document 
+ii 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+This page is intentionally left blank.
+iii 
+ 
+Document Control and Data sheet 
+ 
+ 
+ 
+1. Document No. and Date : SAC/IMDPS/SIPA/DPSG/MSDPD/TN-01/FEB 2014 
+ 
+ 
+2. Title 
+ 
+ 
+: INSAT-3D Data Products Format Document 
+   
+ 
+3. Type of document  
+: Technical 
+ 
+4. No. of pages 
+ 
+:  26 
+ 
+5. Authors 
+ 
+ 
+: INSAT DP Team 
+ 
+6. Originating Unit  
+: Data Products Software Group (DPSG), 
+                                                  Signal & Image Processing Area (SIPA), 
+ 
+ 
+ 
+              SAC, ISRO, Ahmedabad-15, INDIA. 
+ 
+7. Security Classification 
+: Unrestricted 
+ 
+8. Distribution 
+ 
+: Open Circulation 
+ 
+ 
+ 
+ 
+iv 
+ 
+ 
+Contents 
+Chapter 1: Introduction .................................................................................................................................................. 1 
+1.1 Scope ................................................................................................................................................................... 1 
+1.2 Purpose and Objectives ........................................................................................................................................ 1 
+1.3 INSAT-3D Payloads ............................................................................................................................................ 1 
+1.4 INSAT-3D Data Products Types ......................................................................................................................... 2 
+1.5 Product File Naming Convention ........................................................................................................................ 3 
+Chapter 2: INSAT-3D Data Products HDF5 File Structure .......................................................................................... 5 
+2.1 Products Overview............................................................................................................................................... 5 
+2.2 INSAT-3D Digital Data Products File Formats ................................................................................................... 5 
+2.3 Channel Datasets ................................................................................................................................................. 9 
+2.4 Geophysical Parameter Datasets ........................................................................................................................ 11 
+2.6 Calibration Datasets ........................................................................................................................................... 16 
+2.7 Ancillary Datasets .............................................................................................................................................. 19 
+2.8 Dimension Scales .............................................................................................................................................. 20 
+Appendix- I : INSAT-3D Radiometric Calibration ..................................................................................................... 22 
+Appendix- II : INSAT-3D Geometric Calibration ....................................................................................................... 24 
+Abbreviations and Acronyms ...................................................................................................................................... 25 
+References ................................................................................................................................................................... 26 
+ 
+v 
+ 
+Document Change History 
+ 
+*A: Addition; M: Modification; D: Deletion 
+Version No 
+Date. 
+Section No 
+A/M/D * 
+Description of change 
+V1.0 
+Sept 1, 2012 
+ 
+A 
+NetCDF-4 enhanced Data Model 
+based 
+V1.0 
+May 3,2012 
+ 
+M 
+Switching to Netcdf4- classic 
+model 
+V1.0 
+July 22, 2013 
+ 
+M 
+New Levels of Geophysical 
+Parameters, KML Format 
+V1.1 
+Feb. 19, 2014 
+ 
+A,M 
+For Imager VISIBLE and SWIR 
+bands Radiance is included in 
+place of Albedo. 
+For SOUNDER Visible Band 
+Radiance is included in place of 
+Albedo 
+1 
+ 
+Chapter 1: Introduction 
+ 
+1.1 Scope 
+ 
+The document describes the format layout of Sounder and Imager INSAT-3D Digital Data 
+Products provided in HDF5 (Hierarchical Data Format) and Keyhole Markup Language (KML). 
+These include Standard and Geophysical Parameters provided in HDF5 Format and KML. This 
+format document is valid for Level-1, Level-2 and Level-3 products. 
+ 
+1.2 Purpose and Objectives 
+ 
+This document serves as a format document for the INSAT-3D data products in HDF5 Format. 
+The reader should note that this document does not discuss the structures underlying HDF or the 
+specific conventions employed. For more information on HDF, its design philosophy, and its 
+logical and physical formats, the reader is referred to NCSA website [1]. The HDF5 library and 
+utilities (provided by NCSA) can be used to read the contents of the HDF products. 
+ 
+ 1.3 INSAT-3D Payloads 
+ 
+The INSAT-3D spacecraft (parked at 82° East) carries two meteorological payloads: (i) Imager 
+working from the visible to the infrared spectral bands (0.55 to 12.5 µm) and (ii) Sounder 
+working in 18 IR (7 in LWIR,5 in MWIR,6 in SWIR) channels and one in Visible spectral range. 
+Brief specification of Imager and Sounder are as follows. 
+ 
+IMAGER 
+ 
+The IMAGER provides imaging capability of the earth disk from geostationary altitude in one 
+Visible (VIS) in 0.55 to 0.75 µm range and five infrared channels.  The specifications of the 
+payload are summarized in Table 1.2.1.  
+ 
+There are two flexible modes of operations possible with the IMAGER payloads: 
+ 
+ Full frame mode scans 18° E-W x 18°N-S covering the entire earth disk and some space 
+around. The acquisition time for full globe is around 26 minutes. So daily 48 acquisitions 
+are possible in every half hourly interval. 
+ Program mode covering 18° in E-W direction;  N-S coverage can be defined in terms of 
+the number of lines to be scanned  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2 
+ 
+Table 1.1 Payload Specification for IMAGER 
+Spectral 
+Channels
+Spectral Range
+(µm) 
+Resolution (km) 
+Quantization 
+bits 
+VIS 
+0.55 – 0.75 
+1 
+10 
+SWIR 
+1.55-1.70 
+1 
+10 
+MIR 
+3.80-4.00 
+4 
+10 
+WV 
+6.50-7.10 
+8 
+10 
+TIR 1 
+10.3-11.3 
+4 
+10 
+TIR 2 
+11.5 – 12.5 
+4 
+10 
+ 
+ 
+ 
+SOUNDER   
+ 
+The Sounder onboard INSAT 3D has 18 Infra Red channels, out of which  7 are in long wave IR 
+(LWIR), 6 in short wave IR (SWIR) and 5 in medium wave IR (MWIR) bands and 1 Visible 
+Channel. 
+Table 1.2 Payload Specification for Sounder 
+Spectral 
+Channels 
+Spectral 
+Range (µm) 
+Resolution 
+(km) 
+Quantization 
+Bits 
+VISIBLE 
+0.67 – 0.72 
+10  
+12 
+SWIR (6 Channels) 
+3.67 – 4.59 
+10  
+14 
+MWIR (5 Channels) 
+6.38 – 11.33 
+10  
+14 
+LWIR (7 Channels) 
+11.66 – 14.85 
+10 
+14 
+ 
+1.4 INSAT-3D Data Products Types 
+ 
+Supported data products as given as: 
+ 
+Table: 1.3 INSAT-3D Data Product Levels and Types 
+ 
+Product  
+Description  
+Processing 
+level 
+Corrections Applied 
+Format/Remarks 
+Standard 
+Corrections 
+ 
+LEVEL 1B Radiometrically corrected  (Line loss 
+correction, Failed detector correction 
+and RAD LUT applied) 
+HDF5 
+Standard 
+Corrections with 
+Geo-referencing 
+LEVEL 1C Radiometric + Geometric correction 
+applied (Geo-referenced)  
+HDF5 
+Geo-physical  
+Parameter 
+LEVEL 2B  Geophysical parameters  derived from 
+L1B 
+HDF5 
+Geo-physical 
+Parameter 
+LEVEL2G 
+Geophysical Parameters Gridded at a 
+pre-defined Resolution 
+HDF5 
+3 
+ 
+Geo-physical 
+Parameter 
+LEVEL2P 
+Geophysical Parameters provided as 
+Point Datasets 
+HDF5/ KML 
+Geo-physical  
+Parameter 
+LEVEL 3B  Binned Geophysical Parameters 
+derived from L2B 
+HDF5 
+Geo-physical 
+Parameter 
+LEVEL3G 
+Binned Geophysical Parameters 
+derived from L2G 
+HDF5 
+ 
+1.5 Product File Naming Convention 
+The hdf5 product file name is coined as: 
+SSNNN_DDMMMYYYY_HHmm_LOP_XXX.h5 
+ 
+Where 
+SS=Satellite ID (e.g. 3D for INSAT-3D) 
+ 
+NNN=Sensor ID (IMG for Imager, SND for Sounder) 
+ 
+DDMMMYYYY=Date of Acquisition (DD=Day of Month, MMM=Month of the year, YYYY= 
+year of Pass e.g. 23MAY2012) 
+ 
+HHmm=Time of Acquistion (HH=Hour of day mm=minute of the hour) 
+ 
+LOP=Level of Processing (L1B, L1C, L2B) 
+ 
+XXX=Parameter Name (See Table 1.5) or STD or Sector Name (See Table 1.4) e.g. 
+3DIMG_26SEP2012_0730_L1B_STD.h5 
+ 
+ 
+Table 1.4 Sector Name and Mnemonics 
+ 
+Sr. 
+No 
+Sector Name 
+Mnemonics 
+Description/ Remark 
+SENSOR 
+1 
+ASIA_MER 
+ASI_MER 
+ 
+Area Of Interest (AOI) 
+based Products 
+IMAGER  
+2 
+SGP 
+SGP 
+3 
+SA1 
+SA1 
+SOUNDER 
+4 
+SB1 
+SB1 
+ 
+ 
+Table 1.5 Geo-physical Parameter Name and Mnemonics 
+Sr. 
+No 
+Geo-physical Parameter Name 
+SENSOR 
+Level 
+Mnemonics 
+Per Pixel Products (IMAGER) 
+1. 
+Outgoing Longwave Radiation 
+IMAGER 
+L2B 
+OLR 
+2. 
+Hydro Estimator derived Precipitation 
+IMAGER 
+L2B 
+HEM 
+3. 
+Cloud Mask 
+IMAGER 
+L2B  
+CMK 
+4. 
+Sea Surface Temperature 
+IMAGER 
+L2B 
+SST 
+5. 
+Upper Troposphere Humidity 
+IMAGER 
+L2B 
+UTH 
+4 
+ 
+Gridded Geophysical Parameters (IMAGER) 
+6. 
+Quantitative Precipitation Estimate (IMR Method) 
+IMAGER 
+L2G 
+IMR 
+7. 
+Quantitative Precipitation Estimate (GPI Method) 
+IMAGER 
+L2G 
+GPI 
+8. 
+Aerosol Optical Depth 
+IMAGER 
+L2G 
+AOD 
+Point Geophysical Parameters (IMAGER) 
+9. 
+Wind Vectors 
+IMAGER 
+L2P 
+VIS/IR/WV/MIR 
+10. 
+Smoke 
+IMAGER 
+L2P 
+SMK 
+11. 
+Fire 
+IMAGER 
+L2P 
+FIR 
+Map Projected Geophysical Parameters (IMAGER) 
+12. 
+Fog 
+IMAGER 
+L2C 
+FOG 
+13. 
+Snow Cover 
+IMAGER 
+L2C 
+SNW 
+Per Pixel Products (SOUNDER) 
+14. 
+Atmospheric Profiles and Derived Parameters 
+SOUNDER 
+L2B 
+SA1/SB1 (Sector 
+Acquired) 
+ 
+5 
+ 
+Chapter 2: INSAT-3D Data Products HDF5 File Structure 
+ 
+This chapter gives details of underlying product structure of INSAT-3D HDF Data Product corresponding to various 
+Processing levels as described in previous chapter. 
+2.1 Products Overview 
+Standard Products (L1B and L1C) will have following datasets: 
+Table 2.1 Overview of Standard Products Structure 
+S. No. 
+Dataset Categories 
+Description 
+1. 
+Channel Datasets  
+The various channels in which satellite image is acquired 
+2. 
+Geo-location 
+Information Datasets 
+The Geo-location Information in the form of 2-D Latitude 
+Longitude Disks (containing per pixel Lat/Lon values) for 
+L1B and Map Projection information in case of  L1C Products 
+3. 
+Calibration Datasets 
+Calibration Lookup Tables (Radiance and Brightness 
+Temperature for IR and WV channels and Radiance for 
+Visible and SWIR Channels). Quadratic, Gain and Offset 
+coefficients also provided for calculating radiances directly 
+from count (See APPENDIX II) 
+4. 
+Ancillary Datasets 
+Ancillary Information (Satellite Azimuth, Satellite Elevation, 
+Sensor Azimuth and Sensor Elevation) 
+ 
+Geophysical Parameters will have following datasets: 
+Table 2.2 Overview of Geophysical Parameters Structure 
+S. No. Datasets 
+Description 
+1. 
+Geophysical 
+Parameters  
+For Imager, all geophysical parameters are provided in separate HDF file along with 
+geo-location information and ancillary information (if any e.g. quality flags). For 
+Sounder Profiles, atmospheric profiles, surface parameters along with derived 
+parameters are provided in a single product. 
+2. 
+Geo-location 
+Information 
+L2B/ L3B 
+2-D Latitude/ Longitude HDF5 Datasets 
+L2G/ L3G 
+1-D Latitude/ Longitude HDF5 dimension Scales 
+L2P 
+1-D Latitude/ Longitude HDF5 Datasets for every Point observation 
+ 
+2.2 INSAT-3D Digital Data Products File Formats  
+ 
+This section gives detailed structure of digital data Products in HDF5.  The data product follows 
+CF-conventions (Climate and forecasting conventions [2]). Root group will have following 
+attributes: 
+ 
+ 
+ 
+ 
+6 
+ 
+Table 2.3 Root Group Attributes 
+S. No. 
+Attribute Name 
+Attribute Value/ Format 
+Description 
+1. 
+conventions 
+CF-1.6 
+Conventions used in the 
+data product 
+2. 
+title 
+e.g. 
+3DIMG_01SEP2012_013
+0_L1B  
+A description of what is 
+in the dataset. 
+3. 
+institute 
+=BES,SAC/ISRO, 
+Ahmedabad for BES, 
+Bopal 
+=IMD,New Delhi, INDIA 
+for IMD, Delhi 
+Specifies 
+where 
+the 
+original 
+data 
+was 
+processed. 
+4. 
+source 
+INSAT-3D  Imager (IMG) 
+/INSAT-3D 
+Sounder 
+(SND) 
+The 
+satellite 
+Payload 
+which acquired the data. 
+5. 
+Unique_Id 
+3DIMG_01SEP2012_013
+0 
+Unique Job ID 
+6. 
+Product_Creation_Time 
+YYYY-MM-
+DDTHH:mm:ss 
+Date and Time when 
+product was created 
+7. 
+Output_Format 
+hdf5-1.8.8 
+HDF-5 library used for 
+generating the product 
+8. 
+HDF_Product_File_Name 
+See Section 1.5 
+IMDPS-generated HDF5 
+file 
+9. 
+Station_Id 
+= BES (For BES, Bopal) 
+=IMD (For IMD, Delhi) 
+Station 
+ID 
+for 
+the 
+ground 
+station 
+that 
+processed  data 
+10. 
+Ground_Station 
+= IMD New Delhi, INDIA 
+(For IMD, Delhi) 
+=BES, SAC/ISRO, 
+Ahmedabad, INDIA (For 
+BES, Bopal) 
+Description of Ground 
+station where data was 
+received 
+11. 
+Product_Type 
+= Standard (Full Disk) 
+= SECTOR 
+Identifier to inform user 
+of product Type 
+12. 
+Sensor_Id 
+= IMG (For Imager) 
+= SND (For Sounder) 
+ID for Sensor 
+13. 
+Sensor_Name 
+IMAGER (For Imager) 
+SOUNDER (For Sounder) 
+Descriptive 
+Name 
+of 
+Sensor 
+14. 
+Acquisition_Date 
+DDMMMYYYY 
+Date 
+image 
+was 
+acquired 
+15. 
+Acquisition_Time_in_GMT 
+hhmm 
+Representative time of 
+acquisition in GMT 
+16. 
+Acquisition_Start_Time 
+DD-MM-
+YYYYTHH:MM:SS 
+Start Time for Data 
+Acquisition 
+17. 
+Acquisition_End_Time 
+DD-MM-
+YYYYTHH:MM:SS 
+End 
+Time 
+for 
+Data 
+Acquisition 
+18. 
+Processing_Level 
+L1B/L1C/L2B/L2G/L2P/
+Level of Processing 
+7 
+ 
+L3B/L3G 
+19. 
+Satellite_Name 
+INSAT-3D 
+Name of the Satellite 
+20. 
+Location_of_Satellite(degrees) 
+82° E 
+Location of Satellite 
+21. 
+Imaging_Mode 
+=FULL FRAME 
+=NORMAL FRAME 
+=SECTOR FRAME 
+Type of acquisition 
+21. 
+Nominal_Altitude(km) 
+36000.0 
+Nominal 
+Altitude 
+of 
+Satellite 
+22. 
+Observed Altitude(km) 
+64-bit floating point 
+Observed Altitude of 
+Satellite 
+23. 
+Field_of_View(degrees) 
+64-bit floating point 
+Field 
+of 
+View 
+of 
+Satellite 
+24. 
+Nominal_Central_Point_Coord
+inates(degrees)_Latitude_Long
+itude 
+0.0, 82.0 
+Nominal co-ordinate of 
+the central point 
+25. 
+Software Version 
+1.0 
+Version 
+of 
+the 
+DP 
+Software 
+used 
+for 
+Processing 
+26. 
+left_longitude 
++180° to -180° (32bit 
+floating point) 
+South Bounds of data 
+27. 
+right_longitude 
+North Bounds of data 
+28. 
+upper_latitude 
++90° to -90°  (32bit 
+floating point) 
+Upper Bounds of data 
+29. 
+lower_latitude 
+Lower Bounds of data 
+30. 
+Datum 
+WGS84 
+Datum used 
+31 
+Ellipsoid 
+WGS84 
+Ellipsoid used 
+32. 
+Imaging_Mode 
+FULL_FRAME or 
+SECTOR 
+Mode of Imaging 
+33. 
+FastScan_Linearity_Enabled 
+Yes/No 
+Whether Fast Scan (W-E 
+or E-W) Linearity was 
+enabled onboard during 
+acquisition 
+34. 
+SlowScan_Linearity_Enabled 
+Yes/No 
+Whether Slow Scan (N-
+S) Linearity was enabled 
+onboard during 
+acquisition  
+35. 
+Attitude_Source 
+STAR /EARTH/ZERO 
+Source of Attitude used 
+for product generation 
+STAR: Star Sensor 
+EARTH: Earth Sensor 
+ZERO: No Attitude 
+Available (Zero Attitude 
+Used) 
+36. 
+Radiometric_Calibration_Type LAB 
+CALIBRATED/ONLINE 
+CALIBRATED 
+Whether Radiometric 
+Calibration was carried 
+out (Lab Coefficients or 
+Online Black Body 
+measurements) 
+8 
+ 
+Table 2.4 Root Group Attributes (Specific to Imager L1B Products) 
+S. 
+No. 
+Attribute Name 
+Attribute Value/ 
+Format 
+Description 
+1. 
+TIR1_Gain_Mode 
+=1 
+=2 
+=3 
+=4 
+Gain Mode for TIR1 
+2. 
+TIR2_Gain_Mode 
+Gain Mode for TIR2 
+3. 
+MIR_Gain_Mode 
+Gain Mode for MIR 
+4. 
+WV_Gain_Mode 
+Gain Mode for WV 
+5. 
+VIS_Gain_Mode 
+Gain Mode for SWIR 
+6. 
+SWIR_Gain_Mode 
+Gain Mode for VIS 
+7. 
+TIR1_Acquisition_Mode 
+ 
+ 
+ 
+ 
+=MAIN (For Main) 
+=RED (for Redundant) 
+Acquisition Mode for TIR1 
+(Main or Redundant) 
+8. 
+TIR2_Acquisition_Mode 
+Acquisition Mode for TIR2 
+(Main or Redundant) 
+9. 
+MIR_Acquisition_Mode 
+Acquisition Mode for MIR 
+(Main or Redundant) 
+10. 
+WV_Acquisition_Mode 
+Acquisition Mode for WV 
+(Main or Redundant) 
+11. 
+VIS_Acquisition_Mode 
+Acquisition Mode for VIS 
+(Main or Redundant) 
+12. 
+SWIR_Acquisition_Mode 
+Acquisition Mode for 
+SWIR (Main or 
+Redundant) 
+ 
+Table 2.5 Root Group Attributes (Specific to Binned Products) 
+S. No. 
+Attribute Name 
+Attribute Value/ Format 
+Description 
+1. 
+Input_Date_Times 
+DDMMMYYYY_HHMM 
+Input Date Times used for 
+binning 
+2. 
+Binning_Function 
+= MIN (Minimum) 
+= MAX (Maximum) 
+= AVG (Average) 
+= SUM (Accumulated) 
+Binning Function Used 
+3. 
+Binning_Period 
+=Daily 
+=Weekly 
+=Monthly 
+=Yearly 
+ 
+4. 
+Num_Input_Date_Times 
+ 
+Number 
+of 
+Input 
+Date 
+Times used 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+9 
+ 
+2.3 Channel Datasets 
+ 
+For Imager, following are the channel Datasets 
+Table 2.6 Channel Datasets for IMAGER 
+S. No. 
+Dataset Name 
+Data Type 
+Description 
+1. 
+IMG_VIS 
+16-bit unsigned integer 
+Gray Counts for Visible channel  
+2. 
+IMG_SWIR 
+16-bit unsigned integer 
+Gray 
+Count 
+for 
+Shortwave 
+Infrared Channel 
+3. 
+IMG_TIR1 
+16-bit unsigned integer 
+Gray 
+Counts 
+for 
+Thermal 
+Infrared Channel 1 
+4. 
+IMG_TIR2 
+16-bit unsigned integer 
+Gray 
+Counts 
+for 
+Thermal 
+Infrared Channel 2 
+5. 
+IMG_MIR 
+16-bit unsigned integer 
+Gray Counts for Middlewave 
+Infrared Channel 
+6. 
+IMG_WV 
+16-bit unsigned integer 
+Gray Counts for Shortwave 
+Infrared Channel 
+ 
+The resolution value for L1B Products is at NADIR and for L1C, it is uniform over full image. 
+ 
+Table 2.7 Channel Datasets for SOUNDER (Data Type: 16-bit unsigned integer) 
+S. No. 
+Dataset Name 
+Description 
+1. 
+SND_LWIR1 
+Gray Counts for Longwave Infrared Channel 1 
+2. 
+SND_LWIR2 
+Gray Counts for Longwave Infrared Channel 2 
+3. 
+SND_LWIR3 
+Gray Counts for Longwave Infrared Channel 3 
+4. 
+SND_LWIR4 
+Gray Counts for Longwave Infrared Channel 4 
+5. 
+SND_LWIR5 
+Gray Counts for Longwave Infrared Channel 5 
+6. 
+SND_LWIR6 
+Gray Counts for Longwave Infrared Channel 6 
+7. 
+SND_LWIR7 
+Gray Counts for Longwave Infrared Channel 7 
+8. 
+SND_MWIR1 
+Gray Counts for Middlewave Infrared Channel 1 
+9. 
+SND_MWIR2 
+Gray Counts for Middlewave Infrared Channel 2 
+10. 
+SND_MWIR3 
+Gray Counts for Middlewave Infrared Channel 3 
+11. 
+SND_MWIR4 
+Gray Counts for Middlewave Infrared Channel 4 
+12. 
+SND_MWIR5 
+Gray Counts for Middlewave Infrared Channel 5 
+13. 
+SND_SWIR1 
+Gray Counts for Shortwave Infrared channel 1 
+14. 
+SND_SWIR2 
+Gray Counts for Shortwave Infrared Channel 2 
+15. 
+SND_SWIR3 
+Gray Counts for Shortwave Infrared Channel 3 
+16. 
+SND_SWIR4 
+Gray Counts for Shortwave Infrared Channel 4 
+17. 
+SND_SWIR5 
+Gray Counts for Shortwave Infrared Channel 5 
+18. 
+SND_SWIR6 
+Gray Counts for Shortwave Infrared Channel 6 
+19. 
+SND_VIS 
+Gray Counts of Visible Channel 
+ 
+ 
+ 
+ 
+ 
+10 
+ 
+Each of these datasets has following attributes giving meta-information about each channel: 
+ 
+Table 2.8 Attributes of Datasets within Channel Datasets 
+S. No. 
+Attribute Name 
+Data type 
+Description 
+Applicable 
+Levels  
+1. 
+long_name 
+string, 
+length=variable 
+Descriptive name of the channel 
+L1B, L1C 
+2. 
+invert 
+string, length=4 
+or 5 
+Whether the channel is inverted 
+or not. Possible values=true or 
+false. All IR/WV channels are 
+inverted. 
+L1B, L1C 
+3. 
+bandwidth 
+32-bit 
+floating 
+point 
+Bandwidth 
+of 
+channel  
+(same units as that of central 
+wavelength) 
+L1B, L1C 
+4. 
+central_wavelen
+gth 
+32-bit 
+floating 
+point 
+Central wavelength 
+L1B, L1C 
+5. 
+wavelength_unit 
+string, length=2 
+Units of central wavelength 
+L1B, L1C 
+6. 
+bits_per_pixel 
+32-bit integer 
+Bits per pixel of the data 
+L1B, L1C 
+7. 
+resolution 
+32-bit 
+floating 
+point 
+Spatial Resolution at NADIR in 
+case of L1B and for full image in 
+case of L1C 
+L1B, L1C 
+8. 
+resolution_unit 
+string, length=2 
+Units of Spatial resolution 
+L1B, L1C 
+9. 
+coordinates 
+string, 
+length=variable 
+CF-compliant 
+attribute 
+for 
+associating coordinate variables 
+with 
+the data variable. For 
+example “time latitude longitude” 
+L1B 
+10. 
+grid_mapping 
+string, 
+length=variable 
+CF-compliant 
+attribute 
+for 
+associating coordinate variables 
+with 
+the data variable. For 
+example “mercator” for Mercator 
+Projection. 
+L1C 
+11.# 
+lab_radiance_sca
+le_quad 
+64-bit 
+floating 
+point 
+Quadratic term for lab calibrated 
+radiance calculation from count 
+L1B, L1C 
+12. # 
+lab_radiance_sca
+le_factor 
+ 
+32-bit 
+floating 
+point 
+ 
+Slope term for lab calibrated 
+radiance calculation from count 
+L1B, L1C 
+13. # 
+lab_radiance_ad
+d_offset 
+Offset term for lab calibrated 
+radiance calculation from count 
+L1B, L1C 
+14. 
+online_radiance_
+quad 
+64-bit 
+floating 
+point 
+Offset term for online calibrated 
+radiance calculation from count 
+L1B, L1C 
+15. # 
+online_radiance_
+scale_factor 
+ 
+32-bit 
+floating 
+point 
+ 
+Quadratic 
+term 
+for 
+online 
+calibrated radiance calculation 
+from count 
+L1B, L1C 
+16. # 
+online_radiance_
+add_offset 
+Slope term for online calibrated 
+radiance calculation from count 
+L1B, L1C 
+# For detailed description of these fields Refer Appendix-I: Radiometric Calibration 
+11 
+ 
+2.4 Geophysical Parameter Datasets  
+ 
+Geophysical Parameters are classified into three types: 
+1. L2B: The parameters derived from L1B 
+2. L2G: The Parameters derived from L1B gridded at predefined grid interval. 
+3. L2P: The Parameters derived from L1B with output as point datasets. 
+ 
+Table 2.9 L2B Geophysical Parameters (IMAGER) 
+S. 
+No 
+Geophysical 
+Parameter 
+Name 
+Dataset(s) 
+Name 
+Description 
+Data Type 
+1. 
+Outgoing 
+Longwave 
+Radiation 
+OLR 
+Outgoing Longwave Radiation 
+Dataset 
+32-bit floating 
+point 
+2. 
+Fog 
+FOG 
+FOG Dataset 
+8-bit signed 
+character 
+4. 
+Hydro Estimator 
+derived 
+Precipitation 
+HEM 
+Hydro estimator derived HEM 
+Dataset 
+32-bit floating 
+point 
+5. 
+Cloud Mask 
+CMK 
+Cloud Mask Dataset 
+0:Clear;1:Cloudy;2: 
+Probably_Clear;3:Probably_Cloudy 
+8-bit signed 
+character 
+6. 
+Upper 
+Troposphere 
+Humidity 
+UTH 
+Upper Troposphere Humidity 
+Dataset 
+32-bit floating 
+point 
+7. 
+Sea Surface 
+Temperature 
+SST 
+Sea Surface Temperature Dataset 
+32-bit floating 
+point 
+SST_QFLAGS SST Quality Flags 
+1:Cloud Masked; 2:Climatology 
+Check Failed; 3:High Confidence; 
+4:Land 
+8-bit unsigned 
+character 
+ 
+Table 2.10 L2B SOUNDER Geophysical Parameters (Data Type: 32-bit floating point) 
+S. No. Dataset(s) Name 
+Description 
+1. 
+H2OMMRPhy 
+Water Vapor Profile (Physical Retrieval) 
+2. 
+H2OMMRReg 
+Water Vapor Profile (Regression Retrieval) 
+3. 
+O3VMRReg 
+Ozone Profiles (Regression Retrieval) 
+4. 
+TAirPhy 
+Temperature Profile (Physical Retrieval) 
+5. 
+TAirReg 
+Temperature Profile (Regression Retrieval) 
+6. 
+TSurfPhy 
+Surface Skin Temperature (Physical Retrieval) 
+7. 
+TSurfReg 
+Surface Skin Temperature (Regression Retrieval) 
+8. 
+totO3Reg 
+Total  Column Ozone (Regression Retrieval) 
+9. 
+DMI 
+Dry Microburst Index 
+10. 
+FORC_SKIN_TEMP 
+Forecast Skin Temperature 
+11. 
+FOR_SURF_HUMIDITY 
+Forecast Surface Humidity 
+12 
+ 
+12. 
+GEO_POT_HEIGHT 
+Geo-potential Height 
+13. 
+L1_PREC_WATER 
+Layer-1 Precipitable Water (1000 to 900 mb) 
+14. 
+L2_PREC_WATER 
+Layer-2 Precipitable Water (900 to 700 mb) 
+15. 
+L3_PREC_WATER 
+Layer-1 Precipitable Water (700 to 300 mb) 
+16. 
+LI 
+Lifted Index 
+17. 
+MEAN_SURF_PRES 
+Mean Surface Pressure 
+18. 
+WI 
+Wind Index 
+19. 
+Theta-e 
+Maximum vertical theta-e 
+20. 
+totH2O 
+Total Water Vapor 
+ 
+Table 2.11 L2G Geophysical Parameters (Data Type: 32-bit floating point) 
+S. No Geophysical 
+Parameter Name 
+Dataset(s) 
+Name 
+Description 
+1. 
+Quantitative 
+Precipitation Estimate 
+(IMR Method) 
+IMR 
+IMSRA (INSAT 
+Multispectral Rainfall 
+Algorithm ) derived 
+Precipitation Dataset 
+2. 
+Quantitative 
+Precipitation Estimate 
+(GPI Method) 
+GPI 
+Precipitation Derived 
+from GPI Method 
+3. 
+Aerosol Optical 
+Depth 
+AOD 
+Aerosol Optical Depth 
+ 
+ 
+Table 2.12 L2C Geophysical Parameters (Data Type: 8-bt signed character) 
+S. No 
+Geophysical 
+Parameter Name 
+Dataset(s) 
+Name 
+Description 
+1. 
+Snow Cover 
+SNW 
+Snow Cover Dataset 
+2. 
+FOG 
+FOG 
+FOG Dataset 
+ 
+Table 2.13 L2P Wind Vector Geophysical Parameter Datasets 
+S.No. 
+Dataset(s) Name 
+Description 
+Data Type 
+1. 
+MEAN_BT 
+Average Brightness Temperature 
+(Only for TIR/WV/MIR channels) 
+ 
+32-bit floating point 
+ 
+2. 
+MIN_BT 
+Minimum Brightness Temperature 
+(Only for TIR/WV/MIR channels) 
+3. 
+OBSERVATION_TI
+ME 
+Time of Observation 
+64-bit floating point 
+4. 
+SCANS 
+Scan Number 
+32-bit signed integer 
+ 
+5. 
+PIXELS 
+Pixel Number 
+6. 
+PRESSURE 
+Pressure 
+ 
+32-bit floating point 
+7. 
+QUALITY_INDICA
+TOR 
+Wind Quality  
+8. 
+HEIGHT 
+ASSIGNMENT 
+Height Assignment Method.  
+HWIN: Infrared Window 
+8-bit signed character 
+13 
+ 
+METHOD 
+Technique 
+HH2O: H2O intercept method 
+BASE: Cloud Base method 
+CLRR : Clear Sky WV wind 
+HOLD : Old Empirical method 
+(When forecast is not available) 
+For MIR Channel 
+0:HWIN;1:BASE;2:HOLD 
+For TIR Channel 
+0:HWIN;1:HH2O;2:BASE;3:HOL
+D 
+For WV Channel 
+0:HWIN;1:BASE;2:CLRR;3:HOL
+D 
+For VIS Channel 
+0:HWIN;1:BASE;2:HOLD 
+9. 
+UCOMP 
+U Component of Wind 
+ 
+ 
+32-bit floating point 
+ 
+10. 
+VCOMP 
+V Component of Wind 
+11. 
+WIND_DIRECTION 
+Wind Direction 
+12. 
+WIND_SPEED 
+Wind Speed 
+13. 
+SAT_ZEN 
+Satellite Zenith 
+ 
+Note: The L2P HDF Geophysical Parameters have a extra attribute in the root group with 
+following details: 
+Table 2.14 Attribute in Root Group of L2P Geophysical Parameter Datasets 
+S. No. 
+Attribute Name 
+Data Type 
+Description 
+1. 
+:featureType 
+string, value=”point” 
+CF-compliant attribute used to 
+indicate that dataset is point dataset 
+ 
+The dataset containing geophysical parameter has following of attributes: 
+ 
+Table 2.15 Attributes of Geophysical Parameter Datasets 
+S. No. Attribute Name 
+Data type 
+Description 
+1. 
+long_name 
+string, length=variable 
+Descriptive name of the geophysical 
+parameter 
+2. 
+standard_name 
+string, length=variable 
+Standard name of the geophysical 
+parameter 
+3. 
+_FillValue 
+Same as dataset data-type CF-compliant attribute used where the 
+parameter 
+is 
+missing 
+(wherever 
+applicable) 
+4. 
+units 
+String, length=units 
+Unit string defining the units of 
+geophysical parameter 
+5. 
+coordinates 
+string, length=variable 
+CF-compliant attribute for associating 
+coordinate variables with the data 
+variable. (Applicable for L2B and L2P) 
+ 
+14 
+ 
+2.5 Geo-location Information Datasets (For details Refer Appendix-II: Geometric 
+Calibration) 
+ 
+These datasets contain geo-location information corresponding to the channel or geophysical 
+parameter data stored in the product. For L1B and L2B products, the geo-location information is 
+provided in terms of latitude/longitude datasets. For L1B products, the latitude/ longitude 
+datasets are stored corresponding to each distinct resolution (1km/ 4km/ 8km for IMAGER and 
+10 km for SOUNDER). 
+ 
+Table 2.16 Geo-location Datasets for L1B, L2B and L2P (HDF) Products 
+S. No. 
+Dataset Name 
+Data Type 
+Description 
+Applicable 
+Levels 
+1. 
+Latitude 
+ 
+ 
+16-bit 
+signed 
+integer 
+ 
+Latitude values. (For L1B 
+Products, it corresponds 
+to IR channels.) 
+L1B, L2B, L2P 
+2. 
+Longitude 
+Longitude values (For 
+L1B 
+Products, 
+it 
+corresponds 
+to 
+IR 
+channels.) 
+L1B, L2B, L2P 
+3. 
+Latitude_VIS 
+ 
+32-bit 
+signed 
+integer 
+Latitude values for VIS 
+and SWIR channels 
+L1B 
+4. 
+Latitude_VIS 
+Longitude values for VIS 
+and SWIR channels 
+L1B 
+5. 
+Latitude_WV 
+ 
+16-bit 
+signed 
+integer 
+ 
+Latitude values for WV 
+channels 
+L1B 
+6. 
+Longitude_WV 
+Longitude values for WV 
+channels 
+L1B 
+ 
+Each of these datasets has following attributes: 
+ 
+Table 2.17 Attributes Geo-location Information Datasets 
+S. No. 
+Attribute Name 
+Data type 
+Description 
+1. 
+add_offset 
+ 
+ 
+32-bit floating point 
+ 
+CF-compliant attribute for defining 
+add offset (used in scaling the values). 
+2. 
+scale_factor 
+CF-compliant attribute for defining 
+scale factor (used in scaling the 
+values). 
+3. 
+units 
+string (degrees_north for 
+latitude, degrees_east for 
+longitude) 
+CF-compliant attribute for defining 
+units 
+of 
+latitude 
+and 
+longitude 
+variables 
+4. 
+_FillValue 
+Same as dataset data-type 
+CF-compliant attribute used where the 
+parameter is missing 
+5. 
+long_name 
+string, length=variable 
+long name for latitude and longitude 
+variables 
+ 
+15 
+ 
+For L1C products, the geo-location information is provided in terms of map projection (grid 
+mapping in CF terminology) parameters. Grid Mapping is specified by creating 
+“Projection_Information Dataset” and grid mapping is defined as a set of attributes of this 
+dataset. For INSAT-3D, the supported projections are: 
+ 
+1.  Mercator 
+2. Lambert Conformal Conic 
+ 
+For Mercator, the grid mapping is defined as following set of attributes: 
+ 
+Table 2.18 Grid Mapping Description for Mercator projection (for L1C and L2C) 
+S. 
+No. 
+Attribute Name 
+Data type 
+Description 
+1. 
+grid_mapping_name 
+string, 
+length=variable 
+CF compliant attribute, its value is 
+‘mercator’ 
+2. 
+false_easting 
+ 
+ 
+ 
+ 
+ 
+ 
+64-bit floating 
+point 
+ 
+False 
+Easting 
+for 
+Mercator 
+Projection 
+3. 
+false_northing 
+False 
+Northing 
+for 
+Mercator 
+Projection 
+4. 
+longitude_of_projection_origin 
+Longitude of Projection Origin for 
+Mercator Projection 
+5. 
+semi_minor_axis 
+Semi major axis of earth (in 
+meters) 
+6. 
+semi_major_axis 
+Semi minor axis of earth (in 
+meters) 
+7. 
+standard_parallel  
+Standard Parallel for Mercator 
+Projection, Latitude at which 
+true_scale=1 (EPSG 9805) 
+ 
+For Lambert Conformal Conic, the grid mapping is defined as following set of attributes: 
+ 
+Table 2.19 Grid Mapping Description for Lambert Conformal Conic Projection (for L1C 
+and L2C) 
+S. No. 
+Attribute Name 
+Data type 
+Description 
+1. 
+grid_mapping_name 
+string, 
+length=variable 
+CF compliant attribute, its 
+value 
+is 
+‘lambert_conformal_conic’ 
+2. 
+false_easting 
+64-bit 
+floating 
+point 
+False 
+Easting 
+for 
+LCC 
+Projection 
+3. 
+false_northing 
+64-bit 
+floating 
+point 
+False 
+Northing 
+for 
+LCC 
+Projection 
+4. 
+longitude_of_central_meridian 64-bit 
+floating 
+point 
+Longitude 
+of 
+Central 
+Meridian for LCC Projection 
+5. 
+latitude_of_projection_origin 
+64-bit 
+floating 
+point 
+Latitude of Projection Origin 
+for LCC Projection 
+6. 
+semi_minor_axis 
+64-bit 
+floating Semi-major axis of earth 
+16 
+ 
+point 
+7. 
+semi_major_axis 
+64-bit 
+floating 
+point 
+Semi-minor axis of earth 
+8. 
+standard_parallel 
+64-bit 
+floating 
+point 
+Standard Parallels for LCC 
+Projection 
+ 
+For L2G products, geo-location information is provided as Latitude/ Longitude Dimension 
+scales.  
+Table 2.20 Dimension Scales for L2G Geophysical Parameters  
+(Data Type: 64-bit floating point) 
+S. No. 
+Dataset Name 
+Description 
+1. 
+Latitude 
+Latitude values for each grid point in latitude direction. 
+2. 
+Longitude 
+Longitude values for each grid point in longitude direction. 
+ 
+Each dimension scale has following attributes: 
+ 
+Table 2.21 Attributes of Dimension Scales for L2G Geophysical Parameters 
+S. No. 
+Attribute Name 
+Data Type 
+Description 
+1. 
+long_name 
+string, length=variable 
+long name for dimension scale 
+2. 
+standard_name 
+string, length=variable 
+standard name for dimension scale 
+3. 
+units 
+String 
+(degrees_north 
+for 
+latitude, 
+degrees_east 
+for 
+longitude) 
+Units for latitude and longitude 
+ 
+2.6 Calibration Datasets 
+ 
+This calibration datasets contain calibration information for Imager and sounder channel data. 
+For Imager, following are the Calibration Information datasets: 
+ 
+Table 2.22 Calibration Information Datasets for IMAGER  
+(Data Type: 32-bit floating point) 
+S. No. 
+Dataset Name 
+Description 
+1. 
+IMG_VIS_RADIANCE 
+Visible Radiance 
+2.  
+IMG_SWIR_RADIANCE Short Wave Infrared Radiance 
+3. 
+IMG_MIR_RADIANCE 
+Middlewave Infrared Radiance 
+4. 
+IMG_MIR_TEMP 
+Middlewave Infrared Temperature 
+5. 
+IMG_TIR1_RADIANCE 
+Thermal Infrared 1 Radiance 
+6. 
+IMG_TIR1_TEMP 
+Thermal Infrared 1 Temperature 
+7. 
+IMG_TIR2_RADIANCE 
+Thermal Infrared 1 Radiance 
+8. 
+IMG_TIR2_TEMP 
+Thermal Infrared 2 Temperature 
+9. 
+IMG_WV_RADIANCE 
+Water Vapor Infrared Radiance 
+10 
+IMG_WV_TEMP 
+Water Vapor Infrared Temperature 
+ 
+ 
+ 
+ 
+17 
+ 
+For Sounder, the Calibration Information datasets are listed below: 
+ 
+Table 2.23 Calibration Information Datasets for SOUNDER  
+(Data Type: 32-bit floating point) 
+S. No. 
+Dataset Name 
+Description 
+1. 
+SND_LWIR1_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 1 
+2. 
+SND_LWIR1_TEMP 
+Brightness Temperature Lookup Table for Longwave 
+Infrared Channel 1 
+3. 
+SND_LWIR2_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 2 
+4. 
+SND_LWIR2_TEMP 
+Brightness Temperature Lookup Table for Longwave 
+Infrared Channel 2 
+5. 
+SND_LWIR3_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 3 
+6. 
+SND_LWIR3_TEMP 
+Brightness Temperature Lookup Table for Longwave 
+Infrared Channel 3 
+7. 
+SND_LWIR4_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 4 
+8. 
+SND_LWIR4_TEMP 
+Brightness Temperature Lookup Table for Longwave 
+Infrared Channel 4 
+9. 
+SND_LWIR5_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 5 
+10. 
+SND_LWIR5_TEMP 
+Temperature for Longwave Infrared Channel 5 
+11. 
+SND_LWIR6_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 6 
+12. 
+SND_LWIR6_TEMP 
+Brightness Temperature Lookup Table for Longwave 
+Infrared Channel 6 
+13. 
+SND_LWIR7_RADIANCE 
+Radiance Lookup Table for Longwave Infrared 
+Channel 7 
+14. 
+SND_LWIR7_TEMP 
+Brightness Temperature Lookup Table for Longwave 
+Infrared Channel 7 
+15. 
+SND_MWIR1_RADIANCE 
+Radiance Lookup Table for Middlewave Infrared 
+Channel 1 
+16. 
+SND_MWIR1_TEMP 
+Brightness Temperature Lookup Table for Midwave 
+Infrared Channel 1 
+17. 
+SND_MWIR2_RADIANCE 
+Radiance Lookup Table for Middlewave Infrared 
+Channel 2 
+18. 
+SND_MWIR2_TEMP 
+Brightness Temperature Lookup Table for Middlewave 
+Infrared Channel 2 
+19. 
+SND_MWIR3_RADIANCE 
+Radiance Lookup Table for Middlewave Infrared 
+Channel 3 
+20. 
+SND_MWIR3_TEMP 
+Brightness Temperature Lookup Table for Middlewave 
+Infrared Channel 3 
+21. 
+SND_MWIR4_RADIANCE 
+Radiance Lookup Table for Middlewave Infrared 
+Channel 4 
+18 
+ 
+22. 
+SND_MWIR4_TEMP 
+Brightness Temperature Lookup Table for Middlewave 
+Infrared Channel 4 
+23. 
+SND_MWIR5_RADIANCE 
+Radiance Lookup Table for Middlewave Infrared 
+Channel 5 
+24. 
+SND_MWIR5_TEMP 
+Brightness Temperature Lookup Table for Middlewave 
+Infrared Channel 5 
+25. 
+SND_SWIR1_RADIANCE 
+Radiance Lookup Table for Shortwave Infrared 
+Channel 1 
+26. 
+SND_SWIR1_TEMP 
+Brightness Temperature Lookup Table for Shortwave 
+Infrared Channel 1 
+27. 
+SND_SWIR2_RADIANCE 
+Radiance Lookup Table for Shortwave Infrared 
+Channel 2 
+28. 
+SND_SWIR2_TEMP 
+Brightness Temperature Lookup Table for Shortwave 
+Infrared Channel 2 
+29. 
+SND_SWIR3_RADIANCE 
+Radiance Lookup Table for Shortwave Infrared 
+Channel 3 
+30. 
+SND_SWIR3_TEMP 
+Brightness Temperature Lookup Table for Shortwave 
+Infrared Channel 3 
+31. 
+SND_SWIR4_RADIANCE 
+Radiance for Lookup Table Shortwave Infrared 
+Channel 4 
+32. 
+SND_SWIR4_TEMP 
+Brightness Temperature Lookup Table for Shortwave 
+Infrared Channel 4 
+33. 
+SND_SWIR5_RADIANCE 
+Radiance Lookup Table for Shortwave Infrared 
+Channel 5 
+34. 
+SND_SWIR5_TEMP 
+Brightness Temperature Lookup Table for Shortwave 
+Infrared Channel 5 
+35. 
+SND_SWIR6_RADIANCE 
+Radiance Lookup Table for Shortwave Infrared 
+Channel 6 
+36. 
+SND_SWIR6_TEMP 
+Brightness Temperature Lookup Table for Shortwave 
+Infrared Channel 6 
+37. 
+SND_VIS_RADIANCE 
+Radiance Lookup Table for Visible Channel 
+ 
+All the datasets have following set of attributes: 
+ 
+Table 2.24 Attributes of Calibration Information Datasets for SOUNDER 
+S. No. 
+Attribute Name 
+Data type 
+Description 
+1. 
+_FillValue 
+Same as dataset data-type 
+CF-compliant attribute used where 
+the calibration dataset is missing 
+2. 
+long_name 
+string, length=variable 
+Descriptive name of the calibration 
+dataset 
+3.  
+units 
+String, length=variable 
+Unit string defining the units of 
+calibration dataset 
+4. 
+invert 
+string (true or false) 
+Whether the dataset is inverted 
+(wherever applicable) 
+ 
+ 
+19 
+ 
+ 
+2.7 Ancillary Datasets 
+ 
+Ancillary Datasets provide ancillary Information (Satellite Azimuth/Elevation and Sensor 
+Azimuth/Elevation). The details of corresponding datasets are listed below: 
+ 
+Table 2.25 Ancillary Datasets 
+S. No. 
+Dataset Name 
+Data Type 
+Description 
+1. 
+Sat_Azimuth 
+16-bit unsigned integer 
+Satellite Azimuth 
+2.  
+Sat_Elevation 
+16-bit signed integer 
+Satellite Elevation 
+3. 
+Sun_Azimuth 
+16-bit unsigned integer 
+Sun Azimuth 
+4. 
+Sun_Elevation 
+16-bit signed integer 
+Sun Elevation 
+ 
+Meta information related to these datasets is provided as attributes along with each dataset: 
+ 
+Table 2.26 Attributes of Ancillary Datasets 
+S. No. 
+Attribute 
+Name 
+Data type 
+Description 
+Applicable 
+Levels 
+1. 
+long_name 
+string, 
+length=variable 
+Descriptive 
+name 
+of 
+the 
+dataset 
+L1B, L1C 
+2. 
+add_offset 
+string, 
+length=variable 
+CF-compliant 
+attribute 
+for 
+defining add offset (used in 
+scaling the values). 
+L1B, L1C 
+3. 
+scale_factor 
+string, 
+length=variable 
+CF-compliant 
+attribute 
+for 
+defining scale factor (used in 
+scaling the values). 
+L1B, L1C 
+4. 
+_FillValue 
+Same as dataset 
+data-type 
+CF-compliant attribute used 
+where the dataset is missing 
+L1B, L1C 
+5. 
+units 
+string, 
+length=variable 
+Unit string defining the units 
+of Ancillary dataset 
+L1B, L1C 
+6. 
+coordinates 
+string, 
+length=variable 
+CF-compliant 
+attribute 
+for 
+associating 
+coordinate 
+variables with the ancillary 
+variable. For example “time 
+latitude longitude” 
+L1B 
+7. 
+grid_mapping 
+string, 
+length=variable 
+CF-compliant 
+attribute 
+for 
+associating 
+coordinate 
+variables with the ancillary 
+variable. 
+For 
+example 
+“Mercator” 
+for 
+Mercator 
+Projection. 
+L1C 
+ 
+For generating latitude and longitude, formulae for forward and inverse transformation can be 
+referred at: 
+1. For Lambert Conformal Conic, refer [3] 
+2. For Mercator, refer [4]  
+20 
+ 
+ 
+2.8 Dimension Scales 
+ 
+By default for every dataset created dimension scales are created for every dimension of unique 
+length. For L1B and L2B Products following dimensions are created: 
+ 
+ 
+Table 2.27 Dimension for L1B and L2B Products 
+S. No. 
+Dimension Name Description 
+1. 
+time 
+Time dimension for All Channels 
+2. 
+GeoX 
+Dimension for pixel direction of TIR1, TIR2, and MIR 
+channels 
+3. 
+GeoY 
+Dimension for scan direction of TIR1, TIR2, and MIR channels 
+4. 
+GeoX1 
+Dimension for pixel direction of WV channels 
+5. 
+GeoY1 
+Dimension for scan direction of WV channels 
+6. 
+GeoX2 
+Dimension for VIS and SWIR channels 
+7. 
+GeoY2 
+Dimension for VIS and SWIR channels 
+ 
+GeoY* and GeoX* contains the scan and pixel values of the image along scan and pixel 
+direction. For L1C Products, following dimensions are created: 
+ 
+Table 2.28 Dimension for L1C Products 
+S. No. Dimension Name Description 
+1. 
+time 
+Time dimension for All Channels 
+1. 
+X 
+Dimension for pixel direction of all channels 
+2. 
+Y 
+Dimension for scan direction of all channels 
+3. 
+proj_dim 
+Dimension for Grid Mapping Dataset 
+ 
+The X dimension contains the projection coordinates along pixel direction starting from left. And 
+Y dimension contains projection coordinates along scan direction starting from top. X and Y 
+dimensions have following attributes required as part of CF conventions: 
+ 
+Table 2.29 Attributes of X,Y dimensions for L1C Products 
+S.No. Dimension Name 
+Attribute Name 
+Value 
+1. 
+X 
+long_name 
+x coordinate of projection 
+2. 
+X 
+standard_name 
+projection_x_coordinate 
+3. 
+X 
+units 
+m 
+4. 
+Y 
+long_name 
+y coordinate of projection 
+5. 
+Y 
+standard_name 
+projection_y_coordinate 
+6. 
+Y 
+units 
+m 
+ 
+For L1B and L1C Products, following dimension is also created: 
+Table 2.30 Additional Dimension for L1B and L1C Products 
+S. No. 
+Dimension Name 
+Description 
+1. 
+GreyCount 
+Dimension for storing calibration information as lookup table 
+for all the channels. 
+21 
+ 
+Time dimension has following Attributes: 
+ 
+Table 2.31 Attributes of Time Dimension 
+S. No. 
+Attribute Name 
+Units 
+Description 
+1. 
+units 
+“minutes since 2000-01-01 00:00:00” 
+Units of Time dimension 
+ 
+NOTES: 
+1. All the dimension scales have an attribute named REFERENCE_LIST which is 
+maintained by HDF5 dimension scale API for referring to in which all datasets it is being 
+used as dimension. 
+2. All the Datasets in Products have and attribute named DIMENSION_LIST whose value 
+is an array of references to the dimension scales (e.g. time, GeoY, GeoX). This attribute 
+is maintained by the HDF5 dimension Scale API. 
+22 
+ 
+Appendix- I : INSAT-3D Radiometric Calibration 
+ 
+ 
+COUNT TO RADIANCE 
+ 
+INSAT-3D counts can be converted to radiance either using the lookup table (LUT) or the 
+calibration coefficients. 
+ 
+LOOKUP TABLE 
+ 
+The look up table (XXX_YYYY_RADIANCE, where XXX is the sensor, YYYY is Band) 
+provides 
+mapping 
+from 
+count 
+to 
+corresponding 
+radiance. 
+A 
+field 
+name 
+“Radiometric_Calibration_Type” provided as attribute of Root Group in HDF product describes 
+source of calibration coefficients used for generating this LUT (Ref Table 2.3). 
+ 
+CALIBRATION COEFFICIENTS 
+ 
+Lab and Online radiometric calibration coefficients are available as part of HDF product, which 
+can be used for computing radiance directly from count: 
+ 
+ Lab Calibration coefficients are generated using pre-launch ground test data, where each IR 
+detector element along with its associated processing channel is characterized in Thermo-
+vacuum chamber using two Blackbody targets-a Space Reference Target (SRT) simulating 
+space and a Variable Temperature Blackbody Source (VTBS) simulating the earth scene 
+from 180K to 340K temperature range. Using these data quadratic coefficients (slope, offset 
+and quadratic term) for EOM 10°C, 25°C and 40°C were generated. Based on EOM 
+temperature of an acquisition lab slope, offset and quadratic term are derived and provided in 
+product. 
+ 
+In HDF products a field named “invert” (provided as attribute of each channel dataset) 
+indicates whether image counts are inverted or not. While computing the radiance values the 
+counts should be inverted (only for bands having invert = True) .The lab coefficients 
+provided for Count to radiance conversion are used in following way: 
+ 
+Count = DNMax- Count (only if invert = True) 
+ 
+ Where DNMax 1023 for Imager and DNMax = 16383 for Sounder 
+ 
+R (in mw cm-2 sr-1 um-1)  =  lab_radiance_quad*(Count)2 +   
+lab_radiance_scale_factor*(Count) + lab_radiance_add_offset 
+ 
+ Online calibration is performed using onboard internal blackbody serving as a "hot target" 
+and space view count as "cold target". From these two online slope and offset are computed. 
+Quadratic term is derived using inter sensor calibration. 
+23 
+ 
+In HDF products a field named invert indicates inversion of image counts. While computing 
+the radiance values the counts should be inverted (only for bands having invert = True) . The 
+online coefficients provided for Count to radiance conversion are used in following way: 
+ 
+Count = DNMax- Count (only if invert == true) 
+Where DNMax 1023 for Imager and DNMax = 16383 for Sounder 
+ 
+R (in mw cm-2 sr-1 um-1)=online_radiance_quad *(Count)2 + 
+online_radiance_scale_factor*(Count)+online_radiance_add_offset 
+ 
+COUNT TO BRIGHTNESS TEMPERATURE 
+ 
+Count can be converted to Brightness Temperature (BT) using 2 methods: 
+ 
+ Using LUT provided in the product (XXXX_YYY_TEMP, where XXXX is Sensor YYY is 
+Band).  
+ First convert count to radiance as discussed above and then generate BT from radiance using 
+inverse planck's law as given below.  
+ 
+brightness_temperature = C2 / (cwl * log(C1 / (1.0E6 * rad_w_m2 * pow (cwn, 5.0)) + 1)) 
+ 
+Where  
+ 
+cwl(metres)= central_wavelength(um)/1000000.0  (Field central_wavelength in product) 
+            rad_w_m2 = radiance*10.0 (For converting from mw cm-2 sr -1 um-1 to w m-2 sr-1 um-1) 
+            h = 6.6260755e-34 kg m2 s-1; 
+            c = 2.9979246e+8 ms-1; 
+            k = 1.380658e-23 kg m2 s-2 k-1; 
+            C1 = 2.0 * h *c * c; 
+            C2 = (h * c) / k; 
+ 
+ 
+RECOMMENDATION: It is recommended to use coefficients of type of calibration 
+(Radiometric_Calibration_Type) to generate radiance from counts. The other calibration source 
+at some times may have issues. 
+24 
+ 
+Appendix- II : INSAT-3D Geometric Calibration 
+ 
+ 
+1. INSAT-3D IMAGER 
+ 
+a) IMAGER L1B and L2B products are Fixed Grid product generated using GEOS [5] 
+projection. Per pixel geo-location can either be computed using the GEOS projection 
+parameters or per pixel navigation provided in HDF product. For Water-vapor band 
+this navigation information (Table 2.8) is provided at 8 Km, for IR(TIR1,TIR2,MIR) 
+channels (Table 2.8) at 4Km. and for Visible (Table 2.8),SWIR (Table 2.8) at 1Km.  
+The geo-location datasets and ancillary datasets (sun azimuth/elevation and sensor 
+azimuth/elevation are scaled to reduce data size. (Ref Table 2.17 for geo-location 
+datasets scaling information and Ref Table 2.26 for ancillary datasets scaling 
+information). 
+ 
+b) L1C products are Map Projection based products and the Map-Projection parameters 
+(Table 2.18 and Table 2.19) are provided in the product for navigation of each pixel.  
+ 
+2. INSAT-3D SOUNDER 
+ 
+Sounder L1B and L2B products are generated using Lat-Lon [5] navigation. The per 
+pixel navigation information is provided at 10 Km for all 19 channels.  
+25 
+ 
+Abbreviations and Acronyms 
+ 
+HDF  
+ 
+Hierarchical Data Format 
+ 
+IMD                             India Meteorological Department 
+ 
+INSAT 
+ 
+Indian National Satellite 
+ 
+IR 
+ 
+ 
+Infrared 
+ 
+ISRO  
+ 
+Indian Space Research Organisation 
+ 
+LCC                             Lamberts Conformal Conic Projection 
+ 
+NCSA  
+ 
+National Center for Supercomputing Applications 
+ 
+SAC                             Space Applications Centre 
+ 
+SWIR                           Shortwave Infrared 
+ 
+TIR 
+ 
+ 
+Thermal Infrared 
+ 
+MIR 
+ 
+ 
+Middlewave Infrared 
+ 
+LWIR  
+ 
+Longwave Infrared 
+ 
+USGS  
+ 
+United States Geological Survey 
+ 
+WV 
+ 
+ 
+Water Vapour 
+ 
+VIS                              Visible band 
+ 
+CF Conventions 
+Climate and Forecasting Conventions 
+ 
+GEOS Projection 
+Geo-stationary Satellite Projection 
+ 
+DN 
+ 
+ 
+Digital Number 
+26 
+ 
+References 
+ 
+[1] http://hdf.ncsa.uiuc.edu/ 
+[2] http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.6/cf-conventions.html 
+[3] http://www.remotesensing.org/geotiff/proj_list/lambert_conic_conformal_2sp.html 
+[4] http://www.remotesensing.org/geotiff/proj_list/mercator_2sp.html 
+[5] CGMS 03 (Coordinate Group for Meteorological Satellites – LRIT/HRIT Global 
+Specifications. 
+ 

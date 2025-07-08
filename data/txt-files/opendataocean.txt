@@ -1,0 +1,529 @@
+OPEN DATA 
+
+OCEAN ->
+
+
+GSMap ISRO Rain
+
+The GSMaP_ISRO is a precipitation product that was developed through the Indian Space Research Organisation (ISRO) - Japan Aerospace Exploration Agency (JAXA) Implementation of Agreement (IA) specifically for the Indian subcontinent. It is currently available from March 2000 Onwards and offers a horizontal resolution of 0.1°X 0.1° on a latitude/longitude grid with a temporal resolution of 1 hour. The dataset is based on the Global Satellite Mapping of Precipitation (GSMaP) algorithm (Kubota et al. 2020; Kumar et al. 2021, 2022) with Indian Meteorological Department (IMD) gauge correction, and is a specialized product that focuses on the Indian landmass. The GSMaP algorithm, designed by the JAXA, is instrumental in creating a comprehensive view of precipitation using microwave radiometers and cloud moving data from Geostationary Infrared (IR) technology. The algorithm is separated into three primary categories for effective measurement: the microwave imager, microwave sounder, and microwave-infrared (MVK) combined (Mega et al. 2019). A detailed verification of GSMaP_ISRO for the Indian summer monsoon periods of 2000-2020 against ground, satellite and various merge rainfall products is presented in Kumar et al. (2022). 
+ 
+
+Data Access
+Science products are available to download with a Single Sign On on MOSDAC. Click Here to access the data
+Data Version
+Version 1.0 (beta)
+Data Sources
+GSMaP_MVK product, NOAA Climate Prediction Center (CPC) rainfall analysis, CPC Infrared brightness temperature, IMD gridded rain (0.25 degree), etc.
+Processing Steps
+-For gauge adjustment, the software used was JAXA MCD_V05.02, based upon Mega et al. (2019). -Merging NOAA CPC and Indian gauges was accomplished using Matlab software. -The algorithms pertaining to GSMaP_ISRO are provided in Kumar et al. (2022) in detail.
+References
+Kubota, T., Aonashi, K., Ushio, T., Shige, S., Takayabu, Y. N., Kachi, M., and Oki, R. (2020). Global Satellite Mapping of Precipitation (GSMaP) products in the GPM era. Satellite Precipitation Measurement: Volume 1, 355-373. Kumar, P., Gairola, R., Kubota, T., and Kishtawal, C. (2021). Hybrid assimilation of satellite rainfall product with high density gauge network to improve daily estimation: A case of Karnataka, India. Journal of the Meteorological Society of Japan. Ser. II, 99(3), 741-763. Kumar, P., Varma, A. K., Kubota, T., Yamaji, M., Tashima, T., Mega, T., and Ushio, T. (2022). Long-Term High-Resolution Gauge Adjusted Satellite Rainfall Product Over India. Earth and Space Science, 9(12), e2022EA002595. Mega, T., Ushio, T., Matsuda, T., Kubota, T., Kachi, M., and Oki, R. (2019) Gauge-Adjusted Global Satellite Mapping of Precipitation, IEEE Trans. Geosci. Remote Sens, 57, 4, 1928-1935.
+Kumar, P., Srivastava, S.S., Jivani, N., Varma, A.K., Yokoyama, C. & Kubota, T. (2024) Long-term assessment of ERA5 reanalysis rainfall for lightning events over India observed by Tropical Rainfall Measurement Mission Lightning Imaging Sensor. Quarterly Journal of the Royal Meteorological Society, 150(761), 2472â€“2488. Available from: https://doi.org/10.1002/qj.4719(link is external)
+Derivation Techniques and Algorithm
+The manuscript titled "Long-Term High-Resolution Gauge Adjusted Satellite Rainfall Product Over India" provides a description.
+Limitations
+The number of gauge stations within a NOAA CPC pixel of 0.5 degree impacts the accuracy of the gauge-adjusted rainfall.
+Known problems with data
+No known issues at this time.
+File Naming Convention
+HDF5 file:
+
+Sample name : GPMMRG_MAP_YYMMDDHH00_H_L3S_MCH_03F.h5
+
+YY - Year
+MM - Month
+DD - Day
+HH - Hour
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	MOSDAC
+3	Metadata date	November, 2023
+4	Data Lineage or Quality	IMD gauge adjusted GSMaP_ISRO Rain
+5	Title	GSMaP_ISRO Rain
+6	Abstract	The GSMaP_ISRO rain data has been derived through the IMD gauge based gridded rain & NOAA CPC gauge analysis adjustment of the GSMaP_MVK rain product. It offers high-quality rainfall information with excellent spatiotemporal resolution, covering a range spanning from March 2000 Onwards. It has been developed through the ISRO-JAXA Implementation of Agreement (IA). This product provides a lat/long grid with a 0.1° X 0.1° horizontal resolution, along with hourly temporal resolution.  
+6a	Developer	Prashant Kumar, Atul K. Varma, Takuji Kubota, Moeka Yamaji, Tomoko Tashima, Tomoaki Mega, Tomoo Ushio
+7	Dataset Contact	Dr. Prashant Kumar, ASD/AOSG/EPSA Space Applications Centre, ISRO Ahmedabad-380015 prashant22@sac.isro.gov.in
+8	Update Frequency	23 years of global GSMaP_ISRO rain. Further data will be added intermittently.
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	0.1 degree
+11	Language	English
+12	Topic Category	Gauge adjusted satellite rainfall
+13	Keywords	GSMaP_MVK, NOAA CPC rainfall analysis, CPC Infrared brightness temperature, IMD gridded rain (0.25 degree).
+14	Date or period	March 2000 Onwards
+15	Responsible Party	Dr. Prashant Kumar, ASD/AOSG/EPSA, Space Applications Centre, ISRO Ahmedabad-380015, India
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Development of high spatio-temporal resolution gauge adjusted satellite rainfall
+16b	Individual name	
+Dr. Prashant Kumar, ASD/AOSG/EPSA, Space Applications Centre, ISRO Ahmedabad-380015, India Email: prashant22@sac.isro.gov.in
+
+16c	Position	Scientist/Engineer - SF
+17	Geographic Extent	Global
+18	Geographic name, geographic Identifier	Global
+19	Bounding box	lat_min: -90 , lat_max: 90, lon_min: 0, lon_max: 360
+20	Temporal Extent	March 2000 Onwards
+21	Access Rights or Restrictions	Open Access
+22	Distribution Information	Online download of data files in HDF5 format
+23	Processing Level	Level 3 (Gauge adjusted satellite rainfall product)
+24	Reference System	Datum: WGS84
+
+
+High Resolution Sea Surface Salinity
+
+The Bay of Bengal's high-resolution sea surface salinity has been reconstructed using a Lagrangian technique leveraging satellite data. The primary input datasets utilized are sea surface salinity data from the SMAP mission and sea surface currents derived from altimetry. These datasets are obtained at a spatial resolution of 25 km. The SMAP mission has been operational since 2015, whereas altimetry-derived sea surface currents have been available since 1993. Validation of this reconstructed product was conducted against in-situ datasets obtained from thermo-salinographs. Results indicate that the reconstructed product more accurately captures front formation compared to the original SMAP salinity fields.
+ 
+
+Data Access
+Science products are available to download with a Single Sign On on MOSDAC. Click Here to access the data
+Data Version
+Version 1.0 (beta).
+Data Sources
+SMAP Sea Surface Salinity (https://podaac.jpl.nasa.gov/dataset/SMAP_JPL_L3_SSS_CAP_8DAY-RUNNINGMEAN_V5(link is external)) Altimetry-derived sea surface currents (https://data.marine.copernicus.eu/product/SEALEVEL_GLO_PHY_L4_MY_008_047/(link is external)).
+Processing Steps
+i. Remap Sea Surface Currents with a spatial resolution of 5 km.
+ii. Backward advection of particles from the final time {t} rsub {f} to the initial time {t} rsub {f} -14 , where 14 is the number of days the particles are advected using Runge-Kutta 4th order method.
+iii. The SMAP Sea Surface Salinity observed at {t} rsub {f} -14 is interpolated onto the particle positions that day.
+iv. With this, each particle has an SSS value on {t} rsub {f} day that corresponds to the observation at {t} rsub {f} -14 .
+References
+[1] Barbara, B., Drushka, K., & Gaube, P. (2021), â€œLagrangian reconstruction to extract small-scale salinity variability from SMAP obervationsâ€, JGR Oceans, 126(3), e2020JC016477.
+[2] Dencausse, G., Morrow, R., RogÃ©, M., and Fleury, S. (2014). Lateral stirring of large-scale tracer fields by altimetry. Ocean Dynamics, 64(1), 61â€“78.
+[3] DesprÃ¨s, A., Reverdin, G., and d'Ovidio, F. (2011). Mechanisms and spatial variability of mesoscale frontogenesis in the northwestern subpolar gyre. Ocean Modelling, 39(1), 97â€“113.
+[4] Durack, P. J., Lee, T., Vinogradova, N. T., and Stammer, D. (2016). Keeping the lights on for global ocean salinity observation. Nature Climate Change, 6(3), 228â€“231.
+[5] Lehahn, Y., d'Ovidio, F., and Koren, I. (2018). A satellite-based Lagrangian view on phytoplankton dynamics. Annual Review of Marine Science, 10(1), 99â€“119.
+[6] RogÃ©, M., Morrow, R. A., and Dencausse, G. (2015). Altimetric Lagrangian advection to reconstruct Pacific Ocean fine-scale surface tracer fields. Ocean Dynamics, 65(9), 1249â€“1268.
+Derivation Techniques and Algorithm
+The algorithm is called Lagrangian Reconstruction Technique. User should refer [1].
+Limitations
+This algorithm is applicable only in the region with moderate to high eddy kinetic energy and where lateral advection dominates.
+High resolution sea surface salinity product generated by Lagrangian technique can have error due to tracer bias (depends on accuracy of initial conditions) and advection bias (Passive stirring can introduce bias due to mixing physics (air-sea fluxes, mixing etc.)).
+Known problems with data
+Data sets have biases as well as inaccuracy.
+File Naming Convention
+Netcdf file: HRSSS_bck_YYYYMMDD_14D.nc
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	MOSDAC
+3	Metadata date	April, 2015
+4	Data Lineage or Quality	High resolution sea surface salinity in Bay of Bengal using Lagrangian technique.
+5	Title	Dynamic downscaling of Satellite Sea Surface Salinity for the Bay of Bengal
+6	Abstract	Lagrangian technique is used for generating high-resolution sea surface salinity fields in the Bay of Bengal. This is achieved through the utilization of Sea Surface Salinity (SSS) data derived from the Soil Moisture Active Passive (SMAP) satellite, in conjunction with sea surface currents obtained from altimetry. By employing forward and backward schemes for the numerical advection of SMAP SSS fields using altimeter-derived geostrophic currents, a Lagrangian reconstruction is produced, capturing smaller-scale features. The reliability of our in-house developed algorithm is assessed by comparing it with an available reconstructed product in the Gulf Stream. Additionally, a preliminary validation is conducted against insitu data obtained from a thermo-salinograph. Further, the developed algorithm was modified to select the advection time dynamically.
+7	Dataset Contact	
+ 
+
+Jai Kumar, POD/AOSG/EPSA, Space Applications Centre (ISRO), Ahmedabad, 380015, kumarj@sac.isro.gov.in
+
+8	Update Frequency	Six months.
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	Spatial resolution is 10 km
+11	Language	English
+12	Topic Category	High resolution sea surface salinity product (SAC-TDP) using satellite data.
+13	Keywords	Sea surface salinity, sea surface currents, Lagrangian advection technique, high resolution
+14	Date or period	April 2015 - June 2023
+15	Responsible Party	Jai Kumar, POD/AOGG/ EPSA, Space Applications Centre (ISRO), Ahmedabad-380015, India
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Geophysical parameters from satellite data in the Bay of Bengal region.
+16b	Individual name	Jai Kumar, POD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6104. Email: kumarj@sac.isro.gov.in
+16c	Position	Scientist/Engineer, POD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015
+16d	Vertical Extent (minimumValue, maximumValue, unitOfMeasure, vertical datum)	Lat_min : 0N, Lat_max : 25N, Lon_min: 78E, Lon_max: 100 E
+17	Geographic Extent	Indian Landmass
+18	Geographic name, geographic Identifier	Bay of Bengal
+19	Bounding box	Lat_min : 0N, Lat_max : 25 N, Lon_min: 78E, Lon_max: 100 E
+20	Temporal Extent	April 2015-June 2023
+21	Access Rights or Restrictions	Open Access
+22	Distribution Information	Online download of data files in netCDF format
+23	Processing Level	Level 4
+4	Reference System	Datum: WGS84
+
+Indian Mainland Coastal Product
+SARAL Coastal Product
+SARAL/AltiKa was launched on 25 February 2013 as a joint collaboration mission of ISRO and CNES. With smaller footprint than earlier satellite altimeters, SARAL/AltiKa has improved coastal performance. Specific waveform processing has been used in this product to derive along track geophysical parameters (Sea Surface Height, Significant wave height and wind speed) from the altimeter 40-Hz waveform data. This product is generated for Indian mainland coastal region (up to 50 km from the coast). This product is available for 35 cycles of SARAL/AltiKa starting from March 2013 through July 2016.
+ 
+
+Data Access
+Click Here(https://mosdac.gov.in/auth/realms/Mosdac/protocol/openid-connect/auth?response_type=code&scope=openid%20email&client_id=mosdac&state=GG_C9ni89ltHE_IE89yhLHN4KqU&redirect_uri=https%3A%2F%2Fwww.mosdac.gov.in%2Fuops%2Fredirect_uri&nonce=Jnop2TJK2TN6GrWv67Xm3zB9NMAnkGt-lHXd4jwMXQw) to access the Science Products . Request to use MOSDAC Single Sign On user credentials to download the data.
+Data Version
+Version 1.1 (Beta)
+Data Sources
+Altimeter Sensor-Interim Geophysical Data Record (S-IGDR)
+Indian Ocean Bathymetry
+Indian Ocean Geoid
+High resolution coastline
+Processing Steps
+i. High resolution bathymetry is used to separate the coastal and land waveforms.
+ii. Waveforms are classified based on their shape.
+iii. Waveforms are retracked with the beta parameter retrackers (BETA5 and BETA9) and BAGP (Brown with asymmetric Gaussian Peak) retracker to get sea surface height (SSH), sea surface height anomaly (SSHA), significant wave height (SWH) and wind speed.
+iv. Using Significant Wave Height (SWH) and wind speed, the wave period is derived based on the data adaptive technique of &quot; Genetic Algorithm &quot; (Remya et al. 2011)
+v. Wave power is derived based on SWH and estimated wave period. 40 Hz data is filtered using a lanczos filter to remove high frequency noise.
+vi. Wind power is calculated using standard wind power formula. 40 Hz data is filtered using a lanczos filter to remove high frequency noise.
+References
+Amarouche L, Thibaut P, Zanife O.-Z, Dumont, P. Vincent J.-P. and Steunou N 2004. Improving the Jason-1 ground retracking to better account for attitude effects, Mar. Geod. 27: 171-197.
+Brown, G. S. 1977. The Average impulse response of a rough surface and its applications, IEEE Trans. Antennas Propag. AP-25: 67-74.
+Chelton, D. B., J. C. Ries, B. J. Haines, L. L. Fu, and P. S. Callahan, 2001, “Satellite Altimetry”,
+Satellite Altimetry and Earth Sciences, ed. L.L. Fu and A. Cazenave, pp. 1-131.
+Chaudhary A., Basu S., Kumar R, Mahesh, C. and Sharma R. 2015.” Shape classification of AltiKa 40-Hz waveforms using Linear Discriminant Analysis and Bayes Decision Rule in the Gujarat Coastal region “Marine Geodesy.
+Coastal and Hydrology Altimetry product (PISTACH) handbook, CLS-DOS-NT-10-246, SALP-MU-P-OP-16031-CN 01/00, 1. 0, Oct. 4, 2010
+Deng, X., and W. E. Featherstone. 2006. A coastal retracking system for satellite radar altimeter waveforms: Application to ERS-2 around Australia. J. Geophys. Res. 111: doi:10.1029/2005JC003039.
+Deng, X. 2003. “Improvement of geodetic parameter estimation in coastal regions from satellite radar altimetry.” PhD. Dissertation, Curtin University of Technology, Perth, Australia.
+Halimi, A., C. Mailhes, J. – Y. Tourneret, P. Thibaut, and F. Boy. 2013. Parameter estimation for peaky altimetric waveforms. IEEE Trans. Geosci. Rem. Sens., 51: 1568-1577.
+The PISTACH project for coastal altimetry: Status, products and early results, in Proc. OST-ST Meeting, Seattle, WA.
+Nelder, J.A. and Mead R. 1965. A simplex method for function minimization. Computer Journal, vol 7, no. 4, 308-313.
+Ray, R. D., 1999, A global ocean tide model from TOPEX/POSEIDON altimetry: GOT99.2, NASA Tech. Memorandum 1999-209478, Goddard Space Flight Center, Greenbelt, MD.
+SARAL/AltiKa Products Handbook, SALP-MU-M-OP-15984-CN, 2, 4, December 9, 2013
+Remya, G., Kumar, R., Basu, S., &amp; Sarkar, A. (2011). Altimeter-derived ocean wave period using genetic algorithm. IEEE Geoscience and Remote Sensing Letters, 8(2), 354-358.
+R. Govindan, R. Kumar, S. Basu and A. Sarkar. &quot; Altimeter-Derived Ocean Wave Period Using Genetic Algorithm, &quot; IEEE Geosci. Remote Sens. Lett.,VOL 8.NO. 2,pp. 354 - 358, March 2011
+Sindhu, B., I. Suresh, A. S. Unnikrishnan, N. V. Bhatkar, S.Neetu and G. S. Michael 2007. Improved bathymetric data sets for the shallow water regions in the Indian Ocean. J. Earth Syst. Sci.,116,61–274.
+Sreejith, K.M., Rajesh, S., Majumdar, T.J., Srinivasa Rao G., Radhakrishna, M., Krishna, K.S., Rajawat A.S., 2013. High-resolution residual geoid and gravity anomaly data of the northern Indian Ocean - an input to geological understanding. J. Asian Earth Sci. 62, 616–626.
+Derivation Techniques and Algorithm
+User should refer User Handbook “Moving closer to the coast by SARAL/AltiKa: Geophysical Product for Indian Mainland Region” for complete reference to the algorithm and processing steps. For Handbook SARAL/AltiKa: Geophysical Product for Indian Mainland Region (Size: 1.14MB Format: PDF Tool: PDFView) Click Here
+For value added wave product:
+The wave power (P) is mathematically derived as
+Sample image
+Where
+1. P is Wave power per unit of wave-crest length (in Kilowatt/m)
+2. R represents the satellite range
+3. H m0 is the significant wave height (in meters)
+4. T is wave period (in seconds)
+5. ρ is the density of water (in kilogram/cubic meter)
+6. g is the acceleration due to gravity (in meters/square seconds)
+ 
+
+Wind power is generated by using;
+We have assumed unit area in this equation. is density of air and is wind speed.
+Limitations
+Based on the availability of the Altimeter dataset over the study region (Data Gap, altimeter track loss, bad weather, etc.). Geophysical and atmospheric range corrections have been obtained from the standard 1-Hz product of SARAL/AltiKa.
+Known problems with data
+Data problems due to bad weather (heavy rain).
+Onboard tracker failure leads to unusable data.
+Coastal contamination may lead to erroneous estimate of the derived parameters.
+File Naming Convention
+Netcdf file:
+SRL_CCC_TTTT_yyyymmddHHMMSS_yyyymmddHHMMSS_INDIANCOAST_SIGDR_VER1.1.nc;
+JPG Files:
+ssha_cycCCC_yyyymmdd_yymmdd.jpg (sea surface height anomaly image)
+swh_cycCCC_yyyymmdd_yymmdd.jpg (swh image)
+wind_speed_cycCCC_yyyymmdd_yymmdd.jpg (wind speed image)
+Where
+CCC is the cycle number and TTTT is the track number.,
+first yyyymmddHHMMSS is the start time of the file., and
+second yyyymmddHHMMSS is the end time of the file..
+For values added wind wave power product:
+wind_power_cycCCC_yyyymmdd_yymmdd.jpg (wind power image)
+wave_power_cycCCC_yyyymmdd_yymmdd.jpg (wave power image)
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	MOSDAC
+3	Metadata date	October, 2016
+4	Data Lineage or Quality	Sea surface height, Significant wave height, wind speed in coastal regions using radar altimeters and wind wave power derived in coastal region.
+5	Title	SARAL/AltiKa Coastal Product (Indian region) and Wind Wave Power product
+6	Abstract	SARAL, a joint ISRO-CNES satellite mission, was successfully launched in 2013. It carries a Ka band single frequency satellite altimeter (AltiKa). Satellite altimeters are primarily used to study sea level changes. In the open ocean, the altimetric echo follows a standard shape, with steeply rising leading edge followed by a trailing edge with gradually diminishing power. This standard shape is in agreement with the theoretical Brown model and hence can be easily modeled. However, in the coastal areas, due to the presence of land and other coastal featues in the footprint of the altimeter, contamination occurs and the return is different from open ocean. Up to some extent these contaminations can be modeled. Footprint size of SARAL/Altika is small which is ideal for coastal studies. The available ocean retracker (MLE4) itself shows good performance near the coast. However, further improvemnts can be achieved by using algorithms which can simulate contaminations impact in the coastal areas. In this document we have used various models for the return waveforms at 40 Hz to extract maximum information from the altimeter. Our results show that algorithms which are useful in the coastal areas are BETA5, BETA9 and Brown with Asymmetric Gaussian Peak (BAGP). Additionally, a wind power and wave power product has also been generated from this coastal product.
+7	Dataset Contact	Aditya Chaudhary, OSD/AOSG/EPSA, Space Applications Centre (ISRO), Ahmedabad 380015, aditya.osd@sac.isro.gov.in
+8	Update frequency	35 cycles of SARAL/AltiKa have been processed. After this, cycles are not in exact repeat mode.
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	Data is provided at 40 Hz which corresponds to spatial resolution of nearly 180m.
+11	Language	English
+12	Topic Category	Coastal Altimetry
+13	Keywords	Satellite altimetry, waveform retracking, sea level, significant wave height, waveform classification
+14	Date or period	Cycle 1 to Cycle 35 of SARAL/AltiKa (March 2013 to July 2016)
+15	Responsible Party	Aditya Chaudhary,OSD/AOGG/ EPSA, Space Applications Centre (ISRO), Ahmedabad-380015, India
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Retreival of Geophysical parameters from satellite altimeter over the Indian Coast
+16b	Individual name	Aditya Chaudhary, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6051. Email: Aditya.osd@sac.isro.gov.in
+16c	Position	Scientist/Engineer, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6051. Email: aditya.osd@sac.isro.gov.in
+17	Geographic Extent	lat_min: 05N, lat_max: 24N, lon_min: 68E, lon_max: 90E
+18	Geographic name, geographic Identifier	Indian Coastal Region
+19	Bounding box	lat_min: 05N, lat_max: 24N, lon_min: 68E, lon_max: 90E
+20	Temporal Extent	March 2013 to July 2016
+21	Access Rights or Restrictions	Open Access
+22	Distribution Information	Online download in netcdf formats.
+23	Processing Level	Level 3 (Data product derived from altimeter S-IGDR product)
+24	Reference System	Datum: WGS84
+
+
+Ocean Subsurface
+Ocean Subsurface
+Satellite data has been used to reconstruct ocean interior density and velocity anomalies in the Bay of Bengal through the “interior + surface Quasigeostrophic” (isQG) method. The inputs are sea surface height anomaly (AVISO), sea surface density anomaly; which is calculated using GHRSST sea surface temperature and SMAP sea surface salinity. One more input is the Brunt-Vaisala frequency, calculated from in-situ analysis system (ISAS) climatological data. The results show that isQG retrieved subsurface density anomalies are very promising compared to RAMA buoy data in the cold season when EKE is minimum. Validation of retrieved density has also been performed using ARGO data which reveals that isQG is more promising when the stratification is weak .
+
+Data Access
+Click Here(https://mosdac.gov.in/auth/realms/Mosdac/protocol/openid-connect/auth?response_type=code&scope=openid%20email&client_id=mosdac&state=uz8mNurcxdxvme5bYOh3dnh_Vd0&redirect_uri=https%3A%2F%2Fwww.mosdac.gov.in%2Fuops%2Fredirect_uri&nonce=mg6zvI6kFxxNJCGSBQU65GKv5G-NOeiufluDGbWQNLQ) to access the Science Products . Request to use MOSDAC Single Sign On user credentials to download the data.
+Data Version
+Version 1.0 (beta)
+Data Sources
+Reynold's Optimum Interpolated Sea Surface Temperature (OISST) (https://www.ncdc.noaa.gov/oisst(link is external))
+SMAP sea surface salinity (SSS) (https://smap.jpl.nasa.gov/data/(link is external)).
+AVISO sea surface height (SSH) (https://www.aviso.altimetry.fr/en/data.html(link is external)).
+ISAS-13 temperature/salinity profile (https://annuaire.ifremer.fr/cv/16058(link is external)).
+Processing Steps
+Climatological temperature, salinity (T/S) fields are calculated from ISAS-13 data. Also Brunt-Viasala frequency(N) is calculated.
+Monthly Sea surface density anomaly(SSDA) is calculated from GHRSST, SMAP and ISAS-Climatology.
+Monthly sea surface height anomaly(SSHA) is calculated using AVISO data.
+Using interior + surface Quasi-Geostrophic(isQG) methodology, taking Barotropic and first Baroclinic modes, and taking SSHA and SSDA as boundary conditions, ocean interior density and velocity anomaly are reconstructed. 
+References
+Liu, L., S. Peng, and R. X. Huang (2017), Reconstruction of ocean’s interior from observed sea surface information, J. Geophys. Res. Oceans, 122, 1042– 1056, doi:10.1002/2016JC011927.
+Wang, J., G. Flierl, J. LaCasce, J. McClean, and A. Mahadevan (2013), Reconstructing the ocean’s interior from surface data, J. Phys. Oceanogr., 43, 1611–1626, doi:10.1175/JPO-D-12-0204.1.
+Scott, R. B., and D. G. Furnival, 2012: Assessment of traditional and new eigen-function bases applied to extrapolation of surface geostrophic current time series to below the surface in an idealized primitive equation simulation. J. Phys. Oceanogr., 42, 165–178.
+Smith, K. S., and G. K. Vallis, 2001: The scales and equilibration of mid-ocean eddies: Freely evolving ﬂow. J. Phys. Oceanogr., 31, 554–571.
+Pedlosky, J., 1987: Geophysical Fluid Dynamics. 2nd ed. Springer Verlag, 710 pp.
+Lapeyre, G., 2009: What vertical mode does the altimeter reﬂect? On the decomposition in baroclinic modes and on a surface trapped mode. J. Phys. Oceanogr., 39, 2857–2874.
+P. Klein, 2006: Dynamics of the upper oceanic layers in terms of surface quasi-geostrophy theory. J. Phys. Oceanogr., 36, 165–176.
+Derivation Techniques and Algorithm
+The algorithm is called interior + surface Quasi-Geostrophic(isQG) method. User should refer doi:10.1175/JPO-D-12-0204.1.
+Limitations
+This method is only applicable in a region where the Coriolis parameter does not change abruptly. Also it is not applicable on the equator.
+Vertical movement is ignored in isQG framework.
+isQG method works well when the eddy kinetic energy (EKE) is low. If EKE is large, it will fail to generate accurate subsurface fields.
+We considered the Barotropic and the first Baroclinic modes only in our analysis. This certainly limits our approach.
+This method generates less satisfactory subsurface fields if the stratification is strong.
+The vertical resolution in our case is 10 m. This is a major drawback since in Bay of Bengal, the mixed layer can be as shallow as 15-20 m.
+Known problems with data
+Data problems due to bad weather (heavy rain) and extreme events like cyclones etc.
+File Naming Convention
+Netcdf file: isQG_yyyy.nc
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	MOSDAC
+3	Metadata date	May, 2018
+4	Data Lineage or Quality	Sea surface height anomaly, Sea surface density anomaly in Bay of Bengal using isQG methodology.
+5	Title	Reconstruction of Ocean interior density and horizontal velocity anomaly ﬁelds using Satellite data in Bay of Bengal
+6	Abstract	Satellite data has been used to reconstruct ocean interior density and velocity anomalies in the Bay of Bengal through the “interior + surface Quasigeostrophic” (isQG) method. The inputs are sea surface height anomaly (AVISO), sea surface density anomaly; which is calculated using GHRSST sea surface temperature and SMAP sea surface salinity. One more input is the Brunt-Vaisala frequency, calculated from in-situ analysis system (ISAS) climatological data. The results show that isQG retrieved subsurface density anomalies are very promising compared to RAMA buoy data in the cold season when EKE is minimum. Validation of retrieved density has also been performed using ARGO data which reveals that isQG is more promising when the stratification is weak .
+7	Dataset Contact	
+ 
+
+Anup Kumar Mandal, OSD/AOSG/EPSA, Space Applications Centre (ISRO), Ahmedabad, 380015, anupmandal@sac.isro.gov.in
+
+8	Update Frequency	Six months.
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	Spatial resolution is 25 km, while vertical resolution is 10m
+11	Language	English
+12	Topic Category	Ocean subsurface product (SAMUDRA Project) using satellite data.
+13	Keywords	Density anomaly, Velocity anomaly, subsurface fields, 3D-Ocean fields
+14	Date or period	January 2017 - till date
+15	Responsible Party	Anup Kumar Mandal,OSD/AOGG/ EPSA, Space Applications Centre (ISRO), Ahmedabad-380015, India
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Geophysical parameters from satellite data in the Bay of Bengal region.
+16b	Individual name	Anup Kumar Mandal, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6117. Email: anupmandal@sac.isro.gov.in
+16c	Position	Scientist/Engineer, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015
+16d	Vertical Extent (minimumValue, maximumValue, unitOfMeasure, vertical datum)	Lat_min : 05N Lat_max : 25 N Lon_min: 75E Lon_max: 95 E
+17	Geographic Extent	Indian Landmass
+18	Geographic name, geographic Identifier	Bay of Bengal
+19	Bounding box	Lat_min : 05N Lat_max : 25 N Lon_min: 75E Lon_max: 95 E
+20	Temporal Extent	January 2017 till date
+21	Access Rights or Restrictions	Open Access
+22	Distribution Information	Online download of data files in netCDF format
+23	Processing Level	Level 4
+4	Reference System	Datum: WGS84
+
+Oceanic Eddies Detection
+Eddy Currents
+The oceanic eddy parameter information was prepared for 24 years (1993 – 2016) over Bay of Bengal using AVISO. Merged and gridded satellite altimeter product of sea surface height (SSH) anomaly at 7-day interval having special resolution of 0.25o has been used for present study. Mesoscale oceanic eddies have been identified and tracked in weekly merged altimeter product of Sea Surface Height (SSH) from AVISO. Eddies have been identified based on closed contour approach followed by shape criteria. An automated tracking algorithm has been employed to track these eddies with different lifetime. The trajectories of eddies have been computed from their time history. Present method has been used separately for cold core and warm core eddies. There are 24 files each containing weekly eddy data information for individual year.
+ 
+
+Data Access
+Click Here(https://mosdac.gov.in/auth/realms/Mosdac/protocol/openid-connect/auth?response_type=code&scope=openid%20email&client_id=mosdac&state=JM36Avn6i9_5TjrA_fEOJmEbb7o&redirect_uri=https%3A%2F%2Fwww.mosdac.gov.in%2Fuops%2Fredirect_uri&nonce=r9D_F5pUTu01VZXbiSPNu7fwpub72caVA48eKczmiZY) to access the Science Products . Request to use MOSDAC Single Sign On user credentials to download the data.
+Data Version
+Version 1.0 (beta)
+Data Sources
+The daily gridded map of Absolute Dynamic Topography data is obtained from AVISO
+ftp site (ftp://ftp.aviso.oceanobs.com)
+Website (http://www.aviso.oceanobs.com/(link is external))
+Processing Steps
+Remove the long wavelength component of the SSH anomaly and retain the mesoscale features with the wavelength 50-500 km scale.
+Identified outer most closed contour of SSH anomaly.
+The closed contours are sequentially identified, analysed and checked essential criteria.
+Size and amplitude based thresholds for eddy detection were fixed after carrying out several trials.
+Eddies are detected and calculated the eddy parameters.
+Detected eddies are tracked individually.
+References
+Chelton, D. B., M. G. Schlax, R. M. Samelson, and R. A. de Szoeke (2007), Global observations of large oceanic eddies, Geophys. Res. Lett., 34, L15606, doi:10.1029/2007GL030812.
+Derivation Techniques and Algorithm
+We have followed Chelton et. Al. 2007 in deriving the eddy census in Bay of Bengal with minor modifications in fixing the thresholds for eddy detection specific to this region. This was achieved after performing several trial experiments with different combinations of size and amplitude values.
+Limitations
+Accuracy assessment of the dataset has not been carried out. The number of eddies are depending upon the diameter and amplitude threshold. Only mesoscale eddies with maximum diameter of 400km are being considered.
+Known problems with data
+Less reliability of SSH data near the coast with altimetry is a known problem.
+Related data collections
+http://www.aviso.altimetry.fr/en/data/data-access/registration-form.html(link is external)
+File Naming Convention
+The typical file name is 'eddy_parameter_YYYY.nc' or ‘YYYY.gif’ where
+'eddy_parameter’ signifies that this product consists of eddy parameters.
+'YYYY' corresponds to the year, ex: 2015.
+All the data files are in NetCDF 4 format and the images are in gif format.
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	MOSDAC
+3	Metadata date	December 12, 2017
+4	Data Lineage or Quality	Science product of eddy parameters over Bay of Bengal.
+5	Title	Characterizing Ocean Eddy activities in the Bay of Bengal using Altimeter data
+6	Abstract	The oceanic eddy parameter information over Bay of Bengal was prepared for 24 years (1993 – 2016) using AVISO merged and gridded satellite altimeter sea surface height (SSH) data. SSH anomaly at 7-day interval having special resolution of 0.25o has been used for present study.
+7	Dataset Contact	M. Jishad, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6117. Email: jishadm@sac.isro.gov.in
+8	Update frequency	-
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	0.25o X 0.25o
+11	Language	English
+12	Topic Category	Physical Oceanography
+13	Keywords	Altimter, sea surface height, Oceanic eddy, Bay of Bengal, Cyclonic and anti-cyclonic
+14	Date or period	January 01 1993 to December 31 2016 weekly data
+15	Responsible Party	Jishad M, Rashmi Sharma and Neeraj Agarwal, Space Applications Centre (ISRO), Ahmedabad-380015, India
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Mesoscale oceanic eddies have been identified and tracked in weekly merged altimeter product of Sea Surface Height (SSH) in the Bay of Bengal during the period 1993-2016.
+16b	Individual name	M. Jishad, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6117. Email: jishadm@sac.isro.gov.in
+16c	Position	Scientist/Engineer, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6117. Email: jishadm@sac.isro.gov.in
+16d	Vertical Extent (minimumValue, maximumValue, unitOfMeasure, vertical datum)	time(time): units = "days since 1950-1-1 00:00:00" : calendar = "Gregorian"; EddyNumber(EddyNumber): “Number of the eddy”; flag(flag): "1 for anticyclonic and 2 for cyclonic"; eddy_id(time, EddyNumber, flag): “eddy id number”; cent_lat(time, EddyNumber, flag): Eddy centre latitude : units = "degree_north"; cent_lon(time, EddyNumber, flag):Eddy centre longitude : units = "degree_east"; amp_ed(time, EddyNumber, flag):Amplitude of the eddy : units = "cm"; sca_ed(time, EddyNumber, flag):Scale of the eddy : units = "km"; are_ed(time, EddyNumber, flag): Area of the eddy : units = "km^2";
+17	Geographic Extent	Longitude: 78OE to 100O E Latitude : 5ON to 25O N
+18	Geographic name, geographic Identifier	Bay of Bengal
+19	Bounding box	Longitude : 78OE to 100O E Latitude : 5ON to 25O N Resolution : 0.25 O
+20	Temporal Extent	Based on input AVISO data from 1993-2016 (24 years)
+21	Access Rights or Restrictions	Open Access
+22	Distribution Information	Online download of data files in NetCDF format and images in GIF format
+23	Processing Level	Level 4 (Data product derived from The weakly gridded map of Absolute Dynamic Topography data)
+24	Reference System	Projection: Spherical coordinates
+
+Sea Ice Occurrence Probability
+Sea Ice Occurrence Probability
+The Sea Ice Occurrence Probability (SIOP36) data were prepared from 36 years (October 1978 to December 2014) NSIDC sea ice concentration (SIC) data over the Antarctic Region (Cavalieri, 1996). The SIC data were downloaded from NSIDC data site:(http://nsidc.org/data(link is external) (link is external)). The SIOP36 data consist of 366 data files corresponding to 366 days with the first file representing 1st January and the last, 31st December. The file naming nomenclature follows SIOP36_MMDD_S.bin[.tif/.png] format; where MM refers to month number (01 to 12, 01 being January), DD refers to date of the month, and the character S refers to Southern Hemishphere.
+Data formats are indicated by .bin (Binary), .tif (GeoTIFF), and .png (Portable Network Graphics). Data is freely available to global scientific community and can be downloaded from www.mosdac.gov.in (link is external). Probability values are calculated from the long-term NASA Team algorithm-derived SMMR-SSM/I-SSMIS sea ice concentration product (Cavalieri, 1996). The dataset is given in Polar Stereographic projection with a grid size of 25km x 25km in latitude and longitude. The grid coordinates of the upper left pixel are 39.2 deg S, 42.2 deg W. There are 316 columns and 332 rows. Data values are stored as IEEE floats representing probabilities in the range 0-100%. Pixels with zero values corresponds to either Antarctic land/ice or ocean water.
+Data Access
+
+Click Here(https://mosdac.gov.in/auth/realms/Mosdac/protocol/openid-connect/auth?response_type=code&scope=openid%20email&client_id=mosdac&state=i-rK0UKuXofxplYmSNegNyyA3Ho&redirect_uri=https%3A%2F%2Fwww.mosdac.gov.in%2Fuops%2Fredirect_uri&nonce=ZuZSforv_qbZOPox_XPCL2l3741wv02kQeZnVD9UMkM) to access the Science Products . Request to use MOSDAC Single Sign On user credentials to download the data.
+Data Version
+SIOP36 (ver BETA)
+Data Sources
+The major input data is NASA Team algorithm-derived SMMR-SSM/I-SSMIS sea ice concentration data over Antarctic Region (Cavalieri, 1996) for 36 years (October 1978 to December 2014). The data was downloaded from NSIDC data site: (http://nsidc.org/data(link is external)).
+Processing Steps
+Following are the three major processing steps :
+i. Classification of pixels into sea-ice and non-sea-ice classes.
+ii. Determination of sea-ice-pixel frequency over study period
+iii. Calculation of Sea Ice Probability
+iv. Converting the data into three (.bin, .tif, and .png) formats.
+Data Citation
+Data Citation
+This dataset may be cited as (Rajak et al, 2015). Rajak D. Ram, R.K. Kamaljit Singh, Jayaprasad P., Sandip R. Oza, Rashmi Sharma, and Raj Kumar (2015). Sea Ice Occurrence Probability Data and Its Applications Over the Antarctic. Manuscript submitted to a journal.
+References
+
+Cavalieri, D. J., C. L. Parkinson, P. Gloersen, and H. Zwally. 1996, updated yearly. Sea Ice Concentrations from Nimbus-7 SMMR and DMSP SSM/I-SSMIS Passive Microwave Data. [October 1978 to December 2012]. Boulder, Colorado USA: NASA National Snow and Ice Data CentreDistributed Active Archive Centre.
+References
+This dataset may be cited as (Rajak et al, 2015).
+Comiso, J. C. 2000, updated 2014. Bootstrap Sea Ice Concentrations from Nimbus-7 SMMR and DMSP SSM/I-SSMIS. Version 2. [October 1978 to December 2012]. Boulder, Colorado USA: NASA DAAC at the National Snow and Ice Data Center.
+Rajak D. Ram, R.K. Kamaljit Singh, Jayaprasad P., Sandip R. Oza, Rashmi Sharma, and Raj Kumar (2015). PROBABILISTIC SEA ICE OCCURRENCE DATA OVER ANTARCTIC REGION. Manuscript under preparation.
+Derivation Techniques and Algorithm
+Daily Probability of occurrence of sea ice: Pr = 100 x N / (Y-n)
+where,
+N, is the number of times the pixel has been classified as sea ice (sea ice concentration => 15%);
+Y, is the total possible observations, and
+n is the number of years with data loss on that particular date.
+Limitations
+Accuracy assessment of the dataset has not been carried out.
+Known problems with data
+The inherent problems of the major input sea ice concentration data (from NSIDC site) may be considered the problems with this dataset.
+Related data collections
+Northern Hemisphere EASE-Grid 2.0 Weekly Snow Cover and Sea Ice Extent. Version 4. Boulder, Colorado USA: NASA DAAC at the National Snow and Ice Data Center (Brodzik, M. and R. Armstrong. 2013.). [http://nsidc.org/data(link is external) ].
+File Naming Convention
+The file names follows SIOP36_MMDD_S.bin[.tif/.png] naming convention;
+Where
+MM refers to month number (01 to 12, 01 being January),
+DD refers to date of the month, and
+S refers to Southern Hemisphere.
+Data types are indicated by .bin (binary), .tif (geotiff), and .png (portable network graphics).
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	D. Ram Rajak, OSD/AOSG/EPSA, Space Applications Centre (ISRO), Ahmedabad-380015, India. Email: rajakdr@sac.isro.gov.in
+3	Metadata date	March 05, 2015
+4	Data Lineage or Quality	First ever sea ice occurrence probability data available over the Antarctic
+5	Title	Sea Ice Occurrence Probability Data over the Antarctic (SIOP36).
+6	Abstract	Antarctic Sea Ice Occurrence Probability (SIOP) for each day from January 1st to December 31st is generated from NSIDC sea ice concentration data (Comiso, 2000) which were downloaded from the NSIDC site: (http://nsidc.org/data(link is external)). The SIOP data for 36 years (October 1978 to December 2014) are named as SIOP36
+7	Dataset Contact	D. Ram Rajak, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6051. Email: rajakdr@sac.isro.gov.in
+8	Update frequency	3 years
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	25 000 m
+11	Language	English
+12	Topic Category	Polar Science
+13	Keywords	Sea Ice, Probability, the Antarctic
+14	Date or period	January 01 to December 31 Sea Ice Occurrence Daily Probability calculated from October 1978 to December 2014 data
+15	Responsible Party	D. Ram Rajak, R. K. Kamaljit Singh, Jayaprasad P., Sandip R. Oza, Rashmi Sharma, and Raj Kumar, Space Applications Centre (ISRO), Ahmedabad-380015, India
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Calculated Sea Ice Occurrence Probability (SIOP) for each day from January 1st to December 31st using NSIDC sea ice concentration data (Comiso, 2000). Further details are available in Rajak et al, 2015
+16b	Individual name	D. Ram Rajak, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6051. Email: rajakdr@sac.isro.gov.in
+16c	Position	Scientist/Engineer, OSD/AOSG/EPSA, SAC (ISRO), Ahmedabad-380015, India. Ph: +91 79 2691 6051. Email: rajakdr@sac.isro.gov.in
+16d	Vertical Extent (minimumValue, maximumValue, unitOfMeasure, vertical datum)	Probability in percentage. Minimum value = 0.0294%. Maximum value = 100.0%. Mask: Antarctica land/ice and open ocean water (value = 0.0)
+17	Geographic Extent	UL Coordinates: 40S, 42W. UR Coordinates: 40S, 42E. LL Coordinates: 42S, 135W. LR Coordinates: 42S, 135E
+18	Geographic name, geographic Identifier	Ocean surrounding Antarctica
+19	Bounding box	UL Coordinates: 40S, 42W. UR Coordinates: 40S, 42E. LL Coordinates: 42S, 135W. LR Coordinates: 42S, 135E. Number of columns i. e. image width: 316 pixels. Number of Rows i.e. Image Height: 332 pixels
+20	Temporal Extent	Based on input NSIDC Sea Ice Concentration Data October 1978 to December 2014
+21	Access Rights or Restrictions	Open Access
+22	Distribution Information	Online download in Binary, GeoTIFF and PNG formats. Binary and GeoTIFF data in Float format
+23	Processing Level	Level 4 (Data product derived from sea ice concentration product)
+24	Reference System	Projection: Polar Stereographic (0.0 E,70.0 S,0.0 m,0.0 m). Datum: WGS84
+
+
+Wave based Renewable Energy
+Renewable energy
+AWARE demonstrates potential renewable energy resource available from ocean waves over Indian Ocean region. The product is based on observations of the recent altimeters Jason-2 (2008-2014) and SARAL/Altika (2013-2014). It is particularly helpful in identification of ocean hotspots for extraction of ocean wave energy, that can be the next generation, environment friendly energy resource.It provides two types of products: Inter-annual monthly product from Jason-2 and SARAL/ALTIKA, Monthly climatology of ocean wave energy.
+ 
+
+Data Access
+Click Here(https://mosdac.gov.in/auth/realms/Mosdac/protocol/openid-connect/auth?response_type=code&scope=openid%20email&client_id=mosdac&state=a_bJYYMyWlvC-6ukE_LnznnTks4&redirect_uri=https%3A%2F%2Fwww.mosdac.gov.in%2Fuops%2Fredirect_uri&nonce=zWPCXQ-EWXMp_3gQSZKguMWexVcWNQnvqWSY5BahIH0) to access the Science Products . Request to use MOSDAC Single Sign On user credentials to download the data.
+Data Version
+Version 1.0 (beta)
+Data Sources
+The significant wave height (SWH) and wind speed for both the altimeters are taken from
+Jason-2 (http://www.aviso.oceanobs.com(link is external))
+SARAL/ALTIKA (http://www.mosdac.gov.in)
+Processing Steps
+Using Significant Wave Height (SWH) and wind speed, the wave period is derived based on the data adaptive technique of " Genetic Algorithm " (Remya et al. 2011)
+
+Wave period hence derived is validated using buoy observations from Indian National Center for Ocean Information Services (INCOIS)
+
+Wave power is derived based on SWH and estimated wave period
+References
+R. Govindan, R. Kumar, S. Basu and A. Sarkar. " Altimeter-Derived Ocean Wave Period Using Genetic Algorithm, " IEEE Geosci. Remote Sens. Lett.,VOL 8.NO. 2,pp. 354 - 358, March 2011
+A. Alvarez, A.Orfila , J.Tintore, " DARWIN: An evolutionary program for nonlinear modeling of chaotic time series, " Computer Physics Communications 136, pp.334- 349 2001
+A. Soni, " Application of SARAL/AltiKa in extraction of wave power over Indian Ocean Region, " M. Tech Dissertation, Department of Computer Sciences, Ganpat University, Gujarat, March 2015
+Derivation Techniques and Algorithm
+The wave power (P) is mathematically derived as
+Sample image
+Where
+P is Wave power per unit of wave-crest length (in Kilowatt/m)
+R represents the satellite range
+Hm0 is the significant wave height (in meters)
+T is wave period (in seconds)
+ρ is the density of water (in kilogram/cubic meter)
+g is the acceleration due to gravity (in meters/square seconds)
+Limitations
+The products have gaps as they are based purely on track altimeters data.
+Known problems with data
+Data problems due to bad weather (heavy rain)
+File Naming Convention
+For inter-annual monthly product from Jason-2 and SARAL/ALTIKA
+Parametername_Altimetername_month_year
+Example:  WE_SARL_JUL_2009 represents the wave energy from SARAL/Altika during July 2009.
+For Monthly climatology of ocean wave energy
+Parametername_CLIM_month_start year-end year
+Example:  WE_CLIM_JUL_2008-2014 represents the wave energy climatology during July 2008-2014.
+MetaData
+Sr. No	Core Metadata Elements	Definition
+1	Metadata language	English
+2	Metadata Contact	MOSDAC
+3	Metadata date	August 3rd ,2015
+4	Data Lineage	Wave power in Kilowatt/meter from Altimeters over Indian Ocean Region
+5	Title	Altimeters for Wave based Renewable Energy (AWARE)
+6	Abstract	The wave power is computed from the altimeters (Jason-2 and SARAL/AltiKa) for a period of 2008-2014 at a monthly basis for individual years. Climatology is also prepared in this regard for the Indian Ocean Region.
+7	Dataset Contact	
+Dr Suchandra A. Bhowmick,Space Applications Centre, ISRO, Ahmedabad-380058,INDIA
+Email: suchandra@sac.isro.gov.in
+n
+
+8	Update frequency	Yearly Once
+9	Access Rights or Restriction	Open Access
+10	Spatial Resolution	NA
+11	Language	English
+12	Topic Category	Water power estimates
+13	Keywords	Wave power, non-conventional energy, wave period and Significant Wave Height
+14	Data period	2008-2014
+15	Responsible Party	Dr. Suchandra A. Bhowmick,Space Applications Centre, ISRO, Ahmedabad-380058,INDIA
+16	Organization	Space Applications Centre (ISRO), Ahmedabad, India
+16a	Org. role	Estimation of non-conventional wave energy using active microwave remote sensing instruments
+16b	Unit	Kilowatt/meter

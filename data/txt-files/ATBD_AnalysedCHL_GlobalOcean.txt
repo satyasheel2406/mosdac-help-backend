@@ -1,0 +1,633 @@
+ 
+ 
+ 
+ 
+Algorithm Theoretical Basis Document 
+For  
+Analysed Chlorophyll products 
+ 
+ 
+Sr 
+No. 
+Product Name 
+Spatial 
+Resolution 
+Temporal 
+Resolution 
+1 
+E06OCM_L4_AC 
+ 
+𝟎. 𝟐𝟓𝒐× 𝟎. 𝟐𝟓𝒐 
+Daily 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1. Algorithm Configuration Information 
+1.1 Algorithm Name: Analysed chlorophyll fields for the global ocean using Particle 
+Filter technique 
+1.2 Algorithm Identifier: E06OCM_L4_AC 
+1.3 Algorithm Specification 
+Version 
+Date 
+Description 
+Prepared by 
+1.0 
+16/12/2024 
+Analysed 
+chlorophyll fields 
+for global ocean 
+using 
+Particle 
+Filter technique 
+ 
+Smitha Ratheesh 
+ 
+ Contributors: Smitha Ratheesh, Jishad M, Neeraj Agarwal, Shivani Shah, Ruchi 
+Modi, Ghansham Shankar, Tushar Shukla, and Rashmi Sharma 
+ 
+2. INTRODUCTION:  Satellite measurements of ocean colour allow synoptic 
+coverage of ocean biological production on a global scale. Satellite derived 
+chlorophyll measurements provide global distribution of phytoplankton CHL-
+a on high spatial and temporal scale. The accurate measurements of ocean 
+chlorophyll concentration are very critical to understand the regional and 
+global impact of climate change on marine ecosystem. Considering the 
+contribution of chlorophyll-a measurements to the characterization of Earth’s 
+climate, World Meteorological Organization (WMO) has identified CHL-a as 
+one of the Essential Climate Variable (ECV) under ocean category. However, 
+the continuous availability of satellite based CHL-a is a major challenge due 
+to the obstruction of the visible part of the e.m spectrum by clouds. Moreover, 
+the observations from ocean colour near coastal region suffer from inaccurate 
+atmospheric correction due to the optical complexity in the coastal waters. 
+Coupled physical-biogeochemical modelling provides a key insight into the 
+interaction of elements in the physical and biogeochemical system of marine 
+ecosystem. The coupled models, thus become an essential tool in the scientific 
+community to elucidate the mechanism of physical and marine system and 
+predict its evolution in both space and time scale.  It enhanced the scope to 
+study the biogeochemical and ecological responses to physical forcing, which 
+is a key component in the climate change science and environmental risk 
+assessment.  
+2.1 Overview and Background: The synergistic use of satellite derived 
+chlorophyll and model simulated chlorophyll is adapted in order to explore the 
+advantages offered by both systems in the generation of analysed fields of 
+chlorophyll. For this purpose, daily fields of model chlorophyll from a coupled 
+physical-biogeochemical model are modified with respect to satellite derived 
+chlorophyll data by statistically combining both fields of chlorophyll using 
+Particle filter technique for the global ocean. Particle Filter is an ensemble 
+based technique like ensemble Kalman filter (van Leeuwen, 2009). But unlike 
+methods like EnKF, ensemble optimal interpolation (Evensen, 2003) etc, 
+particle filter doesn’t change the dynamical balance of the system and also does 
+not consider the apriori assumption of the Gaussianity of the probability 
+distribution function (PDF) of the system. This makes particle filter more 
+suitable for non-linear systems like ocean dynamics. Recently the particle filter 
+techniques have been successfully utilized in assimilation of chlorophyll data 
+in a coupled bio-physical model (Ratheesh et al., 2016) and in the assimilation 
+of highly non-linear coastal waves in a wave models (Bhowmick et al., 2019). 
+2.2 Objective  
+The main objective of this document is to provide step wise implementation of 
+the algorithm, along with required inputs and desired outputs. This document 
+will form the basis of operational implementation of the algorithm. 
+2.3 Input data sets 
+2.3.1 Satellite Data: Chlorophyll-a global product from OCM3 onboard 
+OCEANSAT-3 is used in the algorithm to improve model simulations of 
+chlorophyll. GAC products are available scene wise at 1 km resolution wise 
+(https://bhoonidhi.nrsc.gov.in). More than 200 scenes are available daily for 
+the entire globe. Therefore, a gridded field of OCM-3 chlorophyll-a is 
+generated as an intermediate product for the global ocean at 4km resolution 
+combining all the OCM-3 products available for the particular day. 
+2.3.2 Model Data: Chlorophyll from coupled physical-biogeochemical model 
+(MOM5-TOPAZ) for the global ocean is used as the background chlorophyll 
+field in the algorithm. This model is operationally running at SAC. 
+2.3.2.1 General description of the Ocean General Circulation Model 
+Ocean General circulation model used for the simulation of physical 
+parameters of ocean is Modular Ocean Model, version 5 (MOM-5).  It is a 
+numerical representation of the ocean’s hydrostatic primitive equations 
+employing either Boussinesq (volume conserving) or non-Boussinesq (mass 
+conserving) kinematics. The present study use Boussinesq kinematics. This 
+model is developed by NOAA’s Geophysical Fluid Dynamics Laboratory 
+(GFDL) in Princeton, USA.  The horizontal grids used in MOM5 are 
+generalized horizontal coordinates, with the coordinates assumed to be locally 
+orthogonal. For global ocean climate modeling, MOM uses the tripolar grid 
+that has a bipolar Arctic region (Murray , 1996). The model also employs a 
+split-explicit time stepping scheme where fast two-dimensional dynamics is 
+sub-cycled within the slower three dimensional dynamics. MOM gives a wide 
+array of vertical mixing schemes and the present model configuration used 
+KPP scheme.  
+2.3.2.2. Description of the Ecosystem model 
+The present configuration for global ocean is a coupled one, in which MOM5, 
+the ocean component is coupled to an ocean ecosystem model. A 
+comprehensive model of oceanic ecosystems and biogeochemical cycles is 
+used to understand and simulate the ocean ecosystem. The model used is 
+Tracers Of Phytoplankton and Allometric Zooplankton (TOPAZ). TOPAZ is 
+a state of the art model that considers 22 tracers including three phytoplankton 
+groups, two forms of dissolved organic matter, heterotrophic biomass, and 
+dissolved inorganic species for C, N, P, Si, Fe, CaCO3 and O2 cycling. The 
+model includes such processes as gas exchange, atmospheric deposition, 
+scavenging, N2 ﬁxation and water column and sediment denitriﬁcation, and 
+runoﬀ of C, N, Fe, O2, alkalinity and lithogenic material. The phytoplankton 
+functional groups undergo co-limitation by light, nitrogen, phosphorus and 
+iron with ﬂexible physiology. Loss of phytoplankton is parameterized through 
+the size-based relationship of Dunne et al. (2012b). Particle export is described 
+through size and temperature based detritus formation and mineral protection 
+during sinking with a mechanistic, solubility-based representation alkalinity 
+addition from rivers, CaCO3 sedimentation and sediment preservation and 
+dissolution. 
+For each model state variable C , the continuity equation is solved 
+𝜕𝐶
+𝜕𝑡= −∇. 𝑢̃𝐶+ ∇𝐾∇𝑐+ 𝑆𝐶 
+Where 𝑢̃ is the velocity vector from the OGCM ,  𝐾 is the diffusivity, and 𝑆𝐶 
+is the sum of the sources and sinks for state variable C. 
+2.3.2.3 Coupled biogeochemical - physical model (MOM5-TOPAZ) 
+The coupled biogeochemical - physical model is configured for global ocean 
+with a horizontal resolution of 25 km and a variable vertical resolution with a 
+very fine near surface and coarser towards the bottom of ocean. There are 50 
+levels in the vertical direction. The external time step used is 22.5 sec and the 
+internal time step used is 1800 sec. The model bottom topography is derived 
+from the 2 minute resolution ETOPO 2 database. The surface salt is restored 
+to climatology on a time scale of 2 months. 
+During spin up, the physical model was forced by climatological wind and flux 
+data sets and was initialized with temperature and salinity data from Levitus. 
+The model was spun up for 50 years from rest.  Afterwards, TOPAZ model is 
+coupled with the physical model and performed a climatology run for another 
+10 years. For this nitrate, phosphate and silicate are initialised using data from 
+WOA13. After this, an inter-annual run is performed using the daily forcing 
+fields of wind, net short and long wave radiation, precipitation, air temperature 
+and specific humidity from NCMRWF from 2018 onwards. Model forecast is 
+also performed using the NCMRWF data sets for the next 8 days. Model 
+forecasts are written for every six hours, while the analysis fields are written 
+daily. 
+2.3.3 Other Auxiliary data: None 
+Table 1: Input data sets for the algorithm 
+Data sets 
+Spatial Resolution 
+Temporal 
+Resolution 
+Chlorophyll 
+from 
+coupled model 
+25 km x 25 km 
+Daily 
+Chlorophyll 
+from 
+OCM-3 
+(GAC 
+product) 
+1 km  
+Daily 
+ 
+3. Algorithm Functional Specifications 
+ In this section we describe the theoretical basis and algorithm overview for generating 
+daily analysed fields of ocean surface chlorophyll for the global ocean.  
+3.1. Overview 
+OCM-3 derived chlorophyll products are assimilated into the coupled model using particle 
+filter technique to generate more improved fields of model chlorophyll state. Bootstrap 
+technique is used to generate particles/ensembles from model background field, which is 
+chlorophyll field at ocean surface.  A gridded field of OCM3 derived chlorophyll fields at 
+4 km is generated daily for the global ocean as an intermediate product. These three major 
+steps in the algorithm are shown in Figure 1.  
+ 
+ 
+Figure 1: Major steps involved in the generation of analysed chlorophyll product 
+ 
+ 
+3.2. Generation of 4km gridded fields of OCM-3 derived Chlorophyll (Intermediate 
+product): GAC products of chlorophyll for the global ocean are available scene wise 
+and includes many number of GAC data products for a single day. Therefore, an 
+intermediate product of OCM-3 chlorophyll is generated daily for the global ocean at 
+4 km resolution. For the purpose, firstly a background data with 4 km pixel resolution 
+is generated for the global ocean. Secondly, each of the GAC products are scanned 
+location wise and corresponding chlorophyll value is allotted to the specific 4 km pixel 
+corresponding to the location. Figure 2 shows flowchart of generating the gridded 
+fields of OCM-3 chlorophyll for the global ocean. For an example, the gridded OCM-
+3 derived chlorophyll for the global ocean is shown for 28 November 2023. More than 
+200 GAC scenes were considered to generate gridded OCM-3 product for the 
+mentioned day. 
+ 
+Figure 2: Flowchart of gridded 4 km OCM-3 chlorophyll data for the global ocean. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Figure 3: Gridded 4 km OCM-3 derived Chlorophyll for the global ocean for 28 
+November 2023. Some of the GAP scenes for the same day are also shown. More than 
+200 GAC scenes were considered to generate gridded product for a day. 
+ 
+3.3. Theoretical Background of Particle Filter technique 
+The algorithm used for the assimilation of satellite derived CHL into the coupled 
+model is a state of the art ensemble based particle filter technique. Particle filtering 
+uses a set of particles to represent the posterior distribution of a stochastic process 
+given noisy and/or partial observations. The novelty of the scheme lies in the fact 
+that, unlike other ensemble technique, particle filter does not impose any 
+restriction on the form of the PDF of the background field. Thus, its superiority in 
+nonlinear and non-Gaussian systems makes it widely acceptable to many 
+applications (van Leeuwen, 2009, 2010).  The realistic implementation of Particle 
+filter is explained in Mattern et al., 2013; Ratheesh et al., 2016 and Bhowmick et 
+al 2019.  
+Particle filtering method approximate the posterior distribution using 
+randomly extracted particle sets from the posterior probability. The central 
+concept is to determine the distribution of the system’s state variable with 
+minimal variability or uncertainty, and is achieved by updating the 
+probability distribution of the state variable based on observed data and 
+system dynamics. The cornerstone of particle filter is Bayes’s theorem which 
+reads  
+𝑝𝑚(𝜓|𝑑) =
+𝑝𝑑(𝑑|𝜓)𝑝𝑚(𝜓)
+𝑝𝑑(𝑑)
+                      
+ 
+ 
+ 
+(1) 
+Where: 
+1. 𝑝𝑚(𝜓|𝑑) is the Posterior distribution, representing the true state of the 
+system generated using model simulated chlorophyll (𝜓) given chlorophyll  
+observations (𝑑) from OCM-3. 
+2. 𝑝𝑑(𝑑|𝜓) is the likelihood function, representing the probability of 
+observing 𝑑 given  the prior information about the state of the system, 
+which is the model simulated chlorophyll. This term plays a crucial role in 
+assigning weights to the model particles based on their consistency with 
+the observed data.  
+3. 𝑝𝑚(𝜓) is the prior information about the ocean surface chlorophyll, also 
+known as background fields. These are obtained from coupled model 
+simulations of chlorophyll. A set of randomly selected model particles 
+represent the Probability Distribution Function (PDF) of the background 
+fields.  
+The model PDF can be written as  
+p(ψ) = 
+1
+𝑁∑
+𝛿(𝜓−𝜓𝑖)
+𝑁
+𝑖=1
+                                                     (2) 
+where, N is the number of particles.  𝜓𝑖 is spanning the range from 1 to N. 
+The term 𝛿(𝜓−𝜓𝑖) represents the PDF of an individual particle centered 
+around its value  𝜓𝑖, where 𝛿 is the Dirac delta function. The number of 
+particles in the study N is 250. 
+4. 𝑝𝑑(𝑑) is the probability of observations. Its computation can be 
+challenging, particularly in scenarios with sparse observations. This 
+probability is not directly computed but is implicitly represented by the 
+sum of weights of particles (𝑤𝑖). These weights, assigned to each particle 
+based on its likelihood of matching the observations, collectively form a 
+probability distribution. Normalizing the weights ensures that they sum 
+up to one, effectively representing the likelihood of observing 𝑑 across all 
+particles. Thus, the 𝑝𝑑(𝑑) can be written as: 
+𝑝𝑑(𝑑) = ∑
+𝑤𝑖
+𝑁
+𝑖=1
+                    (3) 
+where 𝑤𝑖 is the weight of each particle computed with respect to the 
+observations.  
+The computation of weights is a crucial step in the particle filter technique 
+and is represented by: 
+                                                 
+𝑤𝑖=
+𝑝(𝑑|𝜓𝑖)
+∑
+𝑝(𝑑|𝜓𝑖)
+𝑁
+𝑖=1
+  
+ 
+ 
+ 
+ 
+(4) 
+Therefore, 𝑤𝑖 represents the likelihood of observing 𝑑 given each particle 
+𝜓𝑖 compared to the total likelihood of observing 𝑑 across all particles. As 
+mentioned earlier, weights are already normalized so that their sum is unity. 
+Weight is inversely proportional to the distance between a given observation 
+and its model background. The distance is taken to be usual root mean square 
+difference between model chlorophyll and OCM-3 derived chlorophyll, 
+taken over those model grids where observations are available on a particular 
+day. Thus, the particles close to observation receive more weight as 
+compared to farther ones. In this study, model particles of chlorophyll close 
+to OCM-3 derived chlorophyll assign large weightage and becomes strong 
+particles, while weak particles are discarded. The posterior distribution is 
+then represented by the set of particles with stronger weights. These particles, 
+with higher weights, are considered to be more likely to represent the true 
+state of the system based on the available observations. 
+ 
+3.4. Particle filter and its implementation procedure  
+One critical aspect of the ensemble-based approach in high-dimensional 
+coupled models is the generation of a large number of ensembles or particles 
+needed to closely approximate the posterior probability density of the system. 
+Particle generation in this study is done using bootstrapping sampling by 
+introducing random biases to the background field (Bhowmick et al 2019). 
+This approach substantially reduces the computational time required for 
+particle generation, which otherwise needs a distinct model run for each 
+particle generation in the conventional particle filter techniques. The random 
+Gaussian biases are computed with zero mean and 0.5 mg/m3 standard 
+deviation. Here, we used standard deviation of the model chlorophyll to 
+define the PDF of random biases. The randomly introduced biases are then 
+modified for each model grid point with respect to both the model 
+chlorophyll values at each grid point and the model bias. In this way, the 
+correction term added to the model chlorophyll varies spatially with respect 
+to the values of chlorophyll at that grid location. Model bias is computed 
+from the long-term model simulations with respect to satellite-derived 
+chlorophyll and its value is 0.3 mg/m3. This method results in a total of 250 
+particles being drawn by introducing biases to the background field. 
+Another important step in the Particle Filter technique is the selection of 
+strong particles to represent Posterior PDF. This is done using a sequential 
+importance resampling (SIR) method (van Leeuwen 2009, Bhowmick et al., 
+2019, Bhowmick et. al. 2023) to ensure robust estimation of the posterior 
+distribution. The basic idea is to discard particles with low weights and retain 
+multiple copies of particles with relatively higher weights, keeping the total 
+number of particles the same. Selection of particles based on its weight is 
+carried out using Sequential Importance Resampling (SIR) method. In this 
+method, weights are first normalised ([0 1)] and then added to form a 
+cumulative distribution. A random generator is used to generate random 
+numbers and the weights close to this random number is selected from 
+cumulative distribution and this process is repeated multiple times. 
+Probability is very high for choosing particles with higher weight from a 
+cumulative distribution. Thus, the weights for each particle are computed, 
+and the particles are resampled, assigning them equal weights (1/N). N is the 
+total number of ensembles generated. This weight calculation and resampling 
+process is how observations are assimilated into the model. Particle 
+degeneracy is a common problem associated with ensemble-based 
+techniques, where a very few particles carry significant weights, while the 
+majority have negligible weights. This leads to a loss of diversity in the 
+particle population and inaccurate representation of the posterior distribution. 
+SIR addresses this issue by retaining the multiple copies of stronger particles 
+and ensuring that the particle population remains diverse during the 
+resampling process, where particles are randomly selected based on their 
+weights. Assigning equal weights to all selected particles during resampling 
+ensures that each particle has an equal chance of being selected. This 
+prevents the loss of valuable information and improves the sampling 
+efficiency and robustness of the sampling variability.  
+The flowchart of generating analysed chlorophyll fields for the global ocean 
+is given in Figure 4. 
+ 
+Figure 4 : Flow chart of the methodology for generating analysed 
+chlorophyll fields 
+ 
+3.5. Operational Implementation: The implementation steps that are to be followed are 
+mentioned below and is also shown in Figure 5. 
+Step 1: Daily fields of ocean surface chlorophyll output generated from MOM5-
+TOPAZ coupled model in MOSDAC is considered as the model background data. 
+Step 2: OCM-3 GAC chlorophyll data downloaded from Bhunidhi NRSC site is 
+considered as the observation. 
+Step 3: Checking the availability of model and OCM-3 data. If both data sets are 
+available, following steps (steps 4 – 6) will be carried out to generate final product of 
+analysed chlorophyll field. 
+Step 4: Generation of daily gridded fields of OCM-3 Chlorophyll combining all GAC 
+products for the particular day. 
+Step 5: Preparation of 250 ensembles from model background field using Bootstrap 
+technique. 
+Step 6: Generation of daily analysed fields of chlorophyll for the global ocean using 
+Particle Filter technique. 
+ 
+ 
+Figure 5: Steps involved in the Operational Implementation  
+ 
+3.6 Output: Daily fields of chlorophyll from coupled model is improved using particle 
+filter technique incorporating OCM-3 derived chlorophyll data. Therefore, the output 
+generated is available at the same temporal and spatial resolution of the coupled model, 
+which is at 25 km spatial resolution and daily. 
+3.6.1. Format of Output : The outputs are available as images (jpeg format)  and 
+product file (nc format). The analysed chlorophyll fields displayed in the Gallery 
+section in the MOSDAC is shown in Figure 6 for the day 25 January 2024. 
+ 
+ 
+ 
+Figure 6. A typical standard output available in MOSDAC Gallery section 
+3.7 Initial Validation  
+For inter-comparison and validation, independent observations of satellite and Bio-
+Argo buoys are used for the period September 2023 to November 2023.   
+3.7.1 Analysis with Multi-Satellite Chlorophyll data  
+For validating the analysed products, results are compared with available 
+satellite observations. For the purpose, we have used chlorophyll data from 
+sensors other than OCM-3 such as MODIS, VIIRS, etc. This validation can 
+be considered as an independent validation as these satellite information is 
+not incorporated while generating the analysed chlorophyll product. A 
+merged product of chlorophyll from these satellites are downloaded from 
+https://marine.copernicus.eu. 
+To generate analysed chlorophyll fields, OCM-3 derived chlorophyll is 
+assimilated to the coupled model simulated chlorophyll to improve the model 
+simulations of surface chlorophyll. Therefore, validation is carried to check 
+the improvement brought to the model simulations through the incorporation 
+of OCM-3 data. Figure 7 shows the weekly average of chlorophyll (15 Oct 
+2023 to 22 Oct 2023) from various sources; 1) Coupled model chlorophyll, 
+2) Analysed Chlorophyll, 3) Chlorophyll from OCM-3, and 4) Merged 
+Chlorophyll data from multi-satellites.  It is clear from Figure 7 that analysed 
+chlorophyll fields capture the chlorophyll features in the ocean as observed 
+in the multi satellite data. However, a slight overestimation is observed in the 
+analysed products towards polar region beyond 60o latitude in both the 
+hemispheres and is partially attributed to the sparse observations of OCM-3 
+in those regions and the bootstrapping sampling used in the study. While 
+sampling, all the model points are altered adding random biases to the 
+background filed. These particles are then compared with OCM-3 
+chlorophyll data to select strong particles as mentioned in the methodology 
+section. Therefore, quantity and quality of OCM-3 observations play crucial 
+role in the generation of more accurate analysed fields of chlorophyll. OCM-
+3 shows a positive bias all over the ocean with respect to multi-satellite 
+chlorophyll data. 
+ 
+Figure 7: Chlorophyll from various sources averaged over the period 15 Oct 
+to 22 Oct 2023. a) Coupled model chlorophyll, (b) Analysed Chlorophyll, c) 
+OCM-3 derived Chlorophyll, and d) Merged product from multi satellites. 
+Figures 8 and 9 show mean and standard deviation of chlorophyll from 
+different sources. It is very vivid from the figures that assimilation of OCM-
+3 data improved model simulations of chlorophyll. Analysed fields of 
+chlorophyll is more close to chlorophyll observations from multi-satellite as 
+compared to model simulations of chlorophyll and OCM-3 derived 
+chlorophyll.  The features of wind-driven upwelling induced chlorophyll 
+concentrations in the western Arabian are enhanced in the analysed 
+chlorophyll fields due to OCM-3 integration compared to chlorophyll 
+simulations from coupled model without OCM-3 data. 
+ 
+Figure 8: Mean of the ocean surface chlorophyll:  a) Coupled model 
+chlorophyll, b) Analysed Chlorophyll, c) OCM-3 derived Chlorophyll, and 
+d) Chlorophyll from multi satellites.  
+ 
+Figure 9: Standard deviation of the ocean surface chlorophyll: a) Coupled 
+model chlorophyll, b) Analysed Chlorophyll, c) OCM-3 derived Chlorophyll, 
+and d) Chlorophyll from multi satellites 
+3.7.2 Comparison with Bio-Argo data 
+Independent validation of the analysed chlorophyll and merged chlorophyll 
+from multi-satellites has been conducted using Bio-Argo measurements. Bio-
+Argo is an extension of the Argo program, incorporating biogeochemical 
+observations, including chlorophyll-a concentration, oxygen concentration, 
+pH, and more. These floats are deployed and managed by an international 
+community in coordination with institutes from various countries (Wong et 
+al., 2020). Bio-Argo floats are downloaded from htttps://biogeochmical-
+argo.org.  
+Figure 10 shows the buoy locations used for the comparison. Multi-satellites 
+chlorophyll, Analysed Chlorophyll, and model simulated chlorophyll 
+without OCM-3 are compared with buoy measured chlorophyll and the 
+statics are shown in the Table 1. Percentage error is computed using the 
+equation 
+𝑅𝑀𝑆𝐸 𝑜𝑓 𝐶𝐻𝐿
+𝐵𝑖𝑜−𝐴𝑟𝑔𝑜 𝑀𝑒𝑎𝑛 𝐶𝐻𝐿 ∗100.  
+RMSE is found less for the analysed chlorophyll compared to multi-satellite 
+derived chlorophyll when compared against Bio-Argo data. One added 
+advantage in the Analysed chlorophyll is the availability of data at all ocean 
+points. Another reason is that collocated points are less in the case of multi-
+satellite data and is owing to the data void due to cloud obstruction. This 
+issue does not affect analysed chlorophyll data as it is generated by 
+combining chlorophyll observation with model simulation, providing 
+chlorophyll at all model grid points. Additionally, analysed chlorophyll has 
+the advantage of model simulations and observations and it’s the errors are 
+less compared to other two individual components such as model simulations 
+and observations. Analysed chlorophyll OCF data exhibits a positive bias of 
+0.24 mg/m3 and is partially attributed to the positive bias in OCM-3 
+chlorophyll observations.  Among the three CHL datasets, analysed CHL 
+shows a lower percentage error, indicating better performance.  
+ 
+Figure 10. Bio-Argo buoy locations for the validation period. 
+Table 1 : Statistics obtained against BIOARGO data 
+ 
+Model 
+Simulated 
+CHL 
+(without 
+OCM-3) 
+Analysed 
+CHL (With 
+OCM-3) 
+Multi-
+satellite 
+CHL 
+Collocated points 
+7843 
+7843 
+3502 
+Bias (mg/m3) 
+0.485 
+0.24 
+-0.16 
+RMSE (mg/m3) 
+0.6508 
+0.53 
+0.97 
+Correlation Coefficient 
+0.46 
+0.43 
+0.57 
+Percentage 
+error 
+(
+𝑅𝑀𝑆𝐸 𝑜𝑓 𝐶𝐻𝐿
+𝐵𝑖𝑜−𝐴𝑟𝑔𝑜 𝑀𝑒𝑎𝑛 𝐶𝐻𝐿 ∗100) 
+100.49 
+81.84 
+149.78 
+ 
+3.8 Generation of Analysed Chlorophyll fields using latest version of OCM-3 data 
+The latest version of the OCM-3 product available at NRSC Bhoonidhi site is used to 
+generate analysed chlorophyll products as suggested by the ATBD review committee. 
+Chlorophyll from various sources for the days 02 Jan 2025 and 10Jan2025 is shown in 
+figures 11 and 12. 
+ 
+Figure 11: Chlorophyll from various sources for the day 02 Jan 2025. a) Coupled model chlorophyll, (b) 
+Analysed Chlorophyll, c) OCM-3 derived Chlorophyll (New Version), and d) Merged product from multi 
+satellites. 
+ 
+Figure 12: Chlorophyll from various sources for the day 10 Jan 2025. a) Coupled model chlorophyll, (b) 
+Analysed Chlorophyll, c) OCM-3 derived Chlorophyll (New Version), and d) Merged product from multi 
+satellites. 
+  
+3.9 Results from CA (SPPU, Pune) under Oceansat-3 project 
+The analysed chlorophyll products have been used by Savitribai Phule Pune University 
+(SPPU), Pune, CA under Oceansat-3 project. As suggested by the ATBD review 
+committee, a part of their work with analysed chlorophyll fields are also included here. 
+Monthly analysed chlorophyll for the global ocean has been generated by SAC at 25 km 
+resolution using multi-satellite derived chlorophyll and TOPAZ model for the duration 
+1998 to 2015 and is provided to CA for their study. Seasonally varying compensation 
+depth have been computed for the Indian Ocean using the OTTM (Ocean Tracer Transport 
+Model) model and analyzed Chlorophyll-a provided by SAC and is shown in Figure 13. 
+Compensation depth is then used for computing export production for the Indian Ocean. 
+ 
+Figure 13: Seasonal mean of varying compensation depth (1998-2015) using analysed chlorophyll data 
+from SAC 
+ 
+4.0 Limitations: The algorithm, as mentioned depends on the quality of the chlorophyll 
+data simulation, observation (OCM-3 derived chlorophyll) and the sampling method 
+adopted for generating multiple ensembles. Additionally, the model is not currently 
+forward-integrated with the improved initial conditions of chlorophyll. 
+4.1 Future Aspect: The algorithm used here is to generate analysed ocean surface 
+chlorophyll. A fully fledged data assimilation scheme, which sequentially incorporates the 
+modified model fields into the model future projections is planned as future work. The 
+possibility of assimilating Bio-Argo measured chlorophyll and the use of the optimal 
+Interpolation technique to generate analysed chlorophyll fields for the global ocean will 
+also be explored. 
+4.2 Potential Users of the data: One of the highlight of the analysed CHL products is the 
+gap-free data for the global ocean. This analysed CHL products are beneficial for studies 
+related to biogeochemistry, PFZ, carbon export, time series analysis, distribution of 
+chlorophyll in the ocean, interaction of eddies and chlorophyll, etc. Some of the expected 
+end-users of this product are INCOIS, SSPU, NIO, etc 
+ 
+ 
+4. REFERENCES: 
+ 
+ 
+ Evensen, G. (2009). Data assimilation: the ensemble Kalman filter.  
+Berlin: Springer.  
+ 
+ Mattern, J. P., Dowd, M., & Fennel, K. (2013). Particle filter-based data 
+assimilation for a three-dimensional biological ocean model and satellite 
+observations. Journal of Geophysical Research, 118, 2746–2760. 
+ 
+ 
+ Ratheesh, S., Chakraborty, A., Sharma, R., & Basu, S. (2016). 
+Assimilation of satellite chlorophyll measurements into a coupled 
+biophysical model of the Indian Ocean with a guided particle filter. 
+Remote Sensing Letters, 7(5), 446–455. 
+ 
+ van Leeuwen, P. J. (2009). Particle filtering in geophysical systems. 
+Monthly Weather Review, 137, 4089–4114. 
+ 
+ van Leeuwen, P. J. (2010). Nonlinear data assimilation in geosciences: an 
+extremely efficient particle filter. Quarterly Journal of the Royal 
+Meteorological Society, 136, 1991–1999. 
+ 
+ Bhowmick, S.A., Ratheesh, S., Sharma, R., Basu, S., and Kumar, R.A. 
+(2019). Simplified Assimilation Scheme for a Coastal Wave Model Using 
+Concepts of Particle Filter,  Pure and Applied Geophysics, 
+https://doi.org/10.1007/s00024-019-02343-9  
+ 
+ Wong, A.P.S., et al. (2020). Argo Data 1999-2019: Two million 
+temperature-salinity profiles and subsurface velocity observations from a 
+global array of profiling floats, Frontiers in marine Science, 7(700), doi: 
+https://doi.org/10.3389/fmars.2020.00700. 
+ 
+ 
+5. ACKNOWLEDGEMENT: 
+  
+The authors are grateful to Director, Space Applications Centre (SAC) for 
+the support. Special thanks for Dr. Rashmi Sharma DD EPSA, Dr. P K 
+Thapliyal GD AOSG, and Dr K N Babu, Head, BOD for their whole hearted 
+support for this work. MOSDAC team, particularly Nikunj and Vasant are 
+acknowledged for their contribution in the operationalization of Analysed 
+Chlorophyll product at MOSDAC website (www.mosdac.gov.in). Authors 
+sincerely thank Dr Bipasha Paul Shukla, Head, Environmental Sciences 
+Division, SAC, Dr. Suchandra Aich Bhowmick, POD, SAC, and Dr. Sujit 
+Basu, Retd.Scientist, SAC for stimulating discussions for this work. The 
+Bio-Argo data were collected and made freely available by the International 
+Argo Program and the national programs that contribute to it. 
+(https://argo.ucsd.edu, https://www.ocean-ops.org). The Argo Program is 
+part of the Global Ocean Observing System.  
+ 
+ 
+ 
+ 
+ 

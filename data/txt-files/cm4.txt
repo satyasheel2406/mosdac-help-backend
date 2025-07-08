@@ -1,0 +1,593 @@
+ 
+ 
+1 
+ 
+ 
+NATIONAL REMOTE SENSING CENTRE 
+REPORT / DOCUMENT CONTROL SHEET 
+ 
+1.  Security Classification  Unclassified 
+2.  Distribution  
+Through soft and hard copies 
+3.  Report / Document 
+version 
+(a)  Issue no.: 1.0 
+(b) Revision & Date: R01/ Sept 2020 
+4.  Report / Document  
+Type 
+Product ATBD document 
+5.  Document Control 
+Number 
+NRSC-ECSA-SEPT-2020-TR-1662-V1.0 
+6.  Title  
+Cloud Cover (CC) from INSAT-3D 
+7.  Particulars of 
+collation  
+Pages: 13 
+Figures: 2 
+Tables: 3 
+References: 11 
+8.  Author (s)  
+Lima, C. B. and Shivali Verma 
+9.  Affiliation of authors 
+NICES Research Scholar 
+10.  Scrutiny mechanism 
+Reviewed: GH (ECSA) 
+Approved: DD (ECSA) 
+11.  Originating unit 
+NICES (National Information system for Climate and Environment studies) 
+12.  Sponsor (s) / Name 
+and Address 
+NICES, ISRO. 
+13.  Date of  Initiation 
+August, 2020 
+14.  Date of Publication 
+September, 2020    
+15.  
+Abstract: Investigation of cloud top temperature (CTT) and its diurnal variation is highly reliant 
+on high spatial and temporal resolution satellite data, which is lacking over the Indian region. 
+An algorithm has been developed for detection of clouds and retrieval of CTT from the geostationary 
+satellite INSAT-3D. These retrievals are validated (inter-compared) with collocated in-situ (satellite) 
+measurements with specific intent to generate climate-quality data. The cloud detection algorithm 
+employs nine di_erent tests, in accordance with solar illumination, satellite angle and surface type 
+conditions to generate pixel-resolution cloud mask. Validation of cloud mask with cloud-aerosol 
+lidar with orthogonal polarization (CALIOP) shows that probability of detection (POD) of cloudy 
+(clear) sky is 81% (85%), with 83% hit rate. The algorithm is also implemented on similar channels 
+of moderate resolution imaging spectroradiometer (MODIS), which provides 88% (83%) POD of 
+cloudy (clear) sky, with 86% hit rate. 
+Key Words: Cloud cover, INSAT-3D, NICES, ECV 
+ 
+ 
+ 
+ 
+ 
+2 
+ 
+ 
+List of Abbreviations 
+ 
+BT 
+ 
+- 
+Brightness temperature  
+BTMWR  
+- 
+BT measurements from IR radiometer of MWR  
+BTTIR1  
+- 
+BT at TIR1 channel of INSAT-3D 
+BTD   
+- 
+Brightness temperature difference  
+CALIPSO 
+- 
+Cloud-Aerosol Lidar and Infrared Pathfinder Satellite Observations 
+CC 
+ 
+- 
+Cloud Cover 
+ECV  
+- 
+Essential Climate Variable 
+GCOS  
+- 
+Global Climate Observing System 
+HLO  
+- 
+High Level Opaque clouds 
+INSAT-3D 
+- 
+Indian National geostationary Satellite – 3D 
+LLO   
+- 
+Low level opaque clouds 
+MAE  
+- 
+Mean Absolute Error 
+MBE  
+- 
+Mean Bias Error 
+NICES  
+- 
+National Information system for Climate and Environment Studies 
+NRSC  
+- 
+National Remote Sensing Centre 
+PC 
+ 
+- 
+Partial clouds 
+RMSE  
+- 
+Root Mean Squared Error 
+STC 
+ 
+- 
+Semi-transparent cirrus cloud  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+ 
+Cloud Top Temperature from INSAT-3D 
+ 
+1. Abstract 
+Investigation of cloud top temperature (CTT) and its diurnal variation is highly reliant on high 
+spatial and temporal resolution satellite data, which is lacking over the Indian region. An 
+algorithm has been developed for detection of clouds and retrieval of CTT from the 
+geostationary satellite INSAT-3D. These retrievals are validated (inter-compared) with 
+collocated in-situ (satellite) measurements with specific intent to generate climate-quality data. 
+The cloud detection algorithm employs nine different tests, in accordance with solar 
+illumination, satellite angle and surface type conditions to generate pixel-resolution cloud mask. 
+Validation of cloud mask with cloud-aerosol lidar with orthogonal polarization (CALIOP) shows 
+that probability of detection (POD) of cloudy (clear) sky is 81% (85%), with 83% hit rate. The 
+algorithm is also implemented on similar channels of moderate resolution imaging 
+spectroradiometer (MODIS), which provides 88% (83%) POD of cloudy (clear) sky, with 86% 
+hit rate. 
+2. Introduction 
+Cloud cover (CC) is identified as an Essential Climate Variable (ECV) by Global Climate 
+Observing System (GCOS). Accurate information of CC and its spatial and temporal variations 
+is of paramount importance for climate studies. Indian national geostationary satellite, INSAT-
+3D, provides a unique opportunity to observe continuously over Indian subcontinent and 
+surrounding regions at 4km spatial and 30mins temporal resolution. The datasets from INSAT 
+satellite series are being widely used for studies on evolution and variation of clouds and their 
+properties (Gambheer AND Bhat, 2000; Roca and Ramanathan, 2000; Roca et al., 2005). As 
+part of National Information System for Climate and Environment Studies (NICES) program of 
+ISRO, a new integrated algorithm was developed for retrieving CC at pixel level (i.e., 4km x 
+4km resolution) from the Imager on-board INSAT-3D with specific intent to generate climate 
+quality data. Reliability of the retrieved CC was estimated through inter-comparisons with 
+collocated observations from ground-based radiosonde and space based active sensor, Cloud-
+Aerosol Lidar with Orthogonal Polarization (CALIOP) onboard Cloud-Aerosol Lidar and 
+Infrared Pathfinder satellite Observations (CALIPSO). The reported statistics are comparable 
+ 
+ 
+4 
+ 
+ 
+with that of the same product from other satellites over different regions of the globe (Hanna 
+2008; Hamann et al., 2014; Taylor et al., 2017; Huang et al., 2019). Since the intention of 
+retrieving the CC is to generate climate quality database, it is critical to assess reliability of the 
+product in terms of GCOS standards (https://gcos.wmo.int). As per GCOS, CC product is 
+recommended to be at 50km spatial and 3hourly temporal resolution with an uncertainty within 
+0.05%.  
+ 
+3. Data and Methodology 
+3.1 Data 
+Imager onboard the Indian geostationary satellite, INSAT-3D provides observations over the 
+Indian region at a temporal interval of 30 minutes (at HH:00 and HH:30) with visible (VIS), 
+shortwave infrared (SWIR), mid-wave infrared (MIR), water vapor (WV) and thermal infrared 
+(TIR1 & TIR2) channels (Katti et al., 2006). Specifications of these channels are given in Table 
+1. Present study uses level 1C, Asia sector product (ASIA_MER_L1C) from INSAT-3D Imager 
+over India and surrounding regions bounded by 44.5°E-105.5°E and 10°S-45.5°N with spatial 
+resolution of 4km, which is available through the SAC/ISRO web portal, MOSDAC 
+(https://www.mosdac.gov.in). The present algorithm for retrieving CC makes use of VIS, MIR, 
+WV, TIR1 and TIR2 channels. Spatial resolutions of VIS and WV channels are 1km and 8km 
+respectively, whereas those of MIR and TIR channels are 4km. In order to maintain uniformity, 
+measurements from VIS and WV channels are also provided at 4km spatial resolution to match 
+with that of MIR and TIR channels.  
+ 
+Table 1. Specifications of INSAT-3D Imager channels. 
+Channels 
+Spectral Range 
+(µm) 
+Central 
+wavelength (µm) 
+Resolution 
+(km) 
+Visible (VIS) 
+0.55-0.75 
+0.65 
+1.0 
+Short-wave Infrared (SWIR) 
+1.55-1.70 
+1.62 
+1.0 
+Mid-wave Infrared (MIR) 
+3.80-4.00 
+3.9 
+4.0 
+Water Vapour (WV) 
+6.50-7.10 
+6.8 
+8.0 
+ 
+ 
+5 
+ 
+ 
+Thermal Infrared I (TIR1) 
+10.3-11.3 
+10.8 
+4.0 
+Thermal Infrared II (TIR2) 
+11.5-12.5 
+12.0 
+4.0 
+ 
+3.2 Methodology 
+As a part of the NICES program of ISRO, an integrated algorithm is developed for identification 
+of clouds from INSAT-3D Imager. Figure 1 depicts comprehensive flow chart of the developed 
+algorithm. 
+ 
+ 
+Figure 1: Flow chart depicting the algorithm for retrieving cloud top temperature from INSAT-3D Imager 
+(Detailed flow charts and descriptions of methodology are available in Lima et al., Remote 
+Sensing, 11, 2811, doi: 10.3390/rs11232811, 2019). 
+ 
+3.3 Retrieval of Cloud Cover (CC) 
+CC is retrieved from INSAT-3D Imager at 4km (CC4km) spatial resolutions. Detailed 
+information on CC4km retrieval is available in Lima et al., 2019 and Lima et al., 2020; however, 
+it is briefly described here (as shown in Figure 1). The detection scheme contains a series of 
+hierarchical decision tree tests, which exploit differences in spectral signatures of clouds and 
+ 
+ 
+6 
+ 
+ 
+underlying surfaces. Each pixel undergoes a subroutine that provides information of surface type 
+(ocean and land) and solar illumination conditions (day, night, twilight and sunglint). Solar 
+elevation angle (δ_Sun) is used to describe solar illumination conditions; where it is considered 
+as day time when δ _Sun > 10, night when δ _Sun = 0 and twilight when 0 < δ _Sun < 10. This 
+classification is critical in defining proper thresholds for cloud detection, especially over the 
+Indian region where surface characteristics are highly heterogeneous in nature with di_erent geo-
+spatial features. The cloud detection algorithm involves three set of tests: a primary test (for all 
+types of surfaces and solar illumination conditions), a combination of four (three) secondary tests 
+during day/twilight (night) and a combination of two tests for identifying STC clouds. Successful 
+performance of this cloud detection algorithm relies on the selection of proper thresholds for 
+various spectral tests. The threshold values, which better suit to local atmospheric and surface 
+conditions, used in this study are either generated or adopted from previous studies. The primary 
+test uses different criteria for the thresholds over land and ocean and is, in general, capable of 
+identifying most of the cloud pixels with very high confidence. Secondary tests are applied only 
+on those pixels, which are not identified as cloudy by the primary test. In the secondary test, a 
+pixel is considered as cloudy if it satisfies at least three (two) out of four (three) tests during day 
+time/twilight (night time) conditions. Though primary and secondary tests are sufficient enough 
+to identify most of the clouds, these tests are observed to fall short in detecting STC clouds due 
+to high transparency at visible and IR wavelengths. Hence, the present algorithm uses additional 
+two tests for detecting STC clouds from the remaining pixels.Cloud pixels, identified through the 
+cloud detection scheme, are categorized into four classes; high level opaque clouds (HLO), low 
+level opaque clouds (LLO), semi-transparent cirrus clouds (STC) and partial clouds (PC) and are 
+then subjected to CTT retrieval accordingly. Further details can be found in published papers 
+Lima et al., 2019 and Lima et al., 2020. Figure 2 depicts cloud mask retrieved from the INSAT-
+3D Imager, by employing the present algorithm.  
+ 
+ 
+ 
+7 
+ 
+ 
+ 
+Figure 2: INSAT-3D retrieved (i) cloud mask at 07:30 UTC on (a) Jan 1 (winter season), (b) April 1 (pre-
+monsoon season), (c) Aug 1 (monsoon season) and (d) Nov 1(post-monsoon) of the year 2016. 
+The blue and white colored areas in the figure (i) represent clear-sky and cloudy regions 
+respectively (Figures are from Lima et al., Remote Sensing, 11, 2811, doi: 10.3390/rs11232811, 
+2019). 
+ 
+4. Validation of products 
+In order to provide weather and climate researchers more conﬁdence on the products, quality of 
+retrieved cloud cover (CC) is assessed through validation and inter-comparison using in-situ and 
+other satellite measurements.  
+ 
+4.1 Validation of INSAT-3D retrieved CC with CALIPSO and MODIS: 
+In order to ensure accurate evaluation of generated cloud mask by implementing the present 
+algorithm on INSAT-3D, collocated reference datasets are carefully prepared from CALIOP and 
+MODIS. From CALIPSO 5 km cloud layer dataset, clear and cloud pixels for inter-comparison 
+are identified by using feature classification flags at different atmospheric layers and their quality 
+assessment. Accuracy of clear and cloud features from CALIOP is ensured by considering only 
+those pixels with quality assessment (QA) value high (high value of QA is same as the CAD 
+score > 70). Due to the multiple averaging resolution scheme adopted in the CALIOP product 
+retrieval algorithm, the 5 km layer product includes layers with fundamental horizontal 
+averaging distance of 5 km, an intermediate distance of 20 km and a maximum of 80 km. This 
+leads to an overlap of features in vertical dimensions in the CALIOP data and such overlapping 
+ 
+ 
+8 
+ 
+ 
+is avoided by considering only pixels with horizontal averaging of 5 km. After segregating 
+highly confident clear and cloud pixels at each layer from CALIOP, a binary cloud mask is 
+generated in which cloud pixels are those with at least one layer of confident cloud feature and 
+clear pixels are those with all layers of clear feature. From the level 2 MODIS cloud product, 
+only those pixels, which are classified as either confident clear or cloudy are considered for 
+comparison in the present study. However, in order to perform inter-comparisons, collocated 
+pixels are identified among INSAT-3D, MODIS and CALIOP by using the nearest neighbour 
+approach with a maximum distance of 500 m separation between centers of the pixels, within -30 
+min temporal difference. 
+ 
+4.2 Implementation of INSAT-3D Algorithm on MODIS Channels  
+The developed cloud detection algorithm for INSAT-3D is applied on the radiance/reflectance 
+data from comparable channels of MODIS. MODIS channels considered here are having central 
+wavelengths at 0.645 µm, 3.9 µm, 6.715 µm, 11.03 µm and 12.02 µm, which are close to the 
+VIS, MIR, WV, TIR1 and TIR2 channels of INSAT-3D respectively. Basically, MODIS 
+provides reflectance at visible and radiance at remaining channels. In order to implement the 
+present cloud detection algorithm on MODIS channels, radiances of all channels except 0.645 
+µm channel are converted to BT using Planck’s equation. Other datasets used in the cloud 
+detection algorithm, such as SST climatology and GTOPO30, are re-gridded to the spatial 
+resolution of MODIS data. Finally, all tests in the present cloud detection algorithm  are applied 
+to MODIS channels, as they are implemented on INSAT-3D channels. The cloud mask thus 
+generated, by implementing the algorithm on MODIS channels, is validated using reference 
+dataset from CALIOP and MODIS. 
+(i) 
+ 
+Satellite/
+Sensor   
+Hit 
+Rate 
+ 
+(%)
+ 
+Cloudy Regions
+ 
+Clear Regions
+POD 
+ 
+(%)
+FAR 
+ 
+(%)
+POD 
+ 
+(%)
+FAR 
+ 
+(%)
+ 
+CALIPSO
+ 
+83.12
+ 
+81.42
+ 
+18.21
+ 
+84.57
+ 
+15.76
+ 
+MODIS
+ 
+79.40
+ 
+72.84
+ 
+09.28
+ 
+91.61
+ 
+28.35
+ (ii) 
+ 
+ 
+9 
+ 
+ 
+ 
+Satellite/
+Sensor   
+Hit 
+Rate 
+ 
+(%)
+ 
+Cloudy Regions
+ 
+Clear Regions
+POD 
+ 
+(%)
+FAR 
+ 
+(%)
+POD 
+ 
+(%)
+FAR 
+ 
+(%)
+ 
+CALIPSO
+ 
+85.99
+ 
+87.67
+ 
+10.40
+ 
+83.24
+ 
+19.62
+ 
+MODIS
+ 
+84.34
+ 
+75.74
+ 
+5.99
+ 
+94.37
+ 
+23.08
+ 
+Table 2. (i) Algorithm implemented on INSAT-3D channels. (ii) Algorithm 
+implemented on MODIS channels 
+5. Comparison of Cloud detection scheme 
+Comparison of INSAT-3D retrieved cloud mask using the current algorithm is carried out with 
+collocated measurements from CALIOP and MODIS. Moreover, the developed cloud detection 
+algorithm for INSAT-3D is applied on the radiance from comparable channels of MODIS and 
+compared the output against the CALIOP data. Quantitative outcomes of the above analysis are 
+presented in the form of statistical scores, namely; hit rate, probability of detection (POD) and 
+false alarm rate (FAR). Hit rate is fraction of the correctly detected (in comparison with 
+reference data) cloud and clear pixels out of the total number of pixels considered, whereas POD 
+is fraction of the cloud/clear pixels detected with respect to the reference (CALIOP or MODIS) 
+cloud/clear pixels and FAR is fraction of the falsely identified cloud/clear pixels out of the total 
+number of detected cloud/clear pixels. Detailed information on cloud identification is available 
+in Lima et al., 2020. 
+ 
+5.1 Comparison of INSAT-3D Retrieved Cloud Mask with CALIPSO Cloud Data 
+INSAT-3D detected cloudy and clear-sky regions agree with the CALIOP retrievals over India 
+ and surrounding regions for 83% of the time. As indicated by the POD values, 81% of cloud and 
+85% of clear-sky pixels in CALIOP products are detected as cloudy and clear-sky respectively 
+by INSAT-3D with the present algorithm. Compared to CALIOP retrievals, 18% (16%) of clear-
+sky (cloud) pixels are identified falsely as cloudy (clear-sky) by the present algorithm, as 
+indicated by the FAR values. The differences observed are mainly attributed to differences in 
+sensor characteristics and sampling foot prints. CALIOP has a small footprint of 70 m diameter 
+ 
+ 
+10 
+ 
+ 
+along its sub-satellite track, where it provides measurements at every 333 m, whereas INSAT-3D 
+data used in the study are at a spatial resolution of 4 km x4 km. When an INSAT-3D pixel is 
+partially clouded and CALIPSO passed through its cloud free portion, the former detects the 
+pixel as partially cloudy and the latter does as clear, hence leading to an uncertainty in 
+comparison. In order to examine performance of the current algorithm further, these results are 
+compared with the reported comparison results of similar passive sensors with CALIOP 
+retrievals. 
+Table 3: Inter-comparison of cloud mask algorithm applied to INSAT-3D imager data 
+with clouds from the CALIOP sensor for one year from March, 2016 to February, 2017. 
+ 
+Hit Rate (%) 
+ 
+Cloudy Regions 
+Clear Regions 
+ 
+POD 
+(%) 
+FAR 
+(%) 
+POD 
+(%) 
+FAR (%) 
+ 
+83.12 
+81.42 
+18.21 
+84.57 
+15.76 
+ 
+ 
+6. Conclusion 
+Satellite-based datasets of geophysical variables are crucial for climate research as they represent 
+state of the Earth’s climate system. These datasets are useful to examine climate and its 
+variability as well as to fine tune atmospheric model developments. Climate quality data of CC 
+are being generated from INSAT-3D satellite observations. Comparison of CC at pixel level 
+(4km x 4km resolution) with MODIS and CALIPSO shows mean hit rate of 83%. The CC 
+product currently generated is referred to as Version 2.0 and is disseminated through NICES 
+web-portal of ISRO.  
+ 
+7. Description of Data 
+File Name (Daily) 
+: XXX3D_L3_PP_4km_VVV02_DDDMMMYYYY 
+(X-Satellite, L-Level3, P-Product name, V-version, Y-Year, M-Month, D-
+Date) 
+ 
+ 
+11 
+ 
+ 
+Parameters 
+ 
+: CC 
+:  
+Geographic Coverage : 44.5°E-105.5°E and 10°S-45.5°N 
+Unit 
+ 
+ 
+: - 
+Spatial Resolution 
+: 0.04°×0.04° 
+Temporal Resolution : Half-hourly 
+File Format (Data) 
+: NetCDF 
+File Format (Image) : TIFF 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+8. Acknowledgement 
+Ms. Lima gratefully acknowledges the fellowship support received from National Information 
+system for Climate and Environment Studies (NICES) program of ISRO.  INSAT-3D imager 
+data were provided by the ISRO through MOSDAC portal of SAC.  Very special thanks offered 
+to SDSC-SHAR for providing the radiosonde dataset.  We would like to thank the MODIS and 
+ 
+ 
+12 
+ 
+ 
+CALIPSO science team for providing accessibility to data products that helped to carry out the 
+validation studies.  MATLAB tools have been used for developing necessary algorithms to 
+obtain the data product. 
+ 
+9. References 
+ 
+1. Gambheer, A.V. and G. S. Bhat (2000), Life Cycle Characteristics of Deep Cloud 
+Systems over the Indian Region Using INSAT-1B Pixel Data, Mon. Weather Rev., 128, 
+4071–4083. 
+2. GCOS Rep. 154, “Systematic observation requirements for satellite-based data products 
+for climate, 2011 update,” 2011. 
+3. Hamann, U., A. Walther, B. Baum, R. Bennartz, L. Bugliaro, M. Derrien, P.N. Francis, 
+A. Heidinger, S. Joro, A. Kniffka,  et al. (2014), Remote sensing of cloud top 
+pressure/height from SEVIRI: analysis of ten current retrieval algorithms. Atmos. Meas. 
+Tech., 7, 2839–2867. 
+4. Hanna J. W., D. M. Schultz, and A. R. Irving (2008), Cloud-top temperatures for 
+precipitating winter clouds, J. Appl. Meteorol. Climatol., 47, 351–359.  
+5. Huang Y., S. Siems, M. Manton, A. Protat, L. Majewski, and H. Nguyen (2019), 
+Evaluating Himawari-8 Cloud Products Using Shipborne and CALIPSO Observations: 
+Cloud-top Height and Cloud-top Temperature, J. Atmos. Ocean. Technol., 36, 2327–
+2347. 
+6. Katti, V.R., V.R. Pratap, R.K. Dave, K.N. Mankad, INSAT-3D: an advanced 
+meteorological mission over Indian Ocean (2006), GEOSS Next-Generation Sensors 
+Mission. 6407, 640709. 
+7.  Lima, C.B., S.S. Prijith, M.V.R. Sesha Sai, P.V.N. Rao, K. Niranjan and M.V. Ramana 
+(2019), Retrieval and validation of cloud top temperature from the geostationary satellite 
+INSAT-3D, Remote Sensing, 11, 2811; doi:10.3390/rs11232811.  
+8. Lima, C.B., S.S. Prijith, P.V.N. Rao, M.V.R. Sesha Sai and M.V. Ramana (2020), 
+Quality estimates of INSAT-3D derived cloud top temperature for climate data record, 
+IEEE-TGRS (in press). 
+ 
+ 
+13 
+ 
+ 
+9. Roca, R. and V. Ramanathan (2000), Scale Dependence of Monsoonal Convective 
+Systems over the Indian Ocean, J. Clim., 13, 1286–1298. 
+10. Roca, R., S. Louvet, L. Picon, and M. Desbois (2005), A study of convective systems, 
+water vapor and top of the atmosphere cloud radiative forcing over the Indian Ocean 
+using INSAT-1B and ERBE data, Meteorol. Atmos. Phys., 90, 49–65. 
+11. Taylor, S., P. Stier, B. White, S. Finkensieper, and M. Stengel (2017), Evaluating the 
+diurnal cycle in cloud top temperature from SEVIRI, Atmos. Chem. Phys., 17, 7035–
+7053. 
+ 
