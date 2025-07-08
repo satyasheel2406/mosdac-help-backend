@@ -2,7 +2,7 @@ fastapi==0.110.0
 uvicorn[standard]==0.29.0
 transformers==4.41.1
 sentence-transformers==2.7.0
-torch==2.3.0
+torch==2.2.2  # ✅ Compatible with Render's Python environment
 python-dotenv==1.0.1
 openai==1.30.1
 requests==2.31.0
