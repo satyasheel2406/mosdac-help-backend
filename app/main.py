@@ -17,7 +17,10 @@ hf_token = os.getenv("HUGGINGFACE_TOKEN")
 login(hf_token)
 
 # Load Knowledge Graph
-KG_FILE = r"D:\project-root\backend\data\knowledge_graph.json"
+import os
+KG_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
+KG_FILE = os.path.abspath(KG_FILE)
+
 KG = load_knowledge_graph(KG_FILE)
 
 # FastAPI app
