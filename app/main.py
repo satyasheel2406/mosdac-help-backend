@@ -8,14 +8,14 @@ from .utils import load_knowledge_graph
 # Load Hugging Face token
 HF_API_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
 
-# Load KG (assumes data/knowledge_graph.json exists)
+# Load KG
 KG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
 KG = load_knowledge_graph(KG_PATH)
 
 # App setup
 app = FastAPI()
 
-# CORS
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,37 +24,54 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Fallback LLM response using Hugging Face API
+# Hugging Face Inference API (LLM Fallback)
 def generate_llm_response(query: str) -> str:
     url = "https://api-inference.huggingface.co/models/google/flan-t5-small"
     headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-    payload = {"inputs": f"Answer this for MOSDAC user:\n{query}"}
+    payload = {
+        "inputs": f"Answer this helpdesk question for the MOSDAC user:\n{query}",
+        "options": {"wait_for_model": True}
+    }
+
     try:
-        res = requests.post(url, headers=headers, json=payload, timeout=10)
-        return res.json()[0]["generated_text"]
-    except:
+        res = requests.post(url, headers=headers, json=payload, timeout=15)
+        response_data = res.json()
+        
+        # Log full response for debugging
+        print("🤖 LLM Response:", response_data)
+
+        if isinstance(response_data, list) and "generated_text" in response_data[0]:
+            return response_data[0]["generated_text"].strip()
+        elif "error" in response_data:
+            return f"⚠ Hugging Face error: {response_data['error']}"
+        else:
+            return "⚠ Unexpected response from AI model."
+    except Exception as e:
+        print("❌ LLM Fetch Error:", e)
         return "Sorry, I couldn't fetch a response now."
 
+# Root endpoint
 @app.get("/")
 def root():
     return {"message": "MOSDAC Help Bot Backend Running"}
 
+# Entity list
 @app.get("/entities")
 def get_entities():
     return KG["entities"]
 
+# Relation list
 @app.get("/relations")
 def get_relations():
     return KG["relations"]
 
+# Main search
 @app.get("/search")
 def search(query: str):
-    # VERY BASIC: Just find substring matches from entities
     matches = [e for e in KG["entities"] if query.lower() in e["text"].lower()]
     matched_texts = {e["text"] for e in matches}
     relations = [r for r in KG["relations"] if r["source"] in matched_texts or r["target"] in matched_texts]
 
-    # LLM fallback always
     llm_response = generate_llm_response(query)
 
     return {
