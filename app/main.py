@@ -1,24 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-import json
 import requests
-from dotenv import load_dotenv
+import json
 from .utils import load_knowledge_graph
 from sentence_transformers import SentenceTransformer, util
 
-# Load environment variables
-load_dotenv()
-HF_API_URL = os.getenv("HF_API_URL")
-HF_API_KEY = os.getenv("HF_API_KEY")
-
-# Load Knowledge Graph
-KG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json"))
+# Load KG
+KG_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
+KG_FILE = os.path.abspath(KG_FILE)
 KG = load_knowledge_graph(KG_FILE)
+
+# Hugging Face Inference API token
+HF_API_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
 
 # Initialize FastAPI app
 app = FastAPI()
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,32 +26,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Use a light model just for embedding
-semantic_model = SentenceTransformer("all-MiniLM-L6-v2")
+# Load small sentence transformer
+semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
 entity_texts = [ent["text"] for ent in KG["entities"]]
 entity_embeddings = semantic_model.encode(entity_texts, convert_to_tensor=True)
 
-# Query Hugging Face API (LLM only)
+# Function to use Hugging Face Inference API
 def generate_llm_response(query: str) -> str:
-    headers = {
-        "Authorization": f"Bearer {HF_API_KEY}",
-        "Content-Type": "application/json"
-    }
+    api_url = "https://api-inference.huggingface.co/models/google/flan-t5-large"
+    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
     payload = {
-        "inputs": f"You are an intelligent assistant for the MOSDAC satellite data portal. "
-                  f"Answer the following query clearly, briefly, and helpfully:\n\n{query}"
+        "inputs": f"You are a helpful assistant for the MOSDAC satellite portal.\n\nQuery: {query}",
+        "options": {"wait_for_model": True}
     }
-
+    response = requests.post(api_url, headers=headers, json=payload)
     try:
-        response = requests.post(HF_API_URL, headers=headers, json=payload)
-        response.raise_for_status()
-        result = response.json()
-        if isinstance(result, list):
-            return result[0].get("generated_text", "").strip()
-        return str(result)
-    except Exception as e:
-        return f"LLM Error: {str(e)}"
+        return response.json()[0]["generated_text"]
+    except Exception:
+        return "Sorry, the LLM couldn't generate a response right now."
 
+# Health check
 @app.get("/")
 def root():
     return {"message": "MOSDAC Help Bot Backend Running"}
@@ -67,11 +60,9 @@ def get_relations():
 
 @app.get("/search")
 def search_entity(query: str):
-    from torch import tensor
-    from torch.nn.functional import cosine_similarity
-
     query_embedding = semantic_model.encode(query, convert_to_tensor=True)
     scores = util.cos_sim(query_embedding, entity_embeddings)[0]
+
     top_indices = scores.argsort(descending=True)[:5]
     matches = [KG["entities"][i] for i in top_indices if scores[i] > 0.5]
 
