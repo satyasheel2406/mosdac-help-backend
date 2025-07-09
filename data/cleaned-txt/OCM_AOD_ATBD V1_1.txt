@@ -1,0 +1,1317 @@
+1 
+
+SPACE APPLICATIONS CENTRE 
+AHMEDABAD 380015 
+DOCUMENT CONTROL SHEET 
+Reference No. 
+SAC/EPSA/AMHTDG/HTDD/ATBD-01 
+Publication Date 
+19 March 2021 
+Title and Subtitle 
+Aerosol Optical Depth (AOD) Retrieval from Ocean Colour 
+Monitor (OCM-2) onboard OceanSat-2 
+Type of Report 
+Algorithm Theoretical Basis Document (ATBD) 
+(version-1.1) 
+No. of Pages 
+29 
+No. of Figures 
+10 
+Authors 
+Manoj K. Mishra 
+Originating Unit 
+Space Applications Centre, Ahmedabad. 
+Abstract 
+
+This Algorithm Theoretical Basis Document (ATBD) 
+describes the algorithm used to retrieve the Aerosol 
+Optical Depth (AOD) for the OCM-2 instrument onboard 
+OceanSat-2 a polar-orbiting platform. 
+Specifically, this document identifies the sources of input 
+data, both OCM-2 data and non-OCM-2 data, required for 
+retrieval; provides the physical theory and mathematical 
+background underlying the use of this information in the 
+retrievals; includes implementation details; and describes 
+assumptions and limitations of the proposed algorithm. 
+Keywords 
+Aerosol optical depth, Fine mode fraction, Transmittance, 
+Path radiance, Spectral response function. 
+Security Classification 
+Restricted 
+Distribution Statement 
+Limited to TEC committee members only. 
+
+2 
+
+Summary 
+Existing aerosol algorithms providing aerosol information over land take advantage of measurement 
+in narrow bands falling in the wide spectral range from 0.4 to 2.5 m or of polarization/multi-angle 
+viewing capabilities or both. Most of the ISROs space-borne sensors only partially fulfil the mentioned 
+capabilities. As far as the requirement of narrow multiple channels in the visible region, and 
+radiometric quality of the measurement is concerned, Ocean Colour Monitor (OCM-2) on-board 
+OceanSat-2 seems to be a good choice, however, spectral coverage in OCM-2 is only up to 0.865 m, 
+which omitted the idea of aerosol remote sensing over land with existing algorithm. For this reason, 
+to date OCM-2 was limited to ocean colour applications only. 
+This Algorithm Theoretical Basis Document (ATBD) describes a novel algorithm for remote sensing of 
+aerosol over land using spectral reflectance observed by OCM-2. The algorithm retrieves the aerosol 
+optical depth (AOD) as the primary product and fine mode fraction as a proxy for the size distribution 
+(can be associated with anthropogenic sources) of the undisturbed aerosol column over most of the 
+Indian landmass. The unique characteristic of OCM-2 is the presence of two narrow blue channels 
+(0.44 and 0.49 um), which is taken as an advantage in this algorithm for the resolution of aerosol type 
+while optical depth inversion. The presence of two blue channels also allows full use of red and near-
+infrared (NIR) channels for surface characterization without any assumption on the transparency of 
+aerosol in red and NIR bands. These two facts make this algorithm different from existing ones and 
+also make aerosol remote sensing possible with OCM-2 sensor which does not have measurement 
+capabilities beyond NIR like MODIS, VIIRS, and GOES-R, and do not have multi- viewings like MISR and 
+PARASOL. The high brightness combined with spatial homogeneity of clouds in visible channels allows 
+reasonably good cloud rejection while aerosol estimation. Co-located sun photometer validation is 
+provided for the aerosol product. 
+The prime objectives for developing this aerosol product are to cater main input for air-quality, 
+radiative budget, and climate applications, especially over Indian landmass. The high spatial 
+resolution of 700 meters makes this product unique among globally available aerosol products. Apart 
+from these, it will open the door for the utilization of OCM-2 data for other land applications also. 
+Since OCM-2 in local area coverage mode have 2-day repetivity, the temporal resolution of OCM-2 
+AOD is two days, with an exception for the overlap region where daily retrievals are possible. 
+
+3 
+
+Contents 
+List Figures 
+List of Tables 
+List of Acronyms and Symbols 
+1.0 
+Algorithm Configuration Information 
+1.1 
+Algorithm Name 
+1.2 
+Algorithm Identifier 
+1.3 
+Algorithm Specification 
+2.0 
+Introduction 
+2.1 
+Overview and background 
+2.2 
+Objectives 
+3.0 
+Inputs 
+3.1 
+Static Data 
+3.2 
+Image and pre-processing data (Dynamic) 
+3.3 
+Other Auxiliary data and Model Inputs 
+4.0 
+Algorithm Functional Specifications 
+4.1 
+Overview 
+4.2 
+Instrument Characteristics 
+4.3 
+Theoretical background 
+4.3.1 
+Gas absorption 
+4.3.2 
+Cloud and inland water masking 
+
+4.3.3 
+Physical basis and model for surface characterization 
+4.3.4 
+Radiative transfer calculations 
+4.3.5 
+Aerosol inversion 
+4.4 
+Flowchart 
+4.5 
+Operational Implementation 
+5.0 
+Outputs 
+5.1 
+Format of the output and the domain 
+6.0 
+Validation 
+6.1 
+Data required 
+6.2 
+Methods of validation 
+6.2.1 
+AERONET data for validation 
+6.2.2 
+Handheld sun photometer validation 
+6.2.3 
+Satellite-based Inter-comparisons 
+6.3 
+Provisional validation 
+6.3.1 
+Derived AOD maps 
+6.3.2 
+Validation results with AERONET data 
+7.0 
+Technical issues (Limitations etc.) 
+8.0 
+Future scope 
+9.0 
+Discussion 
+10.0 
+References 
+4 
+
+List of Figures 
+Figure 1. Spectral responses functions of Ocean Colour Monitor bands. 
+Figure 2. Local area coverage mode of Ocean Colour Monitor on-board OceanSat-2. 
+Figure 3. Atmospheric transmittance due to gas absorption for different values of water vapour and 
+the standard value of oxygen (tropical atmosphere). Solar zenith assumed is 45 degrees and 
+nadir viewing geometry. 
+Figure 4. Scatter plot for modelled surface reflectance in band-3 and band-6 versus surface 
+reflectance obtained by atmospheric correction using in-situ data. 
+Figure 5. The overall workflow of the algorithm. 
+Figure 6. AOD map on 2 November 2016. High resolution (700m) of OCM-2 AOD enables one to 
+capture high AOD/dust plume due to dust transportation from dust storms, which 
+originated within India and in neighboring countries (e.g., Pakistan-Afghanistan border as 
+shown). 
+Figure 7. High resolution (700m) from OCM-2 AOD enables one to capture high AOD/smoke plumes 
+due to forest fires in North-East India and the neighboring countries. 
+Figure 8. (a) AOD map over eastern Indo-Gangetic plain (IGP) and central India on 15 January 2021. A 
+very thick layer of aerosol (heavy air pollution) over IGP is observed. (b) Fine mode fraction 
+map shows high fine aerosols in the entire IGP while relatively coarser sized particles in 
+central India. (d) AERONET size distribution at Bhola station showing the dominance of fine 
+mode aerosol. 
+Figure 9. Validation results of the OCM-2 AOD using AERONET in-situ AOD at different stations. 
+Figure 10. Drastic improvement in OCM-2 derived NDVI after correction for aerosol is apparent in the 
+images shown. 
+
+List of Tables 
+Table 1. Summary of the OCM-2 aerosol optical depth (AOD) product 
+Table 2. Specification of Ocean Colour Monitor on-board OceanSat-2. 
+Table 3. Performance parameters of Ocean Colour Monitor on-board OceanSat-2. 
+Table 4. The coefficient that relates ozone optical thickness with concentration. 
+Table 5. Water vapour transmittance for OCM-2 band-8 centered at 865 nm at the solar zenith of 45 
+degrees and nadir viewing geometry. 
+
+5 
+
+List of Acronyms and Symbols 
+AOD 
+Aerosol Optical Depth 
+AWIFS 
+Advanced Wide Field Sensor 
+ATBD 
+Algorithm Theoretical Basis Document 
+AERONET 
+AErosol RObotic NETwork 
+DEM 
+Digital Elevation Model 
+EE 
+
+Error Envelope 
+FAOD 
+Fine mode Aerosol Optical Depth 
+FMF 
+
+Fine Mode Fraction 
+GAC 
+
+Global Area Coverage 
+HDF 
+
+Hierarchical Data Format 
+ISRO 
+
+Indian Space Research Organization 
+INSAT 
+Indian National Satellite 
+IRS 
+
+Indian Remote sensing Satellite 
+IGFOV 
+Instantaneous Geometric Field of View 
+IGP 
+
+Indo Gangetic Plain 
+LAC 
+
+Local Area Coverage 
+LUT 
+
+Look up Tables 
+LAADS DAAC Level-1 and Atmosphere Archive & Distribution System Distributed Active Archive 
+Center 
+L1B 
+
+Level-1 B 
+MODIS 
+Moderate Resolution Imaging Spectroradiometer 
+MISR 
+Multi-angle imaging spectroradiometer 
+NASA 
+National Aeronautics and Space Administration 
+NIR 
+
+Near Infrared 
+NDVI 
+Normalized Differential Vegetation Index 
+Ne 
+Noise equivalent Reflectance 
+OCM 
+Ocean Colour Monitor 
+PARASOL 
+ Polarization & Anisotropy of Reflectances for Atmospheric Sciences coupled with 
+Observations from a Lidar 
+RT 
+
+Radiative Transfer 
+rmse 
+Root Mean Square Error 
+SRF 
+
+Spectral Response Function 
+SAC 
+
+Space Applications Center 
+SWIR 
+Short Wave Infrared 
+SNR 
+
+Signal to Noise Ratio 
+TOA 
+
+Top of the Atmosphere 
+TOMS 
+Total Ozone Mapping Spectrometer 
+VNIR 
+
+Visible to Near Infrared 
+VIIRS 
+Visible Infrared Imaging Radiometer Suite 
+VEDAS 
+Visualization of Earth observation Data and Archival System 
+
+O3 
+
+Oxygen 
+H2O 
+
+Water Vapour 
+O2 
+
+Oxygen 
+6 
+
+R2 
+
+Coefficient of determination 
+S 
+
+Slope of regression line 
+I 
+
+intercept of regression line 
+N 
+
+Number of data points 
+
+Rayleigh or Molecular optical depth 
+
+AOD or Aerosol optical depth 
+
+Wavelength 
+c 
+
+Central wavelength of a spectral band 
+
+Extinction coefficient 
+
+Altitude 
+
+Ozone optical depth 
+
+Ozone extinction coefficient 
+
+Gas transmittance 
+
+Ozone transmittance 
+2 
+Water Vapour transmittance 
+
+Sensor zenith 
+0 
+
+Solar zenith 
+,3 3 
+Standard deviation of reflectance in a 3 x 3 pixel window 
+
+Normalized Differential Vegetation Index 
+
+Band Radiance 
+
+Saturation Radiance 
+
+. 
+Atmospherically corrected reflectance 
+
+Surface reflectance 
+
+Top of the atmosphere reflectance 
+
+Spherical albedo 
+
+Path reflectance 
+0 
+
+Sensor angles 
+
+Solar angles 
+0 
+
+Extraterrestrial irradiance 
+
+Phase scattering function 
+
+Cosine of sensor zenith 
+0 
+
+Cosine of solar zenith 
+0 
+
+Single scattering albedo 
+
+Intensity 
+( ) 
+Particle size distribution 
+
+Modelled satellite level radiance 
+
+7 
+
+Aerosol Optical Depth (AOD) Retrieval from Ocean Colour Monitor (OCM-2) onboard OceanSat-2 
+
+1.0 Algorithm Configuration Information 
+1.1 Algorithm Name 
+OCM-2 Land Aerosol Optical Depth (AOD) 
+1.2 Algorithm Identifier 
+O2_*_AER_NDV 
+1.3 Algorithm Specification 
+Version 
+Date 
+Prepared by 
+Description 
+1.0 
+16 March 2021 
+Manoj K Mishra 
+OCM-2 AOD Baseline 
+Document 
+1.1 
+25 March 2021 
+Manoj K Mishra 
+OCM-2 AOD Baseline 
+Document 
+
+2.0 Introduction 
+2.1 Overview and background 
+Aerosols play an important role in numerous aspects of human life. Aerosols have largescale 
+effects, such as their impact on climate by redistributing solar radiation (IPCC 2007; Charlson et al. 
+1991; Haywood et al. 1999) and interacting with clouds (Platnick and Twomey 1994; Kaufman et 
+al. 2002). Aerosol information is also critical for atmospheric correction algorithms for multi-
+spectral satellite sensors and military operations. The climate effects of atmospheric aerosols may 
+be comparable to carbon dioxide greenhouse effects, but with opposite signs and larger 
+uncertainty (Hansen and Lacis, 1990). Aerosols have a significant impact on human life beyond the 
+climate element. When in the lower troposphere aerosols cause poor air quality, reduction of 
+visibility, and public health hazards. Satellite remote sensing provides a means to derive aerosol 
+distribution at global and regional scales. 
+This Algorithm Theoretical Basis Document (ATBD) describes the algorithm used to retrieve the 
+Aerosol Optical Depth (AOD) for the OCM-2 instrument onboard OceanSat-2 a polar-orbiting 
+platform. The output product description is summarized in Table 1. 
+Specifically, this document identifies the sources of input data, both OCM-2 data and non- OCM-2 
+data, required for retrieval; provides the physical theory and mathematical background underlying 
+the use of this information in the retrievals; includes implementation details; describes 
+assumptions and limitations of the proposed approach. 
+Table 1. Summary of the OCM-2 aerosol optical depth (AOD) product 
+Parameter Name 
+Units 
+Horizontal Cell Size 
+Comments 
+Aerosol Optical 
+depth @ 550nm 
+Dimensionless 
+700 meters over 
+land. 
+Retrieved for all pixels except 
+cloudy and saturated pixels. 
+Fine Mode Fraction 
+Dimensionless 
+700 meters over 
+land. 
+Retrieved for all pixels except 
+cloudy and saturated pixels. 
+
+2.2 Objectives 
+The primary objective of this algorithm is to calculate the aerosol optical depth, proportional to the 
+total aerosol loading of the ambient aerosol, over land for the Indian region using OCM-2 data. The 
+8 
+
+secondary objective is to derive fine-mode fraction which is a proxy information about the particle 
+size distribution and can be associated with anthropogenic sources of aerosols. The overall 
+objectives of the aerosol retrieval are: 
+
+To determine the aerosol optical thickness, at 550 nm and 700-meter spatial resolution 
+over land within an uncertainty of 20%. 
+
+To derive fine mode fraction as a qualitative indicator of anthropogenic pollution sources. 
+As clouds block the surface reflectance, the aerosol optical depth cannot be found for cloudy pixels 
+therefore optical thickness retrievals apply only under clear and daytime conditions. 
+
+3.0 Inputs 
+3.1 Static Data 
+Input Name 
+Resolution 
+Units 
+Source 
+Digital elevation 
+model (DEM) 
+1.0 km 
+meters 
+(GLOBE) Digital Elevation 
+Model, Version 1.0, NOAA, 
+(Hastings et al., 1999) 
+Spectral response 
+function (SRF) 
+1.0 nanometres 
+dimensionless 
+SEDA/SAC/ISRO 
+
+3.2 Image and preprocessing data (Dynamic) 
+Input Name 
+Resolution 
+Quantization 
+Units 
+Source 
+OCM-2 radiometrically 
+corrected TOA 
+radiance in channels 
+centred at 443, 490, 
+550, 620 and 865 nm 
+360 x 250 
+meters 
+12 bit 
+mW/cm2/nm/sr 
+HDF L1 B data file (NRSC) 
+Sun-sensor geometry 
+pixel 
+- 
+degree 
+HDF L1 B data file (NRSC) 
+Latitude/Longitude 
+pixel 
+- 
+0N / 0E 
+HDF L1 B data file (NRSC) 
+
+3.3 Other Auxiliary data and Model Inputs 
+Input Name 
+Resolution 
+Units 
+Source 
+Ozone 
+1.0 x 1.25 degree, 
+Monthly 
+Dobson 
+TOMS, NASA (Richard et al., 
+1998) 
+Simulated TOA 
+radiance 
+6 degree interval sun-
+sensor geometry angles 
+mW/cm2/nm/sr 
+Pre-calculated from RT 
+model 
+Fine mode aerosol 
+type 
+1 degree 
+dimensionless 
+Levy et al., 2007 (based on 
+in-situ data from AEROET) 
+4.0 Algorithm Functional Specifications 
+4.1 Overview 
+9 
+
+Aerosol retrievals from polar-orbiting satellite data, such as Moderate Resolution Imaging 
+Spectroradiometer (MODIS) of NASAs, Aqua and Terra Satellites, Visible Infrared Imaging 
+Radiometer Suite (VIIRS), Multi-angle Imaging SpectroRadiometer (MISR), PARASOL are the major 
+sources of high-quality global estimates of AOD over land and oceans (Kaufman et al., 1997; Levy 
+et al., 2007; Hsu et al., 2004, 2006, 2013). All of these sensors of foreign space agencies are 
+equipped with the channels to measure radiances in several narrow visible, near Infrared (NIR) 
+and short-wave infrared (SWIR) spectral bands. In addition to measuring un-polarized spectral 
+radiances at a single scattering angle, some of these sensors such as MISR and PARASOL can also 
+measure un-polarized as well as polarized radiances at several scattering angles, thus providing 
+more scope to improve the accuracy of AOD retrieval as well as aerosol optical properties. Most 
+of these sensors utilize the dark-target method over dark vegetated surfaces and the deep-blue 
+method over bright surfaces to retrieve AOD products. Both of these methods require spectral 
+radiance measurement in at least three visible channels (near 440,490, 620 nm) and two SWIR 
+channels (1.24 & 2.12 um) for aerosol retrieval in addition to channels required for masking 
+unwanted target pixels. 
+As far as Indian satellites are concerned, none of the existing sensors fulfils the requirements of 
+measurement in all channels especially the SWIR channels, which is crucial for aerosol retrieval. 
+Most of the spaceborne optical imaging sensors onboard different Indian Remote Sensing (IRS) 
+satellites such as OceanSat (1, 2 and upcoming 3), CARTOSAT (1, 2 and 3) and RESOURCESAT (1 
+and 2), etc. were designed for specific applications related to Earth surface (land and ocean) 
+monitoring and mapping, as in various EOS missions, and were not designed to accommodate 
+channels for aerosol studies. For this reason, the existing AOD retrieval techniques requiring SWIR 
+and visible channels, in multiple wavelengths, cannot be used for Aerosol retrieval from any of the 
+ISRO sensors data. INSAT-3D/3DR is the only exception, where utilizing the advantage of fixed 
+view geometry due to Geostationary platform, a basic AOD product using single visible channel 
+data without the need of SWIR measurement is operationally generated and is available for public 
+use, on the SAC/VEDAS site (Mishra et al., 2018). However, this method is not so efficient or 
+accurate and is not suited to good accuracy aerosol retrieval, which limits its use to qualitative 
+estimate purpose, and time-series change monitoring only. 
+The reason for less research work toward the development of aerosol retrieval algorithm for 
+single-view visible to near-infrared (VNIR) sensor in past may be due to significant aerosol 
+contamination in the entire VNIR spectral range that makes surface characterization a difficult 
+problem. Moreover, since electromagnetic radiation of SWIR (2m) wavelength minimally interact 
+10 
+
+with aerosols therefore researchers found MODIS-like sensors more feasible for developing 
+relatively simpler aerosol retrieval algorithm. 
+Thus, due to the impracticality of implementation of existing AOD retrieval methods to ISROs 
+operational satellites data, routine accurate AOD retrieval could not be done. However, 
+extremely poor air quality over Indian landmass, especially the urban centers, and the high priority 
+requirement from Environment Ministries, for high resolution (sub kilometres) aerosol 
+estimations to generate ground-level PM2.5/PM10 maps, using existing Indian satellite sensors 
+data, an urgent need was there to develop techniques for retrieving reliable and accurate aerosol 
+information from the existing Indian satellite sensors. Recent research work at Space Applications 
+Center, ISRO, provides a unique solution to this. The research has led to the development of a 
+Novel Technique, which can retrieve AOD from Ocean Colour Monitor (OCM) data onboard IRS 
+OceanSat-2 satellite, which was launched in 2009 and is still in-service. This Algorithm Theoretical 
+Basis Document briefly describes this aerosol algorithm and the aerosol product of which 
+AOD@550 nm beta version is currently operational at VEDAS/SAC/ISRO air quality portal 
+(https://vedas.sac.gov.in/vstatic/AQ/index.html). 
+
+Figure 1. Spectral responses functions of Ocean Colour Monitor bands. 
+
+4.2 Instrument Characteristics 
+The OceanSat-2 was launched in 2009 and was placed in a near-circular sun-synchronous orbit, at 
+an altitude of 720 Km, with an equatorial crossing time of around 1200 hrs. Ocean Colour Monitor 
+is a VNIR sensor on-board OceanSat-2, which acquires top of the atmosphere radiance in 8 narrow 
+spectral channels centered at wavelengths, 412, 443, 490, 510, 550, 620, 740, and 865 nm with 
+high radiometric accuracy. Since 2010 (i.e., for the last 11 years) OCM-2 is continuously providing 
+data over the ocean as well as on land and is still in service. Since OCM-2 is particularly designed 
+for ocean colour studies, the ocean observation is planned at the local time of equator crossing 
+11 
+
+time of 1200 hours noon, the camera can be tilted up to 20 in the along-track direction to avoid 
+sun glint. Table 2 shows the salient characteristics of the OCM-2 sensor. Figure 1 shows the 
+spectral responses of the channels. OCM-2 data is available in two spatial resolutions: Local Area 
+Coverage (LAC) of 360 m and Global Area Coverage (GAC) of 1 km. To meet the objective of 
+covering oceans around the Indian region, Real-Time LAC data is routinely received at the NRSC 
+primary ground station. The area of coverage in LAC mode is shown in figure 2. Table 3 shows 
+various performance parameters of OCM-2. 
+Table 2. Specification of Ocean Colour Monitor on-board OceanSat-2. 
+S.N. 
+Parameters 
+OCM-2 Specifications 
+1 
+IGFOV at nominal altitude (m) 
+360 x 250 
+2 
+Swath (km) 
+1420 
+3 
+No. of spectral bands 
+8 
+4 
+Spectral range (nm) 
+402-885 
+5 
+Spectral bands (nm) 
+B1: 402 422 nm 
+B2: 433 453 nm 
+B3: 480 500 nm 
+B4: 500 520 nm 
+B5: 545 565 nm 
+B6: 660 680 nm 
+B7: 745 785 nm 
+B8: 845 885 nm 
+6 
+Quantization bits 
+12 
+7 
+Tilt (to avoid sun glint) 
+200 
+8 
+Data acquisition modes 
+Local Area Coverage (LAC) 360 m x 236 m 
+Global Area Coverage (GAC) 1 km x 1 km 
+9 
+Data formats 
+HDF 
+Table 3. Performance parameters of ocean colour monitor on-board OceanSat-2. 
+Band 
+Band center 
+(c), nm 
+SNR @ 
+Ref. 
+Radiance 
+Saturation 
+radiance 
+(mW/cm2/sr/um) 
+Max 
+Ne 
+(x 10-3) 
+ Rayleigh 
+B1 
+412 
+356 
+70.2 
+1.29 
+3.00 
+0.210 
+B2 
+443 
+386 
+36.5 
+0.62 
+1.60 
+0.190 
+B3 
+490 
+380 
+29.6 
+0.48 
+1.30 
+0.150 
+B4 
+510 
+324 
+25.8 
+0.43 
+1.30 
+0.130 
+B5 
+550 
+312 
+21.2 
+0.36 
+1.20 
+0.090 
+B6 
+620 
+240 
+16.0 
+0.30 
+1.30 
+0.060 
+B7 
+740 
+286 
+1.9 
+0.05 
+0.17 
+0.030 
+B8 
+865 
+141 
+14.3 
+0.49 
+3.50 
+0.017 
+12 
+
+Figure 2. Local area coverage mode of Ocean Colour Monitor on-board OceanSat-2.. 
+
+4.3 Theoretical background 
+AOD is the measure of aerosols distributed within the column of air from the ground instrument 
+to the top of the atmosphere or from the space-borne sensor to the surface. AOD is the degree to 
+which aerosol prevents the transmission of the light by absorption or scattering of light and is 
+defined as the integrated extinction coefficient of light due to aerosol over a vertical atmospheric 
+column of unit cross-section (mathematically represented by equation 1). Extinction coefficient 
+ is defined as the fractional depletion of radiance per unit length. 
+= ()
+
+0
+ (1) 
+The following description is intended to provide the basic structure of the algorithm that can 
+derive aerosol optical depth and fine mode fraction from OceanSat-2 OCM data, which acquires 
+top of the atmosphere radiance in 8 narrow spectral channels centered at wavelengths, 412, 443, 
+490, 510, 550, 620, 740 and 865 nm with high radiometric accuracy. The overall workflow for the 
+proposed algorithm/technique for aerosol retrieval using OCM-2 data is shown in section 4.4. It 
+mainly involves four components: 
+(a) Masking of the pixel for which retrieval is not possible (e.g., cloud, water, and saturated pixels), 
+(b) The surface characterization in visible-channels, 
+(c) Radiative transfer simulation, and 
+(d) The aerosol inversion. 
+13 
+
+The aerosol retrieval algorithm described in this ATBD is novel/different from other existing 
+aerosol retrieval algorithms such as dark-target or deep-blue in many ways that make it capable 
+to derive aerosols from VNIR sensors. Following are the salient points of the algorithm: 
+(a) The surface characterization in visible channels is shown to be possible by the use of near 
+Infrared channel measurements, where the existing algorithm uses the SWIR channel over 
+dark targets and reflectivity database over bright surfaces. Thus this algorithm avoids the 
+necessity of SWIR measurement as well as doesnt require the pre-existence of a surface 
+reflectivity database. 
+(b) Different from the dark-target algorithm, the surface characterization strategy in this 
+algorithm is not limited to vegetative surfaces but is also valid over moderately bright surfaces, 
+which enables AOD retrieval over both moderately bright as well as dark surfaces. 
+(c) Different from the dark-target, deep-blue algorithm and others where blue and red channels 
+are used for aerosol inversion, in this algorithm aerosol inversion is based on two blue 
+channels which allows more accurate selection of aerosol types and also increases the 
+probability of retrieval over bright targets. 
+Apart from this many other differences such as red and NIR bands are not assumed transparent, 
+simultaneous retrieval of aerosol and surface in NIR and red bands, etc., makes the current aerosol 
+retrieval algorithm novel when compared to existing ones, though none of them are feasible for 
+implementation with OCM-2 sensor. 
+4.3.1 Gas absorption 
+In addition to the aerosols and molecular scattering, certain atmospheric gases may also affect 
+OCM-2 channels. In the VNIR region, primarily three atmospheric gas may absorb the incident 
+solar radiation and upwelling radiation namely water vapour (H2O), ozone (O3), and oxygen (O2). 
+The expression for ozone optical thickness, () for OCM: 
+() = () 
+
+(1) 
+where, refer to total column ozone in Dobson unit and () is the extinction coefficient 
+that relates optical thickness with concentration. Table 4 show the values of () for OCM-
+2 channels. From table 4 it can be seen that band-5 and band-6 centered at 550 and 620 nm, 
+respectively are significantly affected by ozone absorption. The top of the atmosphere radiance 
+is corrected by ozone transmittance. The relation for the ozone transmittance is: 
+= exp [(){()1 + (0)1}] 
+
+ (2) 
+14 
+
+Since OCM-2 channels are selected in atmospheric windows, therefore, absorption due to water 
+vapour and oxygen is expected to be insignificant. To verify this figure 3 shows the 
+transmittance due to water vapour at different concentrations (2, 4, and 6 cm) and the standard 
+value of oxygen for the tropical atmosphere. From figure 3, it is clear that that band 2, 3, 5 and 
+6 are completely free from the water vapour or oxygen absorption. Band 8 is also almost free 
+from water vapour but with very little contamination, however. Table 5 shows the water vapour 
+transmittance obtained after convolving the transmittance curve with band-8 spectral response 
+function, where form it is verified that the contamination is not more than 1% even at high 
+water vapour content of around 6 cm. There may be an error of about 1-2% if water vapour 
+content is very high >6 cm but such conditions are rare and often gets masked as clouds. 
+Table 4. The coefficient that relates ozone optical thickness with concentration. 
+Band (nm) 
+412 
+443 
+490 
+510 
+550 
+620 
+740 
+865 
+() 10-4 
+0.008 
+0.039 
+0.249 
+0.384 
+0.989 
+0.856 
+0.139 0.034 
+
+Table 5. Water vapour transmittance for OCM-2 band-8 centered at 865 nm at the solar zenith 
+of 45 degrees and nadir viewing geometry. 
+H2O (cm) 
+0 
+2 
+4 
+6 
+8 
+10 
+2 10-4 
+1.0 
+0.995 
+0.990 
+0.987 
+0.983 
+0.980 
+
+Figure 3. Atmospheric transmittance due to gas absorption for different values of water vapour 
+and the standard value of oxygen (tropical atmosphere). Solar zenith assumed is 45 degrees and 
+nadir viewing geometry. 
+
+15 
+
+4.3.2 Cloud and inland water masking 
+Masking clouds retaining heavy aerosol events unmasked is very challenging in any aerosol 
+retrieval algorithm. In normal conditions, heavy/thick clouds can be distinguished and masked 
+just by applying an appropriate threshold on visible channel measurements, however, thin 
+clouds especially at cloud edges frequently create problems. An astringent threshold can be 
+used to mask such pixels but it also masks heavy aerosol plumes. For this reason in the present 
+algorithm, a visible channel threshold is used to mask thick clouds only. For masking scattered 
+clouds, a spatial homogeneity test is performed by estimating the standard deviation over a 
+running window of 3x3 pixels. An appropriate threshold is used to detect scattered cloudy 
+pixels keeping the fact in mind that the land surface is more homogeneous than the scattered 
+clouds. For cloud masking following 2 tests are performed: 
+(a) Visible channel (band-2) reflectance threshold test: 
+ 443 > 0.30 Pixel is considered cloudy. (3) 
+(b) Threshold test on the standard deviation of a running 3 x 3-pixel window of band-2 image. 
+443,3 3 > 0.02 Center pixel is considered cloudy. (4) 
+The inland water mask is determined by computing the traditional NDVI like parameter 
+(NDVI) for the 0.62 m and the 0.865 m channels. 
+ =
+8,6,
+8,+6, 
+
+ (5) 
+If < 0.05 then the pixel is considered water contaminated and is masked. 
+The test for pixel saturation is also performed using saturation radiance ( ) values for each 
+band. If measured radiance () in any band satisfies the condition 
+ > 
+
+ (6) 
+then the pixel is considered saturated and is masked. 
+Any pixel with solar zenith angle (0) or sensor zenith angle (0) above-given limits are also 
+masked. The condition for the high zenith angle test is given by: 
+0 > 720 or > 840 
+
+(7) 
+
+4.3.3 Physical basis and model for surface characterization 
+The physical basis behind surface characterization in visible channels using NIR 
+channels is based on the fact that over the vegetated surface, the surface reflectance 
+in the blue spectral region is low due to absorption of solar radiation by chlorophyll while in 
+the NIR region the surface reflectance becomes high due to specular reflection from the 
+16 
+
+leaves. Using this fact appropriate function of the form shown in equation 8 can be developed 
+to characterize the surface reflectance in blue and red channels knowing the surface 
+reflectance in NIR channels and an appropriate vegetation index. For the case of OCM-2 data, 
+the vegetation index used is NDVI, blue and red, and NIR channels used are centered at 443 
+nm, 490 nm, 620 nm, and 865 nm. 
+
+= (
+., ), 
+ (8) 
+=
+
+.
+. 
+
+.+
+. (9) 
+
+.= 
+
+(0,)(0,)
+(0,,)
+(0,)(0,)(,)+()[
+(0,)(0,)
+(0,,)] (10) 
+For developing relation given in equation (8), around 1860 OCM-2 datasets (for the year 2017) 
+were processed and corrected for aerosol and gas absorption at 22 AERONET stations (located 
+in India, Pakistan, Nepal, Bangladesh, and Myanmar) using in-situ aerosol, water vapour, and 
+ozone information. After cloud screening of both AERONET and OCM-2 data around 700 co-
+located data-points are selected for model development. Radiative transfer calculations were 
+used to generate benchmark datasets of surface reflectance for each spectral channel. The 
+performance of function developed to estimate band-3 and band-6 surface reflectance using 
+NIR channel is shown in figure 3. From figure 3 it is seen that surface reflectance in band-3 can 
+be estimated using both red as well as NIR bands and NDVI within root mean square error 
+(rmse) of around 0.02. For lower surface reflectance the scatter is less while on bright surfaces 
+the significant scatter is observed. In figure 4, the data point density is higher for low surface 
+reflectance pixels, which in general true as natural targets are dark in blue wavelengths, 
+therefore excluding bright surface the rmse will become significantly lower than 0.02. In a 
+similar way, function to estimate surface reflectivity in band-2 using band-3 is also developed. 
+
+Figure 4. Scatter plot for modelled surface reflectance in band-3 and band-6 versus surface 
+reflectance obtained by atmospheric correction using in-situ data. 
+17 
+
+4.3.4 Radiative transfer calculations 
+Radiative Transfer (RT) simulation is another important step towards aerosol retrieval in which 
+the method of discrete ordinate is used to solve the RT equation (equation 11) for simulating 
+various radiative quantities for different possible aerosol atmospheres and illumination-view 
+geometries. 
+
+(,)
+
+= (, ) 
+0
+4
+(, )(, )
+
+4
+
+0
+40(, 0)exp (
+
+0). (11) 
+Solving this equation, the top of the atmosphere radiance (
+
+) can be computed assuming 
+tropical atmosphere in the range of 0.4-1.0 at the spectral resolution of 0.0025, which 
+are then convoluted to OCM-2 spectral response functions to simulate observations. The 
+radiative scattering due to aerosols is simulated assuming 2 fine aerosol models defined as 
+moderately and strongly absorbing aerosols, and 1 coarse aerosol model named dust aerosol 
+model. The optical properties (extinction and scattering coefficients, single scattering albedo, 
+phase function, and asymmetry factor) of the basic modes (accumulation and coarse modes) are 
+computed from the Mie theory assuming multi-modal log-normal distribution defined by 
+() = 
+=1
+
+[
+2/,
+22], 
+
+ (12) 
+where is the number of modes, is the particle radius, , is the mean radius of mode , 
+is the width of mode , and is the number density of mode . These parameters and the 
+refractive index (= ,+ ,) for each mode used in Mie calculations are taken from 
+Levy et al., 2007. An exponential profile of AOD with a scaled height of 2 km is assumed. In 
+the current version of the algorithm, to reduce the computational time of operational retrieval 
+of AOD, RT simulation-based look-up-tables (LUTs) are generated and saved as the auxiliary 
+database, which is used to calculate the 
+ as a function of solar zenith , sensor zenith , 
+relative azimuth angle , and AOD (varied from 0-5). LUTs corresponding to =
+0, 0.25, 0.5, 0.75, 1.0, 2, 3.0, 5.0 for each spectral band are generated and saved. Each LUT 
+contains calculated path reflectance for ten and values ranging from 0.0 to 72.0 with an 
+interval of 6.0 degrees and for sixteen values ranging from 0.0 to 180.0 with an interval of 
+12 degrees. For RT simulation several ready-to-use codes are freely available, however, in the 
+current version of the algorithm, the discrete ordinate method is used for which CDISORT code 
+is customized as per the need. 
+
+18 
+
+4.3.5 Aerosol inversion 
+The radiance data for two blue channels (443 and 490 nm in the case of OCM-2) are then 
+compared with modelled radiance. A maximum likelihood method is used to match the 
+appropriate values of aerosol optical thickness at 550nm and mixing ratio to the measured 
+radiance. For estimating the best solution, first AOD solutions using different aerosol models 
+(represented by 12 values of fine mode fraction ranging from -0.1 to 1.1) is estimated by 
+finding the perfect match between modelled and observed radiance in band-3 (490 nm), 
+secondly among these best AOD solutions one is chosen as the final solution by comparing 
+modelled and measured radiance in band-2 (443nm). The technique thus derived gives a 
+procedure, which is performed on each cloud-free land pixel, giving one of the finest daily 
+aerosol optical depth (AOD) at 550nm and fine mode fraction. Mathematically for each pixel, 
+a set of AOD and fine mode fraction is found for which the equations (13) and (14) are 
+satisfied. 
+490
+
+ 490
+= 0, (13) 
+443
+
+ 443
+= . (14) 
+Here 
+ and 
+ stands for satellite level modelled and measured signal (reflectance or 
+radiance), respectively, for band cantered at wavelength and stands for residual error. 
+The satellite level modelled reflectance 
+ is estimated by linear mixing of satellite level 
+modelled reflectance for fine mode and coarse mode aerosol models represented by symbols 
+,
+
+ and ,
+
+ , respectively, and weighted by fine mode fraction . Mathematically 
+it can be represented by the relation: 
+
+= ,
+
++ (1 ),
+
+ . (15) 
+
+19 
+
+4.4 Flowchart 
+
+Figure 5. The overall workflow of the algorithm. 
+
+20 
+
+4.5 Operational Implementation 
+
+Step 1: Reading visible channel radiance, sun-sensor geometry, and geolocation data. 
+Step 2: Apply calibration coefficients to radiance data. 
+Step 2: Down-sampling of each spectral band radiance by 3 x 3 window averaging. 
+Step 3: Cloud masking, Saturation pixel masking, Inland water masking, Ocean masking. 
+Step 4: Ozone correction to each channel radiance. 
+Step 5: Surface characterization in blue channels. 
+Step 6: LUT Interpolation. 
+Step 7. Use LUTs for inversion of aerosol optical depth (AOD) and fine mode fraction. 
+Step 8: Repeat steps 4 to 8 for each unmasked pixel. 
+Step 9. Geo-referencing & resampling the output AOD and fine mode fraction at 0.7 km. 
+
+5.0 Outputs 
+Parameter 
+Unit 
+Min 
+Max Accuracy 
+Resolution 
+Aerosol 
+optical depth 
+at 550 nm 
+Dimensionless 0 
+5 
+Uncertainty <20% 
+(Targeted) 
+0.7 km 
+Fine mode 
+fraction 
+Dimensionless 
+0 
+1 
+ Qualitative indicator 
+0.7 km 
+
+5.1 Format of the output and the domain 
+Geocoded tiff data files for each path and row. Having 3 layers: AOD @550nm, Fine 
+mode fraction, and aerosol corrected surface NDVI. 
+Domain: Local area coverage as shown in figure 2. 
+
+6.0 Validation 
+6.1 Data required 
+Parameter 
+Resolution 
+Accuracy 
+Source 
+AERONET spectral 
+AOD data 
+In-situ point 
+data 
+<=0.02 
+AERONET site in India & 
+neighbouring countries 
+Spectral AOD using 
+handheld sun-
+photometer 
+In-situ point 
+data 
+<=0.02. 
+Data collection campaigns 
+will be organized 
+MODIS/VIIRS AOD 
+product 
+0.1 x 0.1 degree 
+(0.05+0.2 AOD) LAADS DAAC - NASA 
+21 
+
+6.2 Methods of validation 
+6.2.1 AERONET data for validation 
+Ground-based observations can be made using AERONET (Holben et al., 1998), and any of the 
+several miscellaneous techniques, including the diffuse/direct method and polarization 
+measurements. AERONEt (Aerosol Robotic Network) is a network of ground-based sun 
+photometers established and maintained by Brent Holben of Code 923 of the NASA Goddard 
+Space Flight Center and Tom Eck of Raytheon ITSS. The sun-photometers measure the spectral 
+aerosol optical thickness and sky radiance. In India 4 AERONET sites namely Jaipur, Kanpur, 
+Gandhi College, and Amity University Noida; in Bangladesh 2 sites namely Bhola and Dhaka 
+University; in Pakistan Lahore and Karachi, and few sites in Nepal and Myanmar are providing 
+systematic in-situ AOD measurements. Data from these sites will be used for validation of 
+OCM-2 derived AODs after proper co-location in space and time. 
+For co-location of AERONET data with OCM-2 AOD retrievals, the in-situ AOD measurements 
+will be averaged in a 30 minute window centered at the time of OCM-2 AOD retrievals. It is 
+to be noted that different AERONET stations may have a different temporal resolution of the 
+in-situ measurement, therefore, along with overall validation, the variation in validation 
+results when using in-situ data at different temporal resolution will also be studied. 
+6.2.2 Handheld sun photometer validation 
+Many of the present satellite observations are augmented by special field campaigns to 
+provide ground-truth data for the satellite-derived measurements. Ongoing and Past data 
+from such campaigns will be sued for validation. 
+6.2.3 Satellite-based Inter-comparisons 
+OCM-2 derived AOD may be validated by comparing them with aerosol optical depths derived 
+by other satellite sensors, such as MODIS/VIIRS. The basic inter-comparison technique 
+involves three steps: 1) Identification of locations where both sensors fly over at nearly the 
+same time; 2) Extraction of data for storage in an inter-comparison archive; 3) Analysis of the 
+differences between the measurements. 
+6.3 Provisional validation 
+6.3.1 Derived AOD maps 
+Figures 6, 7, and 8 display the ability of the developed aerosol product to capture different 
+sources of aerosols such as small to large-scale forest fires, dust storms, and anthropogenic 
+activities over different parts of India. Due to high-resolution data (figure 6) it is evident that 
+22 
+
+the spatial distribution of aerosol over megacities such as Delhi can be monitored using the 
+OCM-2 AOD product. The availability of high-resolution spatial distribution of aerosol from 
+space over megacities will play a major role in developing a product such as ground particulate 
+matter (PM2.5 and PM10) maps at a large scale, which will be helpful in monitoring of air-
+quality and developing mitigation techniques in metropolitan cities. 
+In figure 8, the AOD map, fine mode fraction map, and AOD histogram are shown for data 
+acquired by OCM-2 over eastern Indo-Gangetic plain (IGP) and central India on 15 January 
+2021. The particle size distribution function from AERONET data at Bhola station, Bangladesh 
+is also shown in figure 8 for the same date. A very thick layer of aerosol (heavy air pollution, 
+AOD>1.0) over IGP is observed. The AERONET stations located at Dhaka University and Bhola, 
+Bangladesh show very high AOD values of 1.5 and 1.25, respectively. OCM-2 AOD retrieval is 
+consistent with ground observations. A fine mode fraction map shows high fine aerosols in 
+the entire IGP, while relatively coarser-sized particles in central India are observed. It is well 
+known that during winters high anthropogenic pollution associated with the biomass/biofuel 
+combustion process occurs over IGP giving rise to fine aerosols. The dominance of fine mode 
+aerosol is also verified by size distribution observations at AERONET stations Dhaka University 
+and Bhola. 
+6.3.2 Validation results with AERONET data 
+As described previously the retrieved products must look reasonable, and must be evaluated 
+about ground-truth data. The test data includes the entire 2016 data i.e., almost around 1092 
+L1B datasets were processed to generate the aerosol product. Out of these 180 individual 
+granules corresponding to path-9, row-13 (during the entire year of 2016) enclosing four 
+AERONET stations namely Kanpur, Jaipur, Gual Pahari (India), and Karachi (Pakistan) are used 
+for validation with ground truth. Among these, 3 stations, are interior urban centers and 
+mainly affected by anthropogenic sources of aerosols. Over Karachi, being a coastal city, the 
+aerosols are also affected by marine sources (sea salt) in addition to anthropogenic sources. 
+The results are shown in figure 9. A very good correlation, of around 0.8 is observed. About 
+63% to 80% of AOD retrievals are within the error envelope (EE) of 20%. The results show that 
+the proposed algorithm is highly sensitive towards aerosol retrieval using VNIR observation 
+from the OCM-2 sensor. A slight deviation of the slope of the regression line may be due to 
+several reasons but most probably it is due to calibration error, deviation of aerosol optical 
+properties used for inversion, and/or due to uncertainty in surface characterization in the 
+visible channel. These factors need to be improved in future versions. 
+23 
+
+Figure 6. AOD map on 2 November 2016. High resolution (700m) of OCM-2 AOD enables one 
+to capture high AOD/dust plume due to dust transportation from dust storms, which 
+originated within India and in neighboring countries (e.g., Pakistan-Afghanistan border as 
+shown). 
+24 
+
+Figure 7. High resolution (700m) from OCM-2 AOD enables one to capture high AOD/smoke 
+plumes due to forest fires in North-East India and the neighboring countries. 
+
+Figure 8. (a) AOD map over eastern Indo-Gangetic plain (IGP) and central India on 15 January 
+2021. A very thick layer of aerosol (heavy air pollution) over IGP is observed. (b) Fine mode 
+fraction map shows high fine aerosols in the entire IGP while relatively coarser sized particles 
+in central India. (d) AERONET size distribution at Bhola station showing the dominance of fine 
+mode aerosol. 
+2 March 2016
+AOD plume due to 
+forest fire
+25 
+
+Figure 9. Validation results of the OCM-2 AOD using AERONET in-situ AOD at different stations. 
+
+7.0 Technical issues (Limitations etc.) 
+
+The aerosol retrieval may fail at very bright surfaces due to physical limitations or due to the 
+saturation of data. For very bright surfaces after a certain value of aerosol optical depth, the 
+model radiance becomes highly inaccurate. 
+
+In the current version of the algorithm, the fine mode fraction values are used at discrete 
+levels therefore fine mode maps may show pixelated appearance. 
+
+Validation of the fine mode fraction is difficult as no in-situ observations are available, 
+however, in the future fine mode AOD (FAOD) may be correlated with AERONET inverted 
+FAOD values. 
+
+Using OCM-2 channels it is not possible to identify snowy pixels, therefore though snow pixels 
+are expected to be masked as cloudy pixels due to high reflectance but still partially snow 
+contaminated or less reflecting snow pixels may so unexpected AOD retrieved values. In 
+26 
+
+future versions, AWIFS based snow climatology can be used for the identification of snowy 
+pixels. 
+
+For AOD retrievals the OCM-2 radiance image is down-sampled by the average filter of 3 x 3-
+pixel size to improve the signal-to-noise ratio required for AOD retrieval. If retrieval is 
+performed at the original resolution the uncertainty may reach above the targeted 
+uncertainty of <20%. 
+
+It is to be noted the aerosol retrieval is very sensitive to the radiance calibration as well as to 
+surface reflectance. An error of 1% sensor measured reflectance or in surface reflectance may 
+lead to an uncertainty of 10% in AOD retrievals. 
+
+8.0 Future scope 
+
+The current algorithm will be extended to derive AOD at other spectral wavelengths also. 
+
+Cloud contamination in AOD retrievals at the edges of the clouds may be improved by 
+developing a better cloud mask based on spectral analysis. 
+
+In the current version of the algorithm, the vegetation index is used to know the surface type 
+for surface characterization from visible bands; however, pseudo-albedo may also be a 
+potential variable for the same purpose. 
+
+ A similar algorithm can be adapted for OCM-3 on-board upcoming OceanSat-3. 
+
+Knowing AOD, the aerosol correction on level-1 data can be performed for generating surface 
+reflectance and various land products such as surface NDVI. 
+
+Since OCM-2 AOD retrieval is at a very high spatial resolution of 0.7 km, therefore these can 
+be used for atmospheric correction of AWIFS data which will make AWIFS data more useful 
+for agriculture and other land-use applications. 
+
+In the current version, the aerosol model is taken from the work done by Levy et al, 2007 
+about one decade ago based on global in-situ data from AERONET. However, there is a need 
+for reanalysis/updating of aerosol types over different parts of the world, especially over 
+countries like India with complex atmosphere. This will improve the aerosol retrieval accuracy 
+and will also help in establishing the fine-mode fraction as a quantitative indicator instead of 
+the qualitative indicator for anthropogenic aerosol sources. 
+
+This product is expected to cater inputs for radiative effects of aerosols and air-quality 
+monitoring. 
+
+9.0 Discussion 
+In the present document, we introduced a new algorithm for deriving aerosol properties over land 
+from OCM-2 Level 1B spectral radiance. The beta version of the OCM-2 aerosol product generated 
+using this algorithm is operational from 17 December 2020. Unlike other algorithms, this method 
+does not need SWIR channel observation, moreover, it does not assume near Infrared channels 
+27 
+
+transparent to aerosols. In fact, in addition to visible channels, it uses aerosol information 
+contained in near Infrared channels also. The OCM-2 aerosol algorithm is tested subjectively as 
+well as on several test datasets. The results are evaluated at co-located AERONET sites. In its 
+provisional validation, OCM-2 AOD retrievals perform well. On average nearly 70% of AOD 
+retrievals found within an uncertainty envelope of 20% with a correlation coefficient r = 0.83. 
+Retrievals of fine mode fraction are found to agree with a general understanding of aerosol 
+sources in India and to some extent have been seen correlated with an AERONET size distribution, 
+but quantitatively have not been validated and therefore results should not be considered to be 
+quantitative. We note that the validation of fine mode AOD will be done in near future, which will 
+be a product that can be related to the anthropogenic contribution to the total aerosol optical 
+depth. The provisional validation suggests that the operational beta version retrieval is capable of 
+deriving AOD over land within expected uncertainty. However, it is necessary to perform extensive 
+validation exercises including more ground truth sites with more OCM-2 data. 
+As already discussed in the introductory section the primary objective of developing this algorithm 
+is intended to cater inputs for radiative and air-quality studies over the Indian landmass. However, 
+with this aerosol product, OCM-2 data utilization can be extended to other land applications also, 
+which was to date limited to ocean Colour applications only. Just as part of this discussion and to 
+appreciate the utility of OCM aerosol product for other land applications, we have shown OCM-2 
+NDVI product derived with and without aerosol correction in figure 9. The drastic improvement 
+apparent in NDVI establishes the possible utility of this AOD product in many other land 
+applications in addition to radiative and air-quality related studies. 
+
+Figure 10. Drastic improvement in OCM-2 derived NDVI after correction for aerosol is 
+apparent in the images shown. 
+
+28 
+
+10.0 References 
+Charslon, R.J., Langer, J., Rodhe, H., Levoy, C.B. and Warren, S.G., 1991, Perturbation 
+of the northern hemisphere radiative balance by backscattering from anthropogenic sulfate 
+aerosols. Tellus, 43AB, pp. 152163. 
+Holben B. N. et al. (1998), AERONET-A federated instrument network and data archive for aerosol 
+characterization, Remote sensing of environment, 44 (1), 1-16. 
+Haywood, J. and Boucher, O., 2000, Estimates of the direct and indirect radiative forcing due to 
+tropospheric aerosols: a review. Reviews of Geophysics, 38, pp. 513543 
+Hansen, J. E., and A. A. Lacis, 1990, Sun and dust versus greenhouse gases: An assessment of 
+their relative roles in global climate change. Nature, 346, 713-719. 
+Hastings, David A., Paula K. Dunbar, Gerald M. Elphingstone, Mark Bootz, Hiroshi Murakami, 
+Hiroshi Maruyama, Hiroshi Masaharu, Peter Holland, John Payne, Nevin A. Bryant, Thomas L. 
+Logan, J.-P. Muller, Gunter Schreier, and John S. MacDonald, eds., 1999. The Global Land One-
+kilometer Base Elevation (GLOBE) Digital Elevation Model, Version 1.0. National Oceanic and 
+Atmospheric Administration, National Geophysical Data Center, 325 Broadway, Boulder, 
+Colourado 80305-3328, U.S.A. Digital database on the World Wide Web (URL: 
+http://www.ngdc.noaa.gov/mgg/topo/globe.html) and CD-ROMs. 
+Hsu, N. C., S. C. Tsay, M. D. King, and J. R. Herman (2004), Aerosol properties over bright-reflecting 
+source regions, IEEE Trans. Geosci. Remote Sens., 42, 557569. 
+Hsu, N. C., S. C. Tsay, M. D. King, and J. R. Herman (2006), Deep blue retrievals of Asian aerosol 
+properties during ACE-Asia, IEEE Trans. Geosci. Remote Sens, 44, 31803195. 
+Hsu, N. C., M.-J. Jeong, C. Bettenhausen, A. M. Sayer, R. Hansell, C. S. Seftor, J. Huang, and S.-C. 
+Tsay (2013), Enhanced Deep Blue aerosol retrieval algorithm: The second generation, Geophys. 
+Res. Atmos., 118, doi:10.1002/jgrd.50712. 
+IPCC (2007), Climate Change 2007: The Physical Science Basis, Contribution of Working Group I to 
+the Fourth Assessment Report of the Intergovernmental Panel on Climate Change, edited by S. 
+Solomon et al., Cambridge University Press, Cambridge, United Kingdom and New York, NY, USA. 
+Kaufman, Y. J., A. Wald, L. A. Remer, B. C. Gao, R. R. Li, and L. Flynn (1997), The MODIS 2.1-m 
+channelCorrelation with visible reflectance for use in remote sensing of aerosol, IEEE. Trans. 
+Geosci. Remote Sens., 35(5), 12861298. 
+Kaufman, Y.J., Tanre, D. and Boucher, O., 2002, A satellite view of aerosols in the climate 
+system. Nature, 419, pp. 215223. 
+Levy, R. C., L. A. Remer, S. Mattoo, E. F. Vermote, and Y. J. Kaufman (2007), Second-generation 
+operational algorithm: Retrieval of aerosol properties over land from inversion of Moderate 
+Resolution Imaging Spectroradiometer spectral reflectance, J. Geophys. Res., 112, D13211, 
+doi:10.1029/2006JD007811. 
+Platnick, S. and Twomey, S., 1994, Remote sensing the susceptibility of cloud albedo to changes in 
+drop concentration. Atmospheric Research, 34, pp. 8598. 
+29 
+
+Mishra, M. K. (2018), Retrieval of aerosol optical depth from INSAT-3D imager over Asian landmass 
+and adjoining ocean: Retrieval uncertainty and validation, J. Geophys. Res. Atmospheres, 123 (10), 
+5484-5508. 
+Richard D. McPeters, P. K. Bhartia, Arlin J. Krueger, Omar Torres, and Jay R. Herman; Earth Probe 
+Total Ozone Mapping Spectrometer (TOMS) Data Products User's Guide; 1998; NASA Technical 
+Publication 1998-206895
