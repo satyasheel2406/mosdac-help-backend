@@ -26,28 +26,23 @@ app.add_middleware(
 
 # Hugging Face Inference API (LLM Fallback)
 def generate_llm_response(query: str) -> str:
-    url = "https://api-inference.huggingface.co/models/google/flan-t5-small"
+    url = "https://api-inference.huggingface.co/models/tiiuae/falcon-rw-1b"
     headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-    payload = {"inputs": f"Answer this for MOSDAC user:\n{query}"}
+    payload = {"inputs": f"Answer briefly: {query}"}
 
     try:
-        res = requests.post(url, headers=headers, json=payload, timeout=15)
+        res = requests.post(url, headers=headers, json=payload, timeout=20)
         result = res.json()
-
-        # Log the raw result to Render logs
-        print("🔍 Hugging Face API Response:", result)
+        print("🔍 HF API Response:", result)
 
         if isinstance(result, list) and "generated_text" in result[0]:
             return result[0]["generated_text"]
         elif "error" in result:
             return f"⚠ Hugging Face Error: {result['error']}"
-        elif "estimated_time" in result:
-            return "⏳ Model is waking up... try again shortly."
         else:
-            return "❓ Unexpected response format from the model."
+            return "❓ Unexpected response format."
     except Exception as e:
         return f"❌ Exception during LLM request: {str(e)}"
-
 
 # Root endpoint
 @app.get("/")
