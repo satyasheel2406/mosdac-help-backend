@@ -26,7 +26,8 @@ app.add_middleware(
 
 # LLM fallback function
 def generate_llm_response(query: str) -> str:
-    url = "https://api-inference.huggingface.co/models/google/flan-t5-small"
+    url = "https://api-inference.huggingface.co/models/google/flan-t5-base"
+
     headers = {
         "Authorization": f"Bearer {HF_API_TOKEN}",
         "Content-Type": "application/json"
