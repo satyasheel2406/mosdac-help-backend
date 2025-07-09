@@ -2,31 +2,26 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import json
 import os
+import requests
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer, util
-from transformers import pipeline
-from huggingface_hub import login
-import torch
 from .utils import load_knowledge_graph
 
 # Load .env
 load_dotenv()
 
-# Hugging Face login
-hf_token = os.getenv("HUGGINGFACE_TOKEN")
-login(hf_token)
+HF_API_URL = os.getenv("HF_API_URL")
+HF_API_KEY = os.getenv("HF_API_KEY")
 
 # Load Knowledge Graph
-import os
 KG_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
 KG_FILE = os.path.abspath(KG_FILE)
-
 KG = load_knowledge_graph(KG_FILE)
 
 # FastAPI app
 app = FastAPI()
 
-# CORS settings
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,27 +30,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load semantic search model
+# Load SentenceTransformer model
 semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
 entity_texts = [ent["text"] for ent in KG["entities"]]
 entity_embeddings = semantic_model.encode(entity_texts, convert_to_tensor=True)
 
-# Load Hugging Face LLM (Mistral)
-llm = pipeline(
-    "text2text-generation",
-    model="google/flan-t5-large",
-    device=0 if torch.cuda.is_available() else -1
-)
-
-
-# Generate LLM response
-def generate_llm_response(query: str) -> str:
-    prompt = (
-        f"You are an intelligent assistant for the MOSDAC satellite data portal. "
-        f"Answer the following query clearly, briefly, and helpfully:\n\n{query}"
-    )
-    result = llm(prompt, do_sample=True)[0]["generated_text"]
-    return result.strip()
+# Function to query Hugging Face Inference API
+def generate_llm_response(prompt: str) -> str:
+    headers = {
+        "Authorization": f"Bearer {HF_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "inputs": f"You are an assistant for the MOSDAC satellite data portal. Answer this clearly and helpfully:\n\n{prompt}",
+    }
+    response = requests.post(HF_API_URL, headers=headers, json=payload)
+    
+    if response.status_code == 200:
+        try:
+            result = response.json()
+            return result[0]["generated_text"].strip()
+        except Exception:
+            return "⚠ Error: Couldn't parse LLM response."
+    else:
+        return f"⚠ LLM API Error: {response.status_code}"
 
 @app.get("/")
 def root():

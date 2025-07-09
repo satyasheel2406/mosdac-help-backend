@@ -1,16 +1,15 @@
-# Ignore heavy data folders
+# Ignore large or local-only folders
 data/pdf-files/
 data/cleaned-txt/
 data/txt-files/
 data/kg.json
 data/keyword_list.txt
-data/knowledge_graph.json 
-# Ignore local-only scripts
-scripts/
 
-# Ignore compiled files and cache
+# Ignore scripts and compiled files
+scripts/
 __pycache__/
 *.pyc
 
-# Ignore env files
+# Ignore env
 .env
+
