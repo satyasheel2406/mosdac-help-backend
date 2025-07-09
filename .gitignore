@@ -1,7 +1,2 @@
-__pycache__/
+
 .env
-data/cleaned-txt/
-data/pdf-files/
-data/txt-files/
-data/kg.json
-scripts/
