@@ -6,6 +6,8 @@ import json
 from .utils import load_knowledge_graph
 from sentence_transformers import SentenceTransformer, util
 
+# DO NOT run uvicorn from inside this file on Replit!
+
 # Load KG
 KG_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
 KG_FILE = os.path.abspath(KG_FILE)
@@ -74,10 +76,10 @@ def search_entity(query: str):
 
     fallback = []
     if not matches:
-        fallback = [
-            {"text": KG["entities"][i]["text"], "similarity": float(scores[i])}
-            for i in scores.argsort(descending=True)[:3]
-        ]
+        fallback = [{
+            "text": KG["entities"][i]["text"],
+            "similarity": float(scores[i])
+        } for i in scores.argsort(descending=True)[:3]]
 
     llm_response = generate_llm_response(query)
 
