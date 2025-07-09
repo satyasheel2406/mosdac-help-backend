@@ -28,27 +28,26 @@ app.add_middleware(
 def generate_llm_response(query: str) -> str:
     url = "https://api-inference.huggingface.co/models/google/flan-t5-small"
     headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-    payload = {
-        "inputs": f"Answer this helpdesk question for the MOSDAC user:\n{query}",
-        "options": {"wait_for_model": True}
-    }
+    payload = {"inputs": f"Answer this for MOSDAC user:\n{query}"}
 
     try:
         res = requests.post(url, headers=headers, json=payload, timeout=15)
-        response_data = res.json()
-        
-        # Log full response for debugging
-        print("🤖 LLM Response:", response_data)
+        result = res.json()
 
-        if isinstance(response_data, list) and "generated_text" in response_data[0]:
-            return response_data[0]["generated_text"].strip()
-        elif "error" in response_data:
-            return f"⚠ Hugging Face error: {response_data['error']}"
+        # Log the raw result to Render logs
+        print("🔍 Hugging Face API Response:", result)
+
+        if isinstance(result, list) and "generated_text" in result[0]:
+            return result[0]["generated_text"]
+        elif "error" in result:
+            return f"⚠ Hugging Face Error: {result['error']}"
+        elif "estimated_time" in result:
+            return "⏳ Model is waking up... try again shortly."
         else:
-            return "⚠ Unexpected response from AI model."
+            return "❓ Unexpected response format from the model."
     except Exception as e:
-        print("❌ LLM Fetch Error:", e)
-        return "Sorry, I couldn't fetch a response now."
+        return f"❌ Exception during LLM request: {str(e)}"
+
 
 # Root endpoint
 @app.get("/")
