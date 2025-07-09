@@ -26,17 +26,17 @@ app.add_middleware(
 
 # Hugging Face Inference API (LLM Fallback)
 def generate_llm_response(query: str) -> str:
-    url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
+    url = "https://api-inference.huggingface.co/models/mrm8488/t5-base-finetuned-question-generation-ap"
     headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-    payload = {
-        "inputs": f"[INST] You are a helpful assistant for the MOSDAC satellite portal. Answer this query: {query} [/INST]",
-        "options": {"wait_for_model": True}
-    }
+    payload = {"inputs": query}
 
     try:
-        res = requests.post(url, headers=headers, json=payload, timeout=20)
+        res = requests.post(url, headers=headers, json=payload, timeout=15)
         response_json = res.json()
-        return response_json[0]["generated_text"]
+        if isinstance(response_json, list) and "generated_text" in response_json[0]:
+            return response_json[0]["generated_text"]
+        else:
+            return "⚠ Model responded but no valid output received."
     except Exception as e:
         return f"❌ Exception during LLM request: {str(e)}"
 
