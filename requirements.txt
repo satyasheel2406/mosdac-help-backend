@@ -1,7 +1,2 @@
 fastapi
 uvicorn
-python-dotenv
-scikit-learn
-sentence-transformers
-# Add this to the bottom of requirements.txt
-# trigger update
