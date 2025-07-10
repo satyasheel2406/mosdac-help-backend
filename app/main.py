@@ -5,17 +5,17 @@ import json
 import requests
 from .utils import load_knowledge_graph
 
-# Load Hugging Face token from environment (Render > Environment)
-HF_API_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
-
-# Load Knowledge Graph
+# Load KG from data/knowledge_graph.json
 KG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
 KG = load_knowledge_graph(KG_PATH)
 
-# FastAPI app setup
+# Load OpenRouter API key from environment variable
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+# Setup FastAPI app
 app = FastAPI()
 
-# Enable CORS for frontend access (important for Vercel connection)
+# Allow all CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,35 +24,37 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# LLM fallback function
+# ✅ LLM response from Qwen2.5 via OpenRouter.ai
 def generate_llm_response(query: str) -> str:
-    url = "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct"
-    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-    payload = {
-        "inputs": f"Answer like a helpful assistant for the MOSDAC satellite portal:\n\n{query}",
-        "options": {"wait_for_model": True}
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json"
     }
-
+    body = {
+        "model": "qwen2:1.5b-instruct",  # ✅ lightweight + free model
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant answering questions about ISRO and the MOSDAC satellite portal."},
+            {"role": "user", "content": query}
+        ]
+    }
     try:
-        res = requests.post(url, headers=headers, json=payload, timeout=20)
-        res.raise_for_status()
-        output = res.json()
-        return output[0]["generated_text"]
+        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=body, timeout=20)
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]
     except Exception as e:
         return f"❌ Exception during LLM request: {e}"
 
-
-# Root health check
+# Root route
 @app.get("/")
 def root():
-    return {"message": "MOSDAC Help Bot Backend Running"}
+    return {"message": "MOSDAC Help Bot Backend Running with OpenRouter LLM"}
 
-# Endpoint to return all entities
+# Entities
 @app.get("/entities")
 def get_entities():
     return KG["entities"]
 
-# Endpoint to return all relations
+# Relations
 @app.get("/relations")
 def get_relations():
     return KG["relations"]
@@ -60,10 +62,12 @@ def get_relations():
 # Search endpoint
 @app.get("/search")
 def search(query: str):
+    # Simple string matching on KG entities
     matches = [e for e in KG["entities"] if query.lower() in e["text"].lower()]
     matched_texts = {e["text"] for e in matches}
     relations = [r for r in KG["relations"] if r["source"] in matched_texts or r["target"] in matched_texts]
 
+    # Call OpenRouter-powered Qwen2.5 model
     llm_response = generate_llm_response(query)
 
     return {
