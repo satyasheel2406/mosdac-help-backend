@@ -1,34 +1,37 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os, json
+import os
+import json
 from .utils import load_knowledge_graph
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from sentence_transformers import SentenceTransformer, util
 
-# === Load Knowledge Graph ===
-KG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json"))
-KG = load_knowledge_graph(KG_PATH)
+# Paths
+BASE_DIR = os.path.dirname(__file__)
+KG_FILE = os.path.abspath(os.path.join(BASE_DIR, "..", "data", "knowledge_graph.json"))
+CLEANED_TXT_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data", "cleaned-txt"))
 
-# === Load cleaned text files ===
-CLEANED_TXT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "cleaned-txt"))
-documents = []
-doc_map = []
+# Load KG
+KG = load_knowledge_graph(KG_FILE)
 
+# Load cleaned txt corpus
+corpus = []
+file_sources = []
 for fname in os.listdir(CLEANED_TXT_DIR):
-    fpath = os.path.join(CLEANED_TXT_DIR, fname)
-    if fname.endswith(".txt"):
-        with open(fpath, "r", encoding="utf-8") as f:
-            content = f.read()
-            documents.append(content)
-            doc_map.append(fname)
+    path = os.path.join(CLEANED_TXT_DIR, fname)
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                corpus.append(line.strip())
+                file_sources.append(fname)
 
-# === Prepare TF-IDF ===
-vectorizer = TfidfVectorizer(stop_words='english')
-doc_vectors = vectorizer.fit_transform(documents)
+# Load semantic model
+semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
+corpus_embeddings = semantic_model.encode(corpus, convert_to_tensor=True)
 
-# === FastAPI App ===
+# App
 app = FastAPI()
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -51,20 +54,24 @@ def get_relations():
 
 @app.get("/search")
 def search(query: str):
-    # === KG Match ===
     matches = [e for e in KG["entities"] if query.lower() in e["text"].lower()]
     matched_texts = {e["text"] for e in matches}
     relations = [r for r in KG["relations"] if r["source"] in matched_texts or r["target"] in matched_texts]
 
-    # === Lightweight NLP from cleaned-txt ===
-    query_vec = vectorizer.transform([query])
-    similarities = cosine_similarity(query_vec, doc_vectors)[0]
-    top_indices = similarities.argsort()[::-1][:3]
-    nlp_answers = [{"file": doc_map[i], "score": float(similarities[i]), "excerpt": documents[i][:300]} for i in top_indices]
+    # Fallback: semantic match from cleaned-txt if KG didn't help
+    query_embedding = semantic_model.encode(query, convert_to_tensor=True)
+    scores = util.cos_sim(query_embedding, corpus_embeddings)[0]
+    top_idx = int(scores.argmax())
+    fallback_answer = corpus[top_idx]
+    fallback_file = file_sources[top_idx]
 
     return {
         "query": query,
         "matches": matches[:5],
         "related_relations": relations[:5],
-        "nlp_answers": nlp_answers
+        "semantic_fallback": {
+            "answer": fallback_answer,
+            "source": fallback_file,
+            "score": float(scores[top_idx])
+        }
     }
