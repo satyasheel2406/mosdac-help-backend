@@ -25,20 +25,27 @@ app.add_middleware(
 )
 
 # ✅ LLM response from Qwen2.5 via OpenRouter.ai
+import os
+import requests
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
 def generate_llm_response(query: str) -> str:
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    body = {
-        "model": "qwen2:1.5b-instruct",  # ✅ lightweight + free model
-        "messages": [
-            {"role": "system", "content": "You are a helpful assistant answering questions about ISRO and the MOSDAC satellite portal."},
-            {"role": "user", "content": query}
-        ]
-    }
     try:
-        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=body, timeout=20)
+        headers = {
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://your-frontend-site.vercel.app",  # ✅ Change this
+            "X-Title": "MOSDAC Help Bot"
+        }
+        payload = {
+            "model": "qwen2.5-1.5b-instruct",
+            "messages": [
+                {"role": "system", "content": "You are a helpful assistant for the MOSDAC satellite data portal."},
+                {"role": "user", "content": query}
+            ]
+        }
+        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=15)
         response.raise_for_status()
         return response.json()["choices"][0]["message"]["content"]
     except Exception as e:
