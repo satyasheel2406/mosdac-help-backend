@@ -30,27 +30,35 @@ import requests
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
+import os
+import requests
+
+# Load your OpenRouter key from environment
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
 def generate_llm_response(query: str) -> str:
     try:
         headers = {
             "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://your-frontend-site.vercel.app",  # ✅ Change this
+            "HTTP-Referer": "https://your-frontend-url.vercel.app",   # ✅ Change this
             "X-Title": "MOSDAC Help Bot"
         }
+
         payload = {
-            "model": "qwen2.5-1.5b-instruct",
+            "model": "qwen2.5-1.5b-instruct",   # ✅ Ensure model name is exactly this
             "messages": [
                 {"role": "system", "content": "You are a helpful assistant for the MOSDAC satellite data portal."},
                 {"role": "user", "content": query}
             ]
         }
+
         response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=15)
         response.raise_for_status()
         return response.json()["choices"][0]["message"]["content"]
+
     except Exception as e:
         return f"❌ Exception during LLM request: {e}"
-
 # Root route
 @app.get("/")
 def root():
