@@ -1,0 +1,555 @@
+Aerosol 
+
+10. Aerosol 
+S.No. 
+Product Name 
+Spatial Resolution 
+Temporal Resolution 
+1 
+3DIMG_L2G_AOD 
+0.10X0.10 degree 
+30 minutes 
+Aerosol 
+Aerosol 
+10. Aerosol Optical Depth (AOD) Reterival 
+10.1 
+Algorithm Configuration Information 
+10.1.1 Algorithm Name 
+Aerosol Optical Depth (AOD) 
+10.1.2 Algorithm Identifier 
+3DIMG_L2G_AOD 
+10.1.3 Algorithm Specification 
+Version Date 
+Prepared by 
+Description 
+1.0 
+14.02.2007 
+Prakash Chauhan 
+AOD Baseline Document (Version-1) 
+1.1 
+17.08.2012 
+Prakash Chauhan 
+Nivedita Sanwlani 
+Arvind Sahay 
+AOD Baseline Document (Version-2) 
+1.2 
+01.01.2021 
+Manoj K Mishra 
+AOD Baseline Document (Version-3) 
+
+10.2 Introduction 
+10.2.1 Overview and background 
+Aerosols play an important role in numerous aspects of human life. Aerosols have large-
+scale effects, such as their impact on climate by redistributing solar radiation (Herman 
+and Browning 1975; Charlson et al. 1991; Haywood and Boucher 2000) and interacting 
+with clouds (Platnick and Twomey 1994; Kaufman et al. 2002). Aerosol information is 
+also critical for atmospheric correction algorithms for multi-spectral satellite sensors and 
+military operations. The climate effects of atmospheric aerosols may be comparable to 
+CO2 greenhouse effects, but with opposite sign and larger uncertainty (Hansen and Lacis, 
+1990). Aerosols have a significant impact on human life beyond the climate element. 
+When in the lower troposphere, aerosols cause poor air quality, reduction of visibility, 
+and public health hazards. Satellite remote sensing provides a means to derive aerosol 
+distribution at global and regional scales. 
+This Algorithm Theoretical Basis Document (ATBD) describes the updated algorithm 
+used to retrieve the Aerosol Optical Thickness (AOD) for the INSAT-3D/3DR Imager 
+instrument operating from a geostationary platform. In comparison to previous algorithm 
+(see INSAT-3D AOD ATBD version-1&2), the present algorithm (version-3, Mishra et 
+al, 2018) is significantly different both in terms of surface reflectance characterization as 
+well as aerosol inversion. The updated algorithm has several advancement, which has 
+improved the AOD product. Following points are some of the important features of the 
+present algorithm that makes it advanced and improved in comparison to previous 
+versions: 
+a) Previous algorithm utilizes single scattering approximation (SSA) that is it do not 
+consider multiple scattering, while in present algorithm exact radiative transfer 
+calculation are done considering multiple scattering events also. 
+Aerosol 
+b) In previous versions, minimization of 30-day top of the atmosphere (TOA) radiance is 
+assumed as surface contribution, while here minimization of Rayleigh corrected TOA 
+reflectance is used for generating clear composite image (CCI). 
+c) In previous version CCI image is directly used as surface reflectance, while in present 
+algorithm CCI image is first atmospherically corrected using dynamic (seasonal and 
+spatial) background aerosol database (generated using multiyear MODIS aqua AOD data) 
+to generate surface reflectance which is then used for AOD inversion. 
+d) Previously perfectly scattering aerosol type is assumed for both ocean and land (for 
+land it is rarely valid), while in updated algorithm for AOD inversion continental and 
+marine aerosols are used for land and ocean, respectively. 
+e) In previous versions, AOD retrieval done for all pixel even over bright surface where 
+in principle retrieval is not possible using band centered at red (650nm) wavelength, 
+while in current version AOD retrieval is done only for those pixel where surface 
+reflectance is less than critical reflectance. Thus, false retrievals such as AOD retrieval 
+over very bright surface (like desert or bare arid soil surfaces or high reflecting urban 
+setups) are reduced/masked. 
+f) Current algorithm gives AOD product at 550 nm. 
+The output product description is summarized in Table 1. Specifically, this document 
+identifies the sources of input data, both INSAT-3D/3DR imager and non- INSAT-
+3D/3DR imager data, required for retrieval; provides the physical theory and 
+mathematical background underlying the use of this information in the retrievals; 
+includes implementation details; and describes assumptions and limitations of the 
+proposed approach. 
+
+Table 1: Summary of Aerosol Optical Depth (AOD) product 
+Parameter 
+Name 
+Units 
+Horizontal Cell 
+Size 
+Comments 
+Aerosol Optical 
+depth at 550 nm 
+Dimensionless 10.0 km for both 
+Land and oceans 
+Retrieved for all cloud free 
+regions. 
+
+10.2.2 Objective 
+The objective of this algorithm is to calculate the aerosol optical thickness, proportional 
+to the total aerosol loading of the ambient aerosol, over both land and ocean for Indian 
+region on a six times (6:00, 6:30, 7:00, 7:30, 8:00 and 8:30 UTC) daily basis. Retrievals 
+are only performed for cloud free pixels during the daytime. The overall objectives of the 
+INSAT-3D/3DR aerosol retrievals algorithm is to determine the aerosol optical thickness, 
+at 550 nm and 10 km spatial resolution over both land and ocean surfaces with root mean 
+square (RMS) error of 0.20. Optical thickness retrievals apply only under clear and 
+daytime conditions. 
+
+Aerosol 
+10.3 Inputs 
+10.3.1 Static Data 
+Parameter 
+Resolution 
+Source 
+Digital elevation model (DEM) 
+
+Relative Humidity climatology 
+(monthly) 
+5.0 minutes 
+
+0.5 degree 
+ETOPO5 
+
+NCEP 
+Spectral 
+Response 
+Function 
+(SRF) for Imager bands 
+1nm 
+Sensor Group of Space 
+Applications Centre, Ahmedabad 
+
+10.3.2 Image and preprocessing data (Dynamic) 
+
+Parameter 
+Resolution Quantization 
+Accuracy 
+Source 
+Radiometric 
+and 
+geometric corrected 
+radiance values of 
+visible 
+channel 
+(0.55-0.75 m) 
+4 km 
+10 bit 
+---- 
+Derived from 
+raw data by DP 
+(data 
+processing) 
+Radiometric 
+and 
+geometric corrected 
+BT values of TIR-1 
+channel 
+4 km 
+10 bit 
+---- 
+Derived from 
+raw data by DP 
+(data 
+processing) 
+Radiometric 
+and 
+geometric corrected 
+BT values of TIR-2 
+channel 
+4 km 
+10 bit 
+---- 
+Derived from 
+raw data by DP 
+(data 
+processing) 
+Geolocation 
+file 
+along 
+with 
+sun 
+zenith & azimuth 
+and sensor zenith 
+and 
+azimuth 
+information 
+All pixels 
+--- 
+Not greater 
+than 1 pixel 
+Derived from 
+raw data by DP 
+(data 
+processing) 
+At 
+least 
+28-day 
+previous 
+data 
+for 
+Visible band should 
+be available for 1130 
+and 0830 hrs. UTC 
+for the generation of 
+Clear 
+composite 
+reflectance image 
+4 km 
+--- 
+--- 
+Derived from 
+raw data by DP 
+(data 
+processing) 
+
+10.3.3 Other Auxiliary data and Model Inputs 
+Parameter 
+Resolution 
+Quantization 
+Accuracy 
+Source 
+Total Column 
+Ozone 
+
+50 km 
+
+-- 
+
+-- 
+NCEP 
+
+Aerosol 
+concentration 
+
+Surface 
+pressure 
+
+50 km 
+
+-- 
+
+-- 
+NCEP or 
+GTS through 
+IMD 
+10.4 Algorithm Functional Specifications 
+
+10.4.1 Overview 
+It has been demonstrated that aerosol optical thickness can be retrieved from solar-
+reflected radiance, and that aerosol size distribution information is carried in the spectral 
+dependence of aerosol optical thickness (e.g., Kaufman et al., 1997; Kaufman et al., 
+2002). Thus, satellite reflectance measurement limited to one (GOES) or two channels 
+(Advanced Very High Resolution Radiometer [AVHRR]) were used first to derive the 
+total aerosol content by assuming a given aerosol model. 
+The relatively homogeneous surface of the ocean enables the direct application of the 
+look up table (LUT) approach to find the aerosol optical thickness. Using the observed 
+reflectance at the top of the atmosphere (TOA) in coordination with ancillary information 
+on the wind speed, water vapor, surface pressure, surface elevation, and ozone, the 
+corrected reflectances are inverted into a maritime LUT to find values of optical 
+thickness. 
+The approach over land is more complicated, in that dark, vegetated surfaces are required 
+for aerosol optical depth retrieval. In dark vegetation approach for aerosol retrieval a 
+near-IR band is used to identify dark, vegetated pixels, then the surface reflectance in the 
+visible bands is calculated from the observed reflectance in the near-IR band. The optical 
+thickness is initially calculated assuming a continental aerosol model. The suspended 
+matter information is used to choose a better aerosol model and more accurate values of 
+optical thickness (Kaufmann et al. 1997). 
+In spite of advances in aerosol remote sensing over land, most retrievals are limited to 
+once or twice per day, as by the morning and afternoon passes of the orbiting polar 
+satellites. Aerosols, however, show diurnal variations that would be missed by such 
+sparse observations. While studies of aerosol optical depth from Sun photometers show 
+little systematic trends (Smirnov et al. 2002), surface observations of scattering show 
+significant diurnal patterns (Bergin et al. 2001). It is required to understand aerosol plume 
+movement to track and forecast plume movement in the interest of human health. 
+Therefore, it is important to monitor the temporal aspects of aerosol. 
+The INSAT-3DR imager data from geostationary platform has the potential to provide 
+aerosol observations over land and ocean with multiple observations per day. Many 
+studies have demonstrated the potential of Geostationary Operational Environmental 
+Satellite (GOES) series of imager sensors to provide quantitative estimates of aerosol 
+optical (Knapp et al. 2002, Knapp et al. 2005). Their sensitivity studies, however, 
+concluded that retrievals depend on aerosol optical property assumptions and surface 
+reflectance. Studies using newer geostationary satellites (e.g. GOES-8) and larger 
+validation networks (e.g. Aerosol Robotic NetworkAERONET) supported those initial 
+Aerosol 
+findings. Specifically, Zhang et al. (2001) and Knapp et al. (2002) showed that aerosol 
+monitoring from GOES is possible for South America. However, this region has optimal 
+retrieval conditions: surface cover with little variability (i.e. rainforest) and large aerosol 
+optical depths (from biomass burning). 
+Studies by Knapp et al. (2005) have shown operational potential of GOES series of 
+sensors for the monitoring of aerosol optical depth over land. A method is proposed by 
+Knapp et al (2005) to correct surface effects and retrieve aerosol optical depth using 
+visible reflectance measurements from the Geostationary Operational Environmental 
+Satellite (GOES). The surface contribution is determined from temporal compositing of 
+visible imagery, where darker pixels correspond to less atmospheric attenuation and 
+surface reflectance is deduced from the composite using radiative transfer. The method is 
+applied to GOES-8 imagery over the eastern US. Retrieved surface reflectance is 
+compared with separate retrievals using a priori ground based observations of aerosol 
+optical depth. 
+10.4.1.1 
+Theoretical Background 
+The INSAT-3DR imager data will be used to perform the surface reflectance and aerosol 
+optical depth retrievals and mask for clouds. It measures top of the atmosphere (TOA) 
+radiance in six channels: three at infrared wavelengths, one in the visible wavelength and 
+one sensitive to both solar and Earth-emitted radiance. Primarily, the visible channel 
+(0.520.72 mm full width at half maximum) is sensitive to aerosol scattering and 
+remaining channels are used for cloud masking. The cloud mask algorithm is based on 
+the Clouds from the Advanced Very High Resolution Radiometer (AVHRR) (CLAVR) 
+algorithm (Stowe et al. 1999) which uses spectral and spatial thresholds to test for the 
+presence of clouds. 
+The retrieval of aerosol information from INSAT-3DR imager data is a 3-step process: 
+1) Cloud masking 
+2) Composite the visible images to estimate the surface reflectance, and 
+3) Use the surface reflectance with an image to retrieve the aerosol optical depth. 
+These steps are described below. 
+
+Cloud Masking of INSAT-3DR Imager data 
+Clouds are generally characterized by higher reflectance and lower temperature than the 
+underlying earth surface. As such, simple visible and infrared window threshold 
+approaches offer considerable skill in cloud detection. Following threshold-based tests 
+will be performed to detect the cloudy pixels. 
+a) Visible band threshold test 
+The reflectance threshold test using visible band of INSTA-3D/3DR. Pixels with visible 
+channel reflectance greater than 0.3 over land and greater than 0.10 over ocean are 
+considered cloudy. 
+b) TIR Brightness temperature threshold test 
+Aerosol 
+ Pixels with brightness temperature in TIR1 channel less than 273 are considered cloudy. 
+c) Standard deviation threshold test 
+Land: 3X3 pixel window is considered for calculating standard deviation in visible and 
+TIR1 channel. If standard deviation of visible channel and TIR1 BT is greater than 0.03 
+and 4, respectively than all pixels in 3X3 window are masked. 
+Ocean: 3X3 pixel window is considered for calculating standard deviation in visible and 
+TIR1 channel. If standard deviation of visible channel and TIR1 BT is greater than 0.015 
+and 1, respectively, than all pixels in 3X3 window are masked. 
+
+Surface Reflectance Retrieval 
+Estimating the surface contribution to the TOA INSAT-3D/3DR Imager visible 
+reflectance is difficult since observations will have atmospheric contamination. For 
+instance, a visible observation from INSAT-3DR Imager on a cloudless day with low 
+aerosol burden will still have gaseous absorption (primarily, ozone and water vapour); 
+Rayleigh scattering; and residual aerosol extinction. This atmospheric component to the 
+TOA reflectance needs to be removed to retrieve the surface reflectance. While studies 
+have shown it is possible to estimate the surface component from observations in the near 
+infrared (e.g. 2.1 m) where aerosol and Rayleigh scattering are very low (Kaufman et al. 
+2002), the INSAT-3D/3DR imager lacks an observation at this wavelength. Therefore, a 
+compositing method will be used to estimate the surface reflectance. 
+The INSAT-3D/3DR visible channel radiance is converted to top of the atmosphere 
+(TOA) reflectance. TOA reflectance is then corrected for ozone and water Vapor 
+absorption. Water vapour and ozone concentration are used from NCEP model data. 
+Further Rayleigh reflectance is removed from the gaseous absorption corrected TOA 
+reflectance to get Rayleigh corrected reflectance. This reflectance has aerosol and surface 
+contribution only. Now for each pixel, the 30 day previous Rayleigh corrected reflectance 
+is sorted and first and second minima is computed. First minima represent the clearest 
+condition, however, due to cloud shadow contamination, sometimes first minima may not 
+be the true representative of surface reflectance, therefore to remove shadow effect, and 
+we put a threshold test on first minima. If first minima are less than 0.04 then second 
+minima will be considered otherwise first minima is considered. The threshold of 0.04 on 
+first minimum to avoid shadow effect is empirical. This sorting of Rayleigh corrected 
+reflectance and selection of first or second minima is done for all pixel to obtain clear 
+composite image. By using this value to obtain the surface reflectance, one assumes that 
+aerosol would increase the reflectance and cloud shadows will be rare. The length of the 
+time is somewhat subjective. In general, a long enough time is needed for at least one 
+cloud-free observation. Knapp et al. (2005) used a two week (i.e., 14 day) period. The 
+clear composite reflectance is then corrected for background aerosol optical depth (0.02 
+and 0.04 for ocean and land respectively) to estimate Lambertian surface reflectance 
+(surf). The image in figure (1) shows Lambartian surface reflectance computed using 
+above mentioned method from INSAT-3D data from 4-31 December, 2013 and 4-31 
+January 2014 which is used for aerosol inversion on 1 January 2014 and 1 February 2014, 
+respectively. 
+Aerosol 
+
+Figure 1. Shows Lambartian surface reflectance derived from clear composite method 
+using INSAT-3D visible channel data (a) derived from data for the period of 4-31 
+December 2013. (b) Derived from data for the period of 4-31 January 2013. 
+
+The accuracy of the composite depends on the length of time used to create it. For 
+instance, enough cloud-free observations must exist with little aerosol influence for the 
+surface reflectance to be accurate. Areas of persistent aerosol or cloud cover will be 
+likely to have caused errors in the retrieved surface reflectance because the atmospheric 
+component remains large in such situations. It is to be noted that in previous version of 
+AOD retrieval algorithm (version1 an d 2), instead of minimizing Rayleigh corrected 
+reflectance, the TOA radiance was minimized, therefore the effect of change in solar 
+zenith angle during the period of previous 30 days decreases the accuracy of derived 
+surface reflectance. 
+Aerosol Optical Depth Retrieval 
+The aerosol optical depth retrieval is performed using an INSAT-3D/3DR imager visible 
+image and the retrieved surface reflectance (from the previous step). In this retrieval, the 
+current day TOA reflectance is corrected for ozone and water vapour absorption and also 
+corrected for Rayleigh reflectance. Then precomputed look tables (using 6S radiative 
+transfer model) that consist spherical albedo, reflectance, transmittance as a function of 
+sun-sensor geometry and aerosol optical thickness are used to simulate theoretical 
+Rayleigh corrected reflectance which is then compared with observed Rayleigh corrected 
+INSAT-3DR reflectance to obtained aerosol optical depth. It is to noted that over land 
+continental aerosol model is used while over ocean maritime aerosol model is used. In 
+previous versions of AOD retrival algorithm, single scattering approximation was used 
+for inverting AOD, assuming perfectly scattering aerosol (single scattering albedo 
+assumed to be unity). Figure 2 shows the schematic flow chart of the aerosol optical 
+thickness (AOD) retrieval procedure. 
+
+Aerosol 
+10.4.1.2 
+ Flow Chart 
+
+10.4.2 Operational Implementation 
+Step 1: Conversion from gray count to visible radiance and TIR brightness temperature. 
+Step 2: Cloud Masking. 
+Step 3: Conversion of TOA radiance to TOA reflectance. 
+Step 4: Correction of TOA reflectance for gaseous absorption and Rayleigh scattering. 
+Step 5: Generation of clear composite image using darkest observation using last 28-days 
+data. 
+Step 6: Atmospheric correction of clear composite image for background aerosol and 
+generation of Lambartian surface reflectance. 
+Step 7: Correct current day visible data for gaseous absorption and molecular scattering. 
+Step 8: Invert current day Rayleigh corrected reflectance to get AOD using Lambartian 
+surface reflectance and pre-computed LUTs. 
+
+Aerosol 
+10.5 
+Outputs 
+Parameter 
+Unit 
+Min 
+Max 
+Accuracy 
+Resolution 
+Aerosol 
+optical 
+depth at 550 
+nm 
+Dimensionless 0 
+5 
+15-20% 
+10 Km 
+
+10.5.1 format of the output and the domain 
+ Lat , Lon, AOD , 
+
+Domain : 
+40 to 40 N, 30 E to 120 E 
+10.6 
+Validation 
+10.6.1 Data required 
+Prameter 
+Resolution 
+Source 
+AERONET 
+spectral 
+AOD data 
+In-situ point 
+observation 
+AERONET sites in India Kanpur, 
+Gandhi college (Patna) and Jaipur 
+Spectral 
+AOD 
+using 
+handheld sun-photometer 
+In-situ point 
+observation 
+Data collection campaigns will be 
+organized 
+MODIS AOD products 
+0.1 to 1 degree 
+Data available through internet 
+
+10.6.2 Methods of validation 
+ AERONET data for Validation 
+Post-launch routine ground-based observations can be made using AERONET, and any 
+of the several miscellaneous techniques, including the diffuse/direct method, aureole 
+meters, and polarization measurements. AeRoNet (Aerosol Robotic Network) is a 
+network of ground-based sun-photometers established and maintained by Brent Holben 
+of Code 923 of the NASA Goddard Space Flight Center and Tom Eck of Raytheon ITSS. 
+The sun-photometers measure the spectral aerosol optical thickness and sky radiance. In 
+India 3 Aeronet sites namely Kanpur, Goa and Dharwar are providing systematic in-situ 
+AOD measurements. Data from these sites will be used for validation of INSAT-
+3D/3DR derived AODs. 
+ Post-Launch Special Field Experiments 
+Many of the present satellite observations are augmented by special field campaigns to 
+provide ground-truth data for the satellite-derived measurements. The INSAT-3D/3DR 
+Imager derived aerosol optical thickness measurements will be validated using hand-held 
+sun-photometer. The details of these campaigns (timing, location, instrumentation, etc.) 
+will be decided later on. 
+
+Aerosol 
+Post-Launch Satellite-Based Inter-comparisons 
+INSAT-3D/3DR Imager derived aerosol optical depths may be validated by comparing 
+them with aerosol optical depths derived by other satellite sensors, such as MODIS. The 
+basic inter-comparison technique involves three steps: 1) identification of locations where 
+both sensors fly over at nearly the same time; 2) extraction of data for storage in an inter-
+comparison archive; 3) analysis of the differences between the measurements. 
+10.7 
+Technical issues (Limitation etc.) 
+Accuracy of the product depends on the accuracy of the radiation model to simulate the 
+satellite radiances. However, the following limitations of the present study have to be 
+kept in mind. 
+(i) Characterization of surface reflectivity is critical of the study. Use of darkest 
+observation for last 28 days provides mean reflectivity. This may also introduce 
+significant errors in derived AOD, specially for the location with persistent AOD for long 
+period. 
+(ii) Due to single visible channel aerosol type is to be fixed which is in reality is not a 
+good approximation. This may introduce large errors in retrieved AOD. 
+(iii) Over bright surface and high aerosol loadings, TOA reflectance becomes insensitive 
+to aerosol therefore; AOD over bright surfaces may have large uncertainty. 
+10.8 
+Future Scope 
+In future algorithms making use of INSAT-3D/3DR imager data for SWIR and MIR 
+bands can also be attempted for characterization of surface reflectivity. 
+
+ 10.9 References 
+1. Bergin, M.H., Cass, G.R., Xu, J., Fang, C., Zeng, L.M., Yu, T., Salmon, L.G., Kiang, 
+C.S., Tang, X.Y., Zhang, H. and Chameides, W.L., 2001, Aerosol radiative, physical, 
+and chemical properties in Beijing during June 1999. Journal of Geophysical 
+Research, 106, pp. 17 96917 980. 
+2. Charston, R.J., Langer, J., Rodhe, H., Levoy, C.B. and Warren, S.G., 1991, 
+Perturbation of the northern hemisphere radiative balance by backscattering from 
+anthropogenic sulfate aerosols. Tellus, 43AB, pp. 152163. 
+3. Hansen, J. E., and A. A. Lacis, 1990, Sun and dust versus greenhouse gases: An 
+assessment of their relative roles in global climate change. Nature, 346, 713-719. 
+4. Haywood, J. and Boucher, O., 2000, Estimates of the direct and indirect radiative 
+forcing due to tropospheric aerosols: a review. Reviews of Geophysics, 38, pp. 513
+543. 
+5. Herman, B.M. and Browning, S.R., 1975, The effect of aerosols on the Earth-
+atmosphere albedo. Journal of Atmospheric Science, 32, pp. 14301445. 
+6. Kaufman, Y.J., Tanre, D., Remer, L.A., Vermote, E.F., Chu, A. and Holben, B.N., 
+1997, Operational remote sensing of tropospheric aerosol over land from EOS 
+moderate resolution imaging spectroradiometer. Journal of Geophysical Research, 
+102, pp. 1705117067. 
+7. Kaufman, Y.J., Tanre, D. and Boucher, O., 2002, A satellite view of aerosols in the 
+climate system. Nature, 419, pp. 215223. 
+Aerosol 
+8. Knapp, K.R., Vonder Harr, T.H. and Kaufman, Y.J., 2002, Aerosol optical depth 
+retrieval from GOES-8: uncertainty study and retrieval validation over South America. 
+Journal of Geophysical Research, 107, 10.1029/2001JD000505. 
+9. Knapp, K. R., Frouin, R, Kondragunta and Prados, A., 2005, Toward aerosol optical 
+depth retrievals over land from GOES visible radiances: determining surface 
+reflectance, International Journal of Remote Sensing. 
+10. Mishra, M. K., 2018, Retrieval of Aerosol optical depth from INSAT-3D Imager over 
+Asian landmass and adjoining ocean: Retrieval uncertainty and validation, Journal of 
+Geophysical Research: Atmospheres 123 (10), 5484-5508. 
+11. Platnick, S. and Twomey, S., 1994, Remote sensing the susceptibility of cloud albedo 
+to changes in drop concentration. Atmospheric Research, 34, pp. 8598. 
+12. Smirnov, A., Holben, B.N., Dubovik, O.V., ONeill, N.T., Eck, T.F., Westphal, D.L., 
+Goroch, A.K., Pietras, C. and Slutsker, I., 2002, Atmospheric aerosol optical 
+properties in the Persian Gulf. Journal of Atmospheric Science, 59, pp. 620634. 
+13. Stowe, L.L., Davis, P.A. and McClain, E.P., 1999, Scientific basis and initial 
+evaluation of the CLAVR-1 global clear/cloud classification algorithm for the 
+advanced very high resolution radiometer. Journal of Atmospheric and Oceanic 
+Technology, 16, pp. 656681. 
+14. Zhang, J., Christopher, S.A. and Holben, B., 2001, Intercomparison of aerosol optical 
+thickness derived from GOES 8 imager and ground-based Sun photometers. Journal 
+of Geophysical Research, 106, pp. 73877397.
