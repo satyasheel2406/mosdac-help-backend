@@ -26,30 +26,21 @@ app.add_middleware(
 
 # LLM fallback function
 def generate_llm_response(query: str) -> str:
-    url = "https://api-inference.huggingface.co/models/google/flan-t5-base"
-
-    headers = {
-        "Authorization": f"Bearer {HF_API_TOKEN}",
-        "Content-Type": "application/json"
-    }
+    url = "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct"
+    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
     payload = {
-        "inputs": f"Answer this for a MOSDAC user: {query}"
+        "inputs": f"Answer like a helpful assistant for the MOSDAC satellite portal:\n\n{query}",
+        "options": {"wait_for_model": True}
     }
 
     try:
-        response = requests.post(url, headers=headers, json=payload, timeout=20)
-
-        if response.status_code != 200:
-            return f"❌ HF API Error: {response.status_code} - {response.text}"
-
-        data = response.json()
-        if isinstance(data, list) and "generated_text" in data[0]:
-            return data[0]["generated_text"]
-        else:
-            return f"⚠ Unexpected HF response format: {data}"
-
+        res = requests.post(url, headers=headers, json=payload, timeout=20)
+        res.raise_for_status()
+        output = res.json()
+        return output[0]["generated_text"]
     except Exception as e:
         return f"❌ Exception during LLM request: {e}"
+
 
 # Root health check
 @app.get("/")
