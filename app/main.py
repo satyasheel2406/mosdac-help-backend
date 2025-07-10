@@ -26,7 +26,7 @@ app.add_middleware(
 
 # LLM fallback function
 def generate_llm_response(query: str) -> str:
-    url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
+    url = "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct"
     headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
     payload = {
         "inputs": f"Answer like a helpful assistant for the MOSDAC satellite portal:\n\n{query}",
