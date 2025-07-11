@@ -2,13 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
-import re
 import requests
-from dotenv import load_dotenv
-from difflib import SequenceMatcher
 from .utils import load_knowledge_graph
-
-load_dotenv()
+import re
+from difflib import SequenceMatcher
 
 app = FastAPI()
 
@@ -24,19 +21,17 @@ app.add_middleware(
 KG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
 KG = load_knowledge_graph(KG_PATH)
 
-# Load cleaned-txt folder contents into memory
+# Load cleaned-txt folder contents
 CLEANED_TXT_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "cleaned-txt")
 doc_chunks = []
-if os.path.exists(CLEANED_TXT_DIR):
-    for fname in os.listdir(CLEANED_TXT_DIR):
-        if fname.endswith(".txt"):
-            fpath = os.path.join(CLEANED_TXT_DIR, fname)
-            with open(fpath, "r", encoding="utf-8") as f:
-                text = f.read()
-                chunks = re.split(r"(?<=[.])\s+", text)
-                doc_chunks.extend(chunks)
+for fname in os.listdir(CLEANED_TXT_DIR):
+    if fname.endswith(".txt"):
+        with open(os.path.join(CLEANED_TXT_DIR, fname), "r", encoding="utf-8") as f:
+            text = f.read()
+            chunks = re.split(r"(?<=[.])\s+", text)
+            doc_chunks.extend(chunks)
 
-# Simple string similarity
+# Similarity
 def basic_similarity(a, b):
     return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
@@ -48,37 +43,34 @@ def find_best_passage(query):
         if score > best_score:
             best_score = score
             best_text = chunk
-    return best_text.strip()
+    return best_text.strip(), best_score
 
-# OpenRouter API fallback
-def query_openrouter_llm(prompt):
+# OpenRouter AI Fallback
+def generate_llm_response(query: str) -> str:
     api_key = os.getenv("API_KEY")
     if not api_key:
         return "❌ OpenRouter API key missing."
 
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://mosdac-help-frontend.vercel.app",  # Update to your real URL
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://mosdac-help-frontend.vercel.app",  # ✅ Your frontend
         "X-Title": "MOSDAC Help Bot"
     }
 
     payload = {
-        "model": "qwen1.5-1.5b",  # You can change this to mistralai/mistral-7b-instruct or openai/gpt-4o
+        "model": "mistralai/mistral-7b-instruct",  # ✅ lighter than GPT-4o
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant for MOSDAC users."},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": "You are a helpful assistant for ISRO MOSDAC users."},
+            {"role": "user", "content": query}
         ]
     }
 
     try:
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=15
-        )
-        data = response.json()
-        return data["choices"][0]["message"]["content"]
+        res = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+        res.raise_for_status()
+        response_data = res.json()
+        return response_data["choices"][0]["message"]["content"]
     except Exception as e:
         return f"❌ LLM Error: {str(e)}"
 
@@ -100,16 +92,13 @@ def search(query: str):
     matched_texts = {e["text"] for e in matches}
     relations = [r for r in KG["relations"] if r["source"] in matched_texts or r["target"] in matched_texts]
 
-    # Cleaned-text fallback
-    semantic = find_best_passage(query)
-
-    # LLM fallback from OpenRouter
-    llm = query_openrouter_llm(query)
+    best_passage, score = find_best_passage(query)
+    llm_response = generate_llm_response(query)
 
     return {
         "query": query,
         "matches": matches[:5],
         "related_relations": relations[:5],
-        "semantic_suggestions": [{"text": semantic, "similarity": 1.0}] if semantic else [],
-        "llm_response": llm
+        "semantic_suggestions": [{"text": best_passage, "similarity": round(score, 2)}],
+        "llm_response": llm_response
     }
