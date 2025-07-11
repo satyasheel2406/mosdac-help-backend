@@ -16,22 +16,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load Knowledge Graph
+# Load KG
 KG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_graph.json")
 KG = load_knowledge_graph(KG_PATH)
 
-# Load cleaned-txt contents
+# Load cleaned-txt folder contents into memory
 CLEANED_TXT_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "cleaned-txt")
 doc_chunks = []
 
-if os.path.exists(CLEANED_TXT_DIR):
-    for fname in os.listdir(CLEANED_TXT_DIR):
-        if fname.endswith(".txt"):
-            fpath = os.path.join(CLEANED_TXT_DIR, fname)
-            with open(fpath, "r", encoding="utf-8") as f:
-                text = f.read()
-                chunks = re.split(r"(?<=[.])\s+", text)
-                doc_chunks.extend(chunks)
+for fname in os.listdir(CLEANED_TXT_DIR):
+    if fname.endswith(".txt"):
+        fpath = os.path.join(CLEANED_TXT_DIR, fname)
+        with open(fpath, "r", encoding="utf-8") as f:
+            text = f.read()
+            # Split into sentences or chunks
+            chunks = re.split(r"(?<=[.])\s+", text)
+            doc_chunks.extend(chunks)
 
 # Basic similarity function
 def basic_similarity(a, b):
@@ -47,7 +47,6 @@ def find_best_passage(query):
             best_text = chunk
     return best_text.strip()
 
-# Routes
 @app.get("/")
 def root():
     return {"message": "MOSDAC Help Bot Backend Running"}
